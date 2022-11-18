@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  api:
+    container_name: "test"
+    build:
+      context: ./test
+      dockerfile: Dockerfile
+    ports:
+      - "5001:8080"
