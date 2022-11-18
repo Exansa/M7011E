@@ -42,8 +42,8 @@ import express from 'express';
 // Initialize the express engine
 const app: express.Application = express();
 
-// Take a port 3000 for running server.
-const port = 3000;
+// Take a port 8080 for running server.
+const port = 8080;
 
 // Handling '/' Request
 app.get('/', (_req, _res) => {
@@ -70,7 +70,7 @@ cat > tsconfig.json << EOF
 EOF
 
 # Add scripts to package.json
-awk '/scripts/ { print; print "\t\t\"start\": \"nodemon index.ts\","; next }1' package.json > tmp.package.json
+awk '/scripts/ { print; print "\t\t\"start\": \"nodemon index.ts\",\n\t\t\"build\": \"tsc\","; next }1' package.json > tmp.package.json
 mv tmp.package.json package.json
 
 # TODO: Add scripts for linting and formatting
@@ -264,10 +264,9 @@ cat > .nvmrc << EOF
 19
 EOF
 
-# TODO: Fix Dockerfile
 # Create Dockerfile
 cat > Dockerfile << EOF
-FROM node:19
+FROM node:19-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -284,8 +283,10 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-EXPOSE 80
-CMD [ "node", "server.js" ]
+RUN npm run build
+
+EXPOSE 8080
+CMD ["node", "./build/index.js"]
 EOF
 
 cat > .dockerignore << EOF
