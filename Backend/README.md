@@ -1,0 +1,33 @@
+# M7011E Backend
+
+## Prerequisities
+
+### Docker
+
+Install Docker Desktop from the [website](https://www.docker.com).
+
+### Node.js
+
+To be able to run, develop, and test individual services depending on Node.js you need to have Node.js installed on your local machne. Node Version Manager ([nvm](https://www.linode.com/docs/guides/how-to-install-use-node-version-manager-nvm/)) is recommended, but not required. You can also install a single version from the default [website](https://nodejs.org/en/) but be aware of different versions.
+
+## Services
+
+The easiest way to create a new service is to run the [createservice](createservice.sh)
+script. Send the name of the service as a parameter.
+
+```console
+$ ./createservice.sh <SERVICE_NAME>
+```
+
+This will create a Node.js server with the Express.js framework, supporting TypeScript and also installing some housekeeping plugins for eslint and prettier.
+This also creates a Dockerfile for convenient dockerization of the service.
+
+**You don't have to use this script**, or Node.js at all for that matter. This is to be seen simillar to Netflix [Paved Road](https://www.oreilly.com/library/view/oscon-2017/9781491976227/video306724.html).
+
+## Docker
+
+All services must be deployable using a Dockerfile.
+
+### Docker Compose
+
+To orchestrate and administrate the entire backend [Docker Compose](https://docs.docker.com/get-started/08_using_compose/) is used. Configuration is set up using [docker-compose.yml](docker-compose.yml).
