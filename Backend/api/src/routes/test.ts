@@ -8,19 +8,13 @@ export default (channel: Promise<Channel>) => {
 		if (!channel) {
 			res.status(500).send('Channel not initialized');
 		}
-		const data = req.body;
 
-		(await channel).sendToQueue(
-			'test',
-			Buffer.from(
-				JSON.stringify({
-					...data,
-					date: new Date()
-				})
-			)
-		);
-
-		res.send('Order submitted');
+		const data = {
+			...req.body,
+			date: new Date()
+		};
+		(await channel).sendToQueue('test', Buffer.from(JSON.stringify(data)));
+		res.send('Test message was sent with data: ' + JSON.stringify(data));
 	});
 
 	return router;
