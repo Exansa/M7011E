@@ -28,8 +28,8 @@ mkdir $SERVICE_NAME
 cd $SERVICE_NAME
 
 npm init -y
-npm i express @types/node @types/express
-npm i typescript ts-node nodemon eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier eslint-config-prettier eslint-plugin-prettier --save-dev
+npm i express
+npm i typescript ts-node nodemon @types/node @types/express eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier eslint-config-prettier eslint-plugin-prettier --save-dev
 mkdir src
 
 # Create boilerplate files
