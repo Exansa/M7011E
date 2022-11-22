@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 //import dynamic from 'next/dynamic';
 import ResponsiveAppBar from "../resource/components/global/headerBar";
+import GenericCard from "../resource/components/global/card";
 
 //const header = dynamic(() => import('/pages/headerBar.js'));
 //<header />
@@ -61,81 +62,15 @@ export default function Home() {
               <p>Discover and deploy boilerplate example Next.js projects.</p>
             </a>
 
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea href="/">
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image=".\images\6e9.jpg"
-                  alt="image not found"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Wheels
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Wheeels are everywhere and they are really cool
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
+            
+            <GenericCard />
 
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image=".\images\6e9.jpg"
-                  alt="image not found"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Wheels
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Wheeels are everywhere and they are really cool
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
+            <GenericCard />
 
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image=".\images\6e9.jpg"
-                  alt="image not found"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Wheels
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Wheeels are everywhere and they are really cool
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image=".\images\6e9.jpg"
-                  alt="image not found"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Wheels
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Wheeels are everywhere and they are really cool
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
+            <GenericCard />
+            
+            <GenericCard />
+            
           </div>
         </main>
 
