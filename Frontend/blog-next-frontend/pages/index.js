@@ -10,9 +10,12 @@ import { CardActionArea } from "@mui/material";
 //import dynamic from 'next/dynamic';
 import ResponsiveAppBar from "../resource/components/global/headerBar";
 import GenericCard from "../resource/components/global/card";
+import {BrowserRouter, ReactDOM} from 'react-router-dom';
+import React from "react";
 
 //const header = dynamic(() => import('/pages/headerBar.js'));
 //<header />
+
 
 export default function Home() {
   return (
@@ -68,7 +71,7 @@ export default function Home() {
             <GenericCard />
 
             <GenericCard />
-            
+
             <GenericCard />
             
           </div>

@@ -16,10 +16,10 @@ function GenericCard() {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        Wheels
+                        Title
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Wheeels are everywhere and they are really cool
+                        Description Description Description Description Description Description DescriptionDescriptionDescriptionDescription
                     </Typography>
                 </CardContent>
             </CardActionArea>
