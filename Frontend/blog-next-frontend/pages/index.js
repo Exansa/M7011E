@@ -2,16 +2,9 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
 import ResponsiveAppBar from "../resource/components/global/headerBar";
 import GenericCard from "../resource/components/global/card";
-import {BrowserRouter, ReactDOM, render} from 'react-router-dom';
 import React from "react";
-import { useState } from 'react';
 
 
 
