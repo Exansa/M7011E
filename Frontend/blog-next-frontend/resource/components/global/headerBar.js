@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../../../styles/Home.module.css";
 
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import * as React from "react";
 import {
   AppBar,
@@ -22,7 +22,10 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 
-const pages = ["Home", "About", "Browse"];
+//const pages = ["home", "about", "browse"];
+const pages = [{link: "/", name: "Home"}, 
+               {link: "about", name: "About"}, 
+               {link: "browse", name: "Browse"}];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
@@ -97,9 +100,12 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <Link href={page.link}>
+                  <MenuItem key={page.link} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </MenuItem>
+                </Link>
+
               ))}
             </Menu>
           </Box>
@@ -124,16 +130,14 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link href= {'${/page}'}>
-                <a>
+              <Link href={page.link}>
                   <Button
-                    key={page}
+                    key={page.link}
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: 'white', display: 'block' }}
                   >
-                    {page}
+                    {page.name}
                   </Button>
-                </a>
               </Link>
             ))}
           </Box>
