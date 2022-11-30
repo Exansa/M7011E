@@ -1,6 +1,6 @@
 import ResponsiveAppBar from "../../resource/components/global/headerBar";
 
-export function Settings() {
+export function Post() {
     return (
         <div>
           <ResponsiveAppBar />
@@ -8,4 +8,4 @@ export function Settings() {
 
     );
 }
-export default Settings;
+export default Post;

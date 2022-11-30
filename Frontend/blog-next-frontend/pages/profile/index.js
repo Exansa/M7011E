@@ -1,6 +1,6 @@
 import ResponsiveAppBar from "../../resource/components/global/headerBar";
 
-export function About() {
+export function Profile() {
     return (
         <div>
           <ResponsiveAppBar />
@@ -8,4 +8,4 @@ export function About() {
 
     );
 }
-export default About;
+export default Profile;
