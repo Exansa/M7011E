@@ -21,11 +21,12 @@ import AdbIcon from "@mui/icons-material/Adb";
 //const pages = ["home", "about", "browse"];
 const pages = [{link: "/", name: "Home"}, 
                {link: "/about", name: "About"}, 
-               {link: "/browse", name: "Browse"}];
-const settings = [{link: "/user/", name: "Profile"}, 
-                  {link: "/user/account", name: "Account"}, 
-                  {link: "/user/dashboard", name: "Dashboard"}, 
-                  {link: "/user/logout", name: "Logout"}];
+               {link: "/browse", name: "Browse"},
+               {link: "/profile/makePost", name: "Make Post"}];
+const settings = [{link: "/profile/", name: "Profile"}, 
+                  {link: "/profile/settings", name: "Settings"}, 
+                  {link: "/profile/makePost", name: "Post"}, 
+                ];
 
 
 function ResponsiveAppBar() {
@@ -47,12 +48,8 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const handleSetting = (setting) => {
-    if(setting.name != "logout"){
-      <Link href={setting.link} />
-    } else if (setting.name=="Logout"){
+  const handleLogout = () => {
       console.log("logout");
-    }
   }
 
   return (
@@ -173,16 +170,24 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
+                <Link href={setting.link}>
                   <MenuItem key={setting.link} onClick={event => {
-                                console.log("Click!");
-                                handleSetting(setting);
+                                //console.log("Click!");
+                                //handleSetting(setting);
                                 handleCloseUserMenu();
                                 }}>
                     <Typography textAlign="center">
                       {setting.name}
                     </Typography>
                   </MenuItem>
+                </Link>
               ))}
+              <MenuItem onClick={event => {
+                                console.log("Click!");
+                                handleLogout();
+                                handleCloseUserMenu();}}>
+                Logout
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
