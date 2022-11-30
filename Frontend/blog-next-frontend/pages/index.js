@@ -7,9 +7,6 @@ import GenericCard from "../resource/components/global/card";
 import React from "react";
 
 
-
-
-
 export default function Home() {
   return (
     <>
