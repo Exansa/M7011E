@@ -72,7 +72,7 @@ export default () => {
 		}*/
 	});
 
-	router.put('/', async (req, res, next) => {
+	router.patch('/', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -82,9 +82,9 @@ export default () => {
 		});
 		//const id = req?.params?.id;
 
-		const id = '638b64fe0ee338cecc37b568';
 		console.log(req.body);
-		//var id = req.body._id;
+		var id = req.body._id;
+		var data = req.body.data;
 		var idObject = new ObjectId(id);
 		console.log(idObject);
 
@@ -95,7 +95,7 @@ export default () => {
 			const query = { _id: new ObjectId(id) };
 
 			const result = await collection.updateOne(query, {
-				$set: req.body
+				$set: data
 			});
 
 			result
@@ -113,12 +113,7 @@ export default () => {
 			}
 		}
 
-		const collection = await client.db('test').collection('testcollection');
-
-		collection.insertOne(req.body);
-
 		client.close();
-		res.send(req.body);
 	});
 
 	return router;
