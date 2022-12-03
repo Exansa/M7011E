@@ -80,13 +80,10 @@ export default () => {
 			// useUnifiedTopology: true,
 			serverApi: ServerApiVersion.v1
 		});
-		//const id = req?.params?.id;
 
-		console.log(req.body);
 		var id = req.body._id;
 		var data = req.body.data;
 		var idObject = new ObjectId(id);
-		console.log(idObject);
 
 		try {
 			const collection = await client
@@ -103,6 +100,51 @@ export default () => {
 						.status(200)
 						.send(`Successfully updated document with id ${id}`)
 				: res.status(304).send(`Document with id: ${id} not updated`);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+
+		client.close();
+	});
+
+	router.delete('/', async (req, res, next) => {
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+		//const id = req?.params?.id;
+
+		console.log(req.body);
+		var id = req.body._id;
+		var data = req.body.data;
+		var idObject = new ObjectId(id);
+		console.log(idObject);
+
+		try {
+			const collection = await client
+				.db('test')
+				.collection('testcollection');
+			const query = { _id: new ObjectId(id) };
+			const result = await collection.deleteOne(query);
+
+			if (result && result.deletedCount) {
+				res.status(202).send(
+					`Successfully removed document with id ${id}`
+				);
+			} else if (!result) {
+				res.status(400).send(`Failed to remove document with id ${id}`);
+			} else if (!result.deletedCount) {
+				res.status(404).send(`Document with id ${id} does not exist`);
+			}
 		} catch (err) {
 			if (err instanceof Error) {
 				console.error(err.message);
