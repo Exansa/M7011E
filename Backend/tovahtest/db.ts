@@ -31,6 +31,32 @@ export default () => {
 			serverApi: ServerApiVersion.v1
 		});
 
+		var id = req.body._id;
+		var idObject = new ObjectId(id);
+
+		try {
+			const collection = await client
+				.db('test')
+				.collection('testcollection');
+			const query = { _id: new ObjectId(id) };
+
+			const result = await collection.findOne(query);
+
+			result
+				? res.status(200).send(result)
+				: res.status(304).send(`Document with id: ${id} not retrieved`);
+			console.log(result);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+
+		/*
 		const collection = client.db('test').collection('testcollection');
 
 		try {
@@ -39,14 +65,10 @@ export default () => {
 		} catch (error) {
 			res.status(500).send('error with GET request');
 			//res.status(500).send(error.message);
-		}
-
-		/*while (myCursor.hasNext()) {
-			res.send(myCursor.next());
 		}*/
 
 		client.close();
-		res.send(req.body);
+		//res.send(req.body);
 
 		/*try {
 			const games = (await collections.games
