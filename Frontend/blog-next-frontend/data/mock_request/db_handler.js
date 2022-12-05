@@ -8,6 +8,7 @@ import {
   users,
 } from "../mock_db";
 
+
 function getAdmins() {
   return admins;
 }

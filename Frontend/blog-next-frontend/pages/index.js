@@ -56,7 +56,7 @@ export default function Home() {
             </a>
 
             
-            <GenericCard />
+            GenericCard(1);
 
             <GenericCard />
 
