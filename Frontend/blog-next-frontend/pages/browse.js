@@ -2,9 +2,9 @@ import ResponsiveAppBar from "../resource/components/global/headerBar";
 
 export function Browse() {
     return (
-        <div>
+        <Box>
           <ResponsiveAppBar />
-        </div>
+        </Box>
 
     );
 }

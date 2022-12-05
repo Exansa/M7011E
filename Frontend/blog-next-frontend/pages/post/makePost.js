@@ -6,33 +6,63 @@ import { Container,
          Select,
          MenuItem,
          InputLabel,
-         Typography } from '@mui/material';
+         Typography, 
+         Box,
+         FormControl,
+         FormHelperText,
+         OutlinedInput,
+         Checkbox,
+         ListItemText} from '@mui/material';
+import * as React from "react";
+//import { Category } from "@mui/icons-material";
+
 //import { getCategories } from "../../data/mock_request/db_handler";
 
-const content = {
-  key1: "value1",
-  key2: "value2"
-};
+const Categories = [ {id: "1", name: "bikes"},  {id: "2", name: "sleds"},  {id: "3", name: "canons"}, {id: "4", name: "dicks"}];
+const Tags = [ {id: "1", name: "fun"},  {id: "2", name: "sad"},  {id: "3", name: "tasty"}, {id: "4", name: "nsfw"}];
 
-const Categories = [ {id: "1", name: "bikes"},  {id: "2", name: "sleds"},  {id: "3", name: "canons"}];
-
-const handleChange = (event) => {
-    setCategory(event.target.name)
-}
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
 export default function makePost() {
-    const handleChange = (e) => {
+    const [setCategory] = React.useState('');
+    const [tagName, setTagName] = React.useState([]);
+
+    const handleChange = (event) => {
+        const {
+            target: { value },
+          } = event;
+          setTagName(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+          );
+    };
+    
+    const submitForm = (event) => {
+        create_new_post();
+    };
+    
+
+    const handlePicture = (e) => {
         let formData = new FormData();
         formData.append("data", JSON.stringify(content));
         formData.append("profile_picture", e.target.files[0]);
         axios.put("/api/update", formData).then(console.log).catch(console.log);
- };
+    };
     return (
     <>
-        <div>
+        <Box>
             <ResponsiveAppBar />
-        </div>
-        <div>
+        </Box>
+        <Box>
             <Container maxWidth="md">
                 <TextField 
                     required
@@ -48,26 +78,48 @@ export default function makePost() {
                     label="Blog post text"
                     margin="normal"
                 />
-                
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    fullWidth
-                    label="Category"
-                    onChange={handleChange}
-                >
-                {Categories.map((Category) => (
-                  <MenuItem key={Category.id}>
-                    <Typography textAlign="center">{Category.name}</Typography>
-                  </MenuItem>
-                ))}
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-helper-label">Category</InputLabel>
+                         <Select
+                             labelId="demo-simple-select-helper-label"
+                             id="demo-simple-select-helper"
+                             value={Categories.name}
+                             label="Category"
+                             //onChange={handleChange}
+                         >
+                            {Categories.map((Categories) => (
+                                <MenuItem value={Categories.name}>
+                                    {Categories.name}
+                                </MenuItem>
+                            ))}
 
-                </Select>
+                         </Select>
+                </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                         <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+                         <Select
+                            labelId="demo-multiple-checkbox-label"
+                            id="demo-multiple-checkbox"
+                            multiple
+                            value={tagName}
+                            onChange={handleChange}
+                            input={<OutlinedInput label="Tags" />}
+                            renderValue={(selected) => selected.join(', ')}
+                            //MenuProps={MenuProps}
+                        >
+                            {Tags.map((Tags) => (
+                                <MenuItem key={Tags.id} value={Tags.name}>
+                                    <Checkbox checked={tagName.indexOf(Tags.name) > -1} />
+                                <ListItemText primary={Tags.name} />
+                            </MenuItem>
+                            ))}
+                         </Select>
+                </FormControl>
 
-                <input accept="*" type="file" onChange={handleChange} />
+                <input accept="*" type="file" onChange={handlePicture} />
 
                 <Button
+                    sx={{ m: 1, minWidth: 120 }}
                     //disabled={!myForm.isValid}
                     //onClick={myForm.submitForm}
                     variant="contained"
@@ -75,7 +127,7 @@ export default function makePost() {
                     Submit
                 </Button>
             </Container>
-        </div>
+        </Box>
     </>
     )
 }

@@ -19,13 +19,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 
 //const pages = ["home", "about", "browse"];
-const pages = [{link: "/", name: "Home"}, 
-               {link: "/about", name: "About"}, 
-               {link: "/browse", name: "Browse"},
-               {link: "/post/makePost", name: "Make Post"}];
-const settings = [{link: "/profile/", name: "Profile"}, 
+const pages = [{link: "/",       name: "Home"}, 
+               {link: "/browse", name: "Browse"}, 
+               {link: "/about",  name: "About"},
+               {link: "/post/makePost",       name: "Make Post"}];
+const settings = [{link: "/profile/",         name: "Profile"}, 
                   {link: "/profile/settings", name: "Settings"}, 
-                  {link: "/post/makePost", name: "Post"}, 
+                  {link: "/post/makePost",    name: "Post"}, 
                 ];
 
 
