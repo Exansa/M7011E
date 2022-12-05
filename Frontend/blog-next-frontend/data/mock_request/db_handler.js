@@ -54,8 +54,8 @@ function getFullDB() {
 // from: table name
 //
 // Example:
-// query_getKV("id", 1, "users") => [{id: 1, name: "John Doe"}]
-// query_getKV("name", "", "users") => [{id: 1, name: "John Doe"}, {id: 2, name: "Jane Doe"}, ...]
+// get_KV("id", 1, "users") => [{id: 1, name: "John Doe"}]
+// get_KV("name", "", "users") => [{id: 1, name: "John Doe"}, {id: 2, name: "Jane Doe"}, ...]
 function get_KV(key, value = "", from) {
   let data = getFullDB()[from];
 
@@ -73,8 +73,8 @@ function get_KV(key, value = "", from) {
 // from: table name
 //
 // Example:
-// query_getValueByMatchingKV("id", 1, "name", "users") => ["John Doe"]
-// query_getValueByMatchingKV("name", "John Doe", "id", "users") => [1]
+// get_ValueByMatchingKV("id", 1, "name", "users") => ["John Doe"]
+// get_ValueByMatchingKV("name", "John Doe", "id", "users") => [1]
 
 function get_ValueByMatchingKV(s_key, s_value, r_key, from) {
   let query = get_KV(s_key, s_value, from);
