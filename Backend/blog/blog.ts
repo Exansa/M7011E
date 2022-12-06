@@ -186,7 +186,7 @@ export default () => {
 		client.close();
 	});
 
-	router.delete('/', async (req, res, next) => {
+	router.delete('/:user/:post', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -195,21 +195,27 @@ export default () => {
 			serverApi: ServerApiVersion.v1
 		});
 
+		const userId = req?.params?.user;
+		const postId = req?.params?.post;
+
 		try {
-			var id = req.body._id;
-			var data = req.body.data;
+			checkCurrentUser(userId, req.body.user_id);
 			const collection = await client.db('blog').collection('posts');
-			const query = { _id: new ObjectId(id) };
+			const query = { _id: new ObjectId(postId), user_id: userId };
 			const result = await collection.deleteOne(query);
 
 			if (result && result.deletedCount) {
 				res.status(202).send(
-					`Successfully removed document with id ${id}`
+					`Successfully removed document with id ${postId}`
 				);
 			} else if (!result) {
-				res.status(400).send(`Failed to remove document with id ${id}`);
+				res.status(400).send(
+					`Failed to remove document with id ${postId}`
+				);
 			} else if (!result.deletedCount) {
-				res.status(404).send(`Document with id ${id} does not exist`);
+				res.status(404).send(
+					`Document with id ${postId} does not exist`
+				);
 			}
 		} catch (err) {
 			if (err instanceof Error) {
