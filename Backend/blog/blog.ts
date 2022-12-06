@@ -28,8 +28,8 @@ export default () => {
 			const result = await collection.insertOne(post);
 
 			result
-				? res.status(200).send(`Document created successfully`)
-				: res.status(304).send(`Document not created`);
+				? res.status(200).send(`Post created successfully`)
+				: res.status(304).send(`Post not created`);
 			console.log(result);
 		} catch (err) {
 			if (err instanceof Error) {
@@ -197,16 +197,12 @@ export default () => {
 
 			if (result && result.deletedCount) {
 				res.status(202).send(
-					`Successfully removed document with id ${postId}`
+					`Successfully removed post with id ${postId}`
 				);
 			} else if (!result) {
-				res.status(400).send(
-					`Failed to remove document with id ${postId}`
-				);
+				res.status(400).send(`Failed to remove post with id ${postId}`);
 			} else if (!result.deletedCount) {
-				res.status(404).send(
-					`Document with id ${postId} does not exist`
-				);
+				res.status(404).send(`Post with id ${postId} does not exist`);
 			}
 		} catch (err) {
 			if (err instanceof Error) {
