@@ -54,21 +54,6 @@ export default () => {
 
 		const userId = req?.params?.user;
 
-		/*try {
-			var postId = req.body._id;
-			if (!postId) {
-				throw new Error('No post id provided');
-			}
-		} catch (err) {
-			if (err instanceof Error) {
-				console.error(err.message);
-				res.status(400).send(err.message);
-			} else {
-				console.log('Unexpected error', err);
-				res.status(400).send('Unexpected error');
-			}
-		}*/
-
 		try {
 			const collection = await client.db('blog').collection('posts');
 			const query = { user_id: userId };
@@ -148,7 +133,7 @@ export default () => {
 		client.close();
 	});
 
-	router.patch('/', async (req, res, next) => {
+	router.patch('/:user/:post', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -157,22 +142,28 @@ export default () => {
 			serverApi: ServerApiVersion.v1
 		});
 
+		const userId = req?.params?.user;
+		const postId = req?.params?.post;
+
 		try {
-			var id = req.body._id;
-			var data = req.body.data;
+			checkCurrentUser(userId, req.body.user_id);
+			var post = req.body.post;
+			post = generatePost(post, userId);
+			validatePost(post);
+			console.log(post);
 
 			const collection = await client.db('blog').collection('posts');
-			const query = { _id: new ObjectId(id) };
+			const query = { _id: new ObjectId(postId), user_id: userId };
 
 			const result = await collection.updateOne(query, {
-				$set: data
+				$set: post
 			});
 
 			result
 				? res
 						.status(200)
-						.send(`Successfully updated document with id ${id}`)
-				: res.status(304).send(`Document with id: ${id} not updated`);
+						.send(`Successfully updated post with id ${postId}`)
+				: res.status(304).send(`Post with id: ${postId} not updated`);
 		} catch (err) {
 			if (err instanceof Error) {
 				console.error(err.message);
