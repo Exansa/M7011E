@@ -1,5 +1,0 @@
-[
-  { "user_id": 1, "access": "super" },
-  { "user_id": 2, "access": "admin" },
-  { "user_id": 3, "access": "moderator" }
-]
