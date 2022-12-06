@@ -22,7 +22,7 @@ export default function getPosts() {
       location: locations[34],
       category: categories[20],
       tags: [tags[0], tags[1], tags[2]],
-      image: media[6],
+      image: media[7],
     },
     {
       id: 2,
@@ -34,7 +34,7 @@ export default function getPosts() {
       location: locations[17],
       category: categories[19],
       tags: [tags[0], tags[1], tags[2]],
-      image: media[10],
+      image: media[9],
     },
     {
       id: 3,
@@ -58,7 +58,7 @@ export default function getPosts() {
       location: locations[12],
       category: categories[17],
       tags: [tags[0], tags[1], tags[2]],
-      image: media[10],
+      image: media[9],
     },
     {
       id: 5,
@@ -94,7 +94,7 @@ export default function getPosts() {
       location: locations[8],
       category: categories[14],
       tags: [tags[0], tags[1], tags[2]],
-      image: media[6],
+      image: media[7],
     },
     {
       id: 8,

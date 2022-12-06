@@ -5,12 +5,12 @@ import SpecificPost from "../../resource/components/posts/specificPost";
 import getPosts from "../../data/mock_db/posts";
 
 export default function Post() {
-  let post = getPosts()[8];
+  let post = getPosts()[1];
 
   return (
-    <div>
+    <>
       <ResponsiveAppBar />
-      <Box sx={{ width: "60%", mx: "auto" }}>
+      <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
         <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
           <Image src={post.image.href} fit="scale-down" showLoading={false} />
           <Typography variant="h1" component="h2">
@@ -27,6 +27,6 @@ export default function Post() {
           </Typography>
         </Stack>
       </Box>
-    </div>
+    </>
   );
 }
