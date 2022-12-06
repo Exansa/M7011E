@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 const router = Router();
 
 export default () => {
-	router.post('/', async (req, res, next) => {
+	router.post('/:user', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -14,11 +14,18 @@ export default () => {
 			serverApi: ServerApiVersion.v1
 		});
 
+		const userId = req?.params?.user;
+
 		try {
-			var data = req.body.data;
+			checkCurrentUser(userId, req.body.user_id);
+			var post = req.body.post;
+			post = generatePost(post, userId);
+			validatePost(post);
+			console.log(post);
+
 			const collection = await client.db('blog').collection('posts');
 
-			const result = await collection.insertOne(data);
+			const result = await collection.insertOne(post);
 
 			result
 				? res.status(200).send(`Document created successfully`)
@@ -125,7 +132,7 @@ export default () => {
 
 			result
 				? res.status(200).send(result)
-				: res.status(305).send(`Post with id: ${postId} not retrieved`);
+				: res.status(304).send(`Post with id: ${postId} not retrieved`);
 			console.log(
 				result ? result : `Post with id: ${postId} not retrieved`
 			);
@@ -153,6 +160,7 @@ export default () => {
 		try {
 			var id = req.body._id;
 			var data = req.body.data;
+
 			const collection = await client.db('blog').collection('posts');
 			const query = { _id: new ObjectId(id) };
 
@@ -218,3 +226,29 @@ export default () => {
 
 	return router;
 };
+
+function checkCurrentUser(userId: string, userId1: any) {
+	if (userId !== userId1) throw new Error('Not current user. Access denied');
+}
+
+function generatePost(inPost: any, userId: string) {
+	var post = {
+		title: inPost.title,
+		created_at: new Date(),
+		content: inPost.content,
+		user_id: userId,
+		location_id: inPost.location_id,
+		categories_id: inPost.categories_id,
+		tags_id: inPost.tags_id,
+		media_id: inPost.media_id
+	};
+
+	return post;
+}
+
+function validatePost(post: any) {
+	if (!post.title) throw new Error('Title is required');
+	if (!post.content) throw new Error('Content is required');
+	if (!post.created_at) throw new Error('Created at is required');
+	if (!post.user_id) throw new Error('User id is required');
+}
