@@ -105,6 +105,42 @@ export default () => {
 		client.close();
 	});
 
+	router.get('/:user/:post', async (req, res, next) => {
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		const userId = req?.params?.user;
+		const postId = req?.params?.post;
+
+		try {
+			const collection = await client.db('blog').collection('posts');
+			const query = { _id: new ObjectId(postId), user_id: userId };
+
+			const result = await collection.findOne(query);
+
+			result
+				? res.status(200).send(result)
+				: res.status(305).send(`Post with id: ${postId} not retrieved`);
+			console.log(
+				result ? result : `Post with id: ${postId} not retrieved`
+			);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+		client.close();
+	});
+
 	router.patch('/', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
