@@ -1,18 +1,17 @@
 import { Stack, Typography, Button, Avatar, Box } from "@mui/material";
-import { Image } from "mui-image";
+import { Image } from "mui-image"; //https://github.com/benmneb/mui-image
 import ResponsiveAppBar from "../../resource/components/global/headerBar";
-import SpecificPost from "../../resource/components/posts/specificPost";
-import getPosts from "../../data/mock_db/posts";
+import posts from "../../data/mock_db/posts";
 
 export default function Post() {
-  let post = getPosts()[1];
+  const post = posts[0];
 
   return (
     <>
       <ResponsiveAppBar />
       <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
         <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
-          <Image src={post.image.href} fit="scale-down" showLoading={false} />
+          <Box component="img" src={post.image.href} />
           <Typography variant="h1" component="h2">
             {post.title}
           </Typography>
