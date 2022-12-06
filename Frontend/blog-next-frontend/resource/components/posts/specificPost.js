@@ -1,6 +1,6 @@
 import { Stack, Image, Typography, Button, Avatar, Box } from "@mui/material";
 
-export default function SpecificPost({ item }) {
+export default function SpecificPost(item) {
   return (
     <Box>
       <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
