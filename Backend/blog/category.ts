@@ -21,6 +21,13 @@ export default () => {
 
 			const collection = await client.db('blog').collection('categories');
 
+			const query1 = {
+				name: category.name
+			};
+			const alreadyExists = await collection.findOne(query1);
+			console.log(alreadyExists);
+			if (alreadyExists) throw new Error('Category already exists');
+
 			const result = await collection.insertOne(category);
 
 			result
@@ -55,8 +62,16 @@ export default () => {
 			validateCategory(category);
 
 			const collection = await client.db('blog').collection('categories');
-			const query = { _id: new ObjectId(categoryId) };
 
+			const query1 = {
+				name: category.name,
+				_id: { $ne: new ObjectId(categoryId) }
+			};
+			const alreadyExists = await collection.findOne(query1);
+			console.log(alreadyExists);
+			if (alreadyExists) throw new Error('Category already exists');
+
+			const query = { _id: new ObjectId(categoryId) };
 			const result = await collection.updateOne(query, {
 				$set: category
 			});
