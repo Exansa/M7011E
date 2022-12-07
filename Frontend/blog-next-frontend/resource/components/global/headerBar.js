@@ -22,10 +22,10 @@ import AdbIcon from "@mui/icons-material/Adb";
 const pages = [{link: "/",       name: "Home"}, 
                {link: "/browse", name: "Browse"}, 
                {link: "/about",  name: "About"},
-               {link: "/post/makePost",       name: "Make Post"}];
+               {link: "/posts/makePost",       name: "Make Post"}];
 const settings = [{link: "/profile/",         name: "Profile"}, 
                   {link: "/profile/settings", name: "Settings"}, 
-                  {link: "/post/makePost",    name: "Post"}, 
+                  {link: "/posts/makePost",    name: "Post"}, 
                 ];
 
 

@@ -1,4 +1,6 @@
 import ResponsiveAppBar from "../../resource/components/global/headerBar";
+import { useSession } from 'next-auth/react'
+import AccessDenied from "../../resource/components/accessDenied";
 import axios from "axios";
 import { Container, 
          TextField,
@@ -33,6 +35,11 @@ const MenuProps = {
   };
 
 export default function makePost() {
+
+    const [ session ] = useSession()
+
+    if (!session) { return  <Layout><AccessDenied/></Layout> }
+
     const [setCategory] = React.useState('');
     const [tagName, setTagName] = React.useState([]);
 
