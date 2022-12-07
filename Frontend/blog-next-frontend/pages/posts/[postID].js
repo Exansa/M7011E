@@ -1,5 +1,6 @@
 import { Stack, Typography, Button, Avatar, Box } from "@mui/material";
 import PropTypes from "prop-types";
+import Page from "../../resource/components/page";
 import { Image } from "mui-image"; //https://github.com/benmneb/mui-image
 import ResponsiveAppBar from "../../resource/components/global/headerBar";
 import posts from "../../data/mock_db/posts";

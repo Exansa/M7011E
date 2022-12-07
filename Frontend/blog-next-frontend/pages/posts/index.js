@@ -1,5 +1,6 @@
 import { Box, Stack, Typography, Button } from "@mui/material";
 import ResponsiveAppBar from "../../resource/components/global/headerBar";
+import Page from "../../resource/components/page";
 import posts from "../../data/mock_db/posts";
 import GenericCard from "../../resource/components/global/card";
 import { useState } from "react";
