@@ -1,6 +1,6 @@
 import { Box, Stack, Typography, Button } from "@mui/material";
-import ResponsiveAppBar from "../../resource/components/global/headerBar";
-import Page from "../../resource/components/page";
+import ResponsiveAppBar from "../../resource/layout/headerBar";
+import Page from "../../resource/layout/page";
 import posts from "../../data/mock_db/posts";
 import GenericCard from "../../resource/components/global/card";
 import { useState } from "react";
@@ -18,7 +18,6 @@ export default function Browse() {
   return (
     <>
       <Page title="Browse">
-        <ResponsiveAppBar />
         <Box sx={{ mx: 5, my: 3 }}>
           <Stack direction={"column"}>
             <Typography variant="h1" component="h2">

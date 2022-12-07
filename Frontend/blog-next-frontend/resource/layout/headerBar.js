@@ -18,7 +18,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 
-import Routes from "../../routes";
+import Routes from "../routes";
 
 //const pages = ["home", "about", "browse"];
 const pages = [

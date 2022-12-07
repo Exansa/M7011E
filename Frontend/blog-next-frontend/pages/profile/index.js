@@ -1,7 +1,7 @@
-import ResponsiveAppBar from "../../resource/components/global/headerBar";
+import ResponsiveAppBar from "../../resource/layout/headerBar";
 import { Box, Stack, Avatar, Card } from "@mui/material";
 import Users from "../../data/mock_db/users";
-import Page from "../../resource/components/page";
+import Page from "../../resource/layout/page";
 
 export function Profile() {
   let user = Users[0]; //TODO: Auth
@@ -9,8 +9,6 @@ export function Profile() {
   return (
     <>
       <Page title={"Profile: " + user.username}>
-        <ResponsiveAppBar />
-
         <Box sx={{ mx: 4, my: 4 }}>
           <Stack direction="column">
             <Card raised sx={{ padding: 5, width: { md: "40%", xs: "90%" } }}>

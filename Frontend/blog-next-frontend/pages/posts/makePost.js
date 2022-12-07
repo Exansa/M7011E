@@ -1,4 +1,5 @@
-import ResponsiveAppBar from "../../resource/components/global/headerBar";
+import ResponsiveAppBar from "../../resource/layout/headerBar";
+import Page from "../../resource/layout/page";
 import axios from "axios";
 import {
   Container,
@@ -59,10 +60,7 @@ export default function makePost() {
   };
   return (
     <>
-      <Box>
-        <ResponsiveAppBar />
-      </Box>
-      <Box>
+      <Page>
         <Container maxWidth="md">
           <TextField required fullWidth label="Title" margin="normal" />
 
@@ -121,7 +119,7 @@ export default function makePost() {
             Submit
           </Button>
         </Container>
-      </Box>
+      </Page>
     </>
   );
 }
