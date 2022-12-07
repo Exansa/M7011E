@@ -45,6 +45,48 @@ export default () => {
 		client.close();
 	});
 
+	router.get('/:user', async (req, res, next) => {
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		const userId = req?.params?.user;
+
+		try {
+			const collection = await client.db('blog').collection('users');
+			const query = { _id: new ObjectId(userId) };
+
+			var result;
+			if (userId == req.body.user_id) {
+				result = await collection.findOne(query);
+			} else {
+				result = await collection.findOne(query, {
+					projection: { pw: 0 }
+				});
+			}
+
+			result
+				? res.status(200).send(result)
+				: res.status(304).send(`Post with id: ${userId} not retrieved`);
+			console.log(
+				result ? result : `Post with id: ${userId} not retrieved`
+			);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+		client.close();
+	});
+
 	router.patch('/:user', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
