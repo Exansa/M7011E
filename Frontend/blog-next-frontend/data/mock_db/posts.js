@@ -27,7 +27,7 @@ const posts = [
     location: locations[17],
     category: categories[19],
     tags: [tags[0], tags[1], tags[2]],
-    image: media[9],
+    image: media[8],
   },
   {
     id: 3,
@@ -39,7 +39,7 @@ const posts = [
     location: locations[8],
     category: categories[18],
     tags: [tags[0], tags[1], tags[2]],
-    image: media[9],
+    image: media[8],
   },
   {
     id: 4,
@@ -51,7 +51,7 @@ const posts = [
     location: locations[12],
     category: categories[17],
     tags: [tags[0], tags[1], tags[2]],
-    image: media[9],
+    image: media[8],
   },
   {
     id: 5,
@@ -75,7 +75,7 @@ const posts = [
     location: locations[27],
     category: categories[15],
     tags: [tags[0], tags[1], tags[2]],
-    image: media[9],
+    image: media[8],
   },
   {
     id: 7,
