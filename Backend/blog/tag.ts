@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { Collection, Document, MongoClient, ServerApiVersion } from 'mongodb';
 import { Router, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 
@@ -23,6 +23,11 @@ export default () => {
 			validateTag(tag);
 
 			const collection = await client.db('blog').collection('tags');
+
+			//checkTagExists(collection, tag);
+			const query = { name: tag.name, user_id: tag.user_id };
+			const alreadyExists = await collection.findOne(query);
+			if (alreadyExists) throw new Error('Tag already exists');
 
 			const result = await collection.insertOne(tag);
 
@@ -60,8 +65,18 @@ export default () => {
 			validateTag(tag);
 
 			const collection = await client.db('blog').collection('tags');
-			const query = { _id: new ObjectId(tagId), user_id: userId };
 
+			//checkTagExists(collection, tag);
+			const query1 = {
+				name: tag.name,
+				user_id: userId,
+				_id: { $ne: new ObjectId(tagId) }
+			};
+			const alreadyExists = await collection.findOne(query1);
+			console.log(alreadyExists);
+			if (alreadyExists) throw new Error('Tag already exists');
+
+			const query = { _id: new ObjectId(tagId), user_id: userId };
 			const result = await collection.updateOne(query, {
 				$set: tag
 			});
@@ -98,4 +113,10 @@ function generateTag(tag: any, userId: string): any {
 		user_id: userId,
 		name: tag.name
 	};
+}
+
+async function checkTagExists(tag: any, collection: Collection<Document>) {
+	const query = { name: tag.name, user_id: tag.user_id };
+	const alreadyExists = await collection.findOne(query);
+	if (alreadyExists) throw new Error('Tag already exists');
 }
