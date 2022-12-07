@@ -16,27 +16,33 @@ export default function Browse() {
 
   return (
     <>
-      <ResponsiveAppBar />
-      <Box sx={{ mx: 5, my: 3 }}>
-        <Stack direction={"column"}>
-          <Typography variant="h1" component="h2">
-            Browse Posts
-          </Typography>
+      <Page title="Browse">
+        <ResponsiveAppBar />
+        <Box sx={{ mx: 5, my: 3 }}>
+          <Stack direction={"column"}>
+            <Typography variant="h1" component="h2">
+              Browse Posts
+            </Typography>
 
-          <Typography variant="h2" component="h3">
-            Featured
-          </Typography>
+            <Typography variant="h2" component="h3">
+              Featured
+            </Typography>
 
-          <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
-            {posts.slice(0, maxSlice).map((post) => (
-              <Box sx={{ mx: 1, my: 2 }}>
-                <GenericCard postID={post.id} />
-              </Box>
-            ))}
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              justifyContent="space-between"
+            >
+              {posts.slice(0, maxSlice).map((post) => (
+                <Box sx={{ mx: 1, my: 2 }}>
+                  <GenericCard postID={post.id} />
+                </Box>
+              ))}
+            </Stack>
+            <Button onClick={handleSliceChange}>Load More</Button>
           </Stack>
-          <Button onClick={handleSliceChange}>Load More</Button>
-        </Stack>
-      </Box>
+        </Box>
+      </Page>
     </>
   );
 }

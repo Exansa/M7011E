@@ -55,24 +55,26 @@ const Post = () => {
 
   return (
     <>
-      <ResponsiveAppBar />
-      <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
-        <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
-          <Box component="img" src={post.image.href} />
-          <Typography variant="h1" component="h2">
-            {post.title}
-          </Typography>
-          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-            <Avatar src={post.user.image.href} alt={post.user.username} />
-            <Typography variant="h4" component="h3">
-              {post.user.username}
+      <Page title={post.title}>
+        <ResponsiveAppBar />
+        <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
+          <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
+            <Box component="img" src={post.image.href} />
+            <Typography variant="h1" component="h2">
+              {post.title}
+            </Typography>
+            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+              <Avatar src={post.user.image.href} alt={post.user.username} />
+              <Typography variant="h4" component="h3">
+                {post.user.username}
+              </Typography>
+            </Stack>
+            <Typography variant="body1" component="p">
+              {post.content}
             </Typography>
           </Stack>
-          <Typography variant="body1" component="p">
-            {post.content}
-          </Typography>
-        </Stack>
-      </Box>
+        </Box>
+      </Page>
     </>
   );
 };
