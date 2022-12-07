@@ -7,8 +7,8 @@ import posts from "../../../data/mock_db/posts";
 import Routes from "../../../resource/routes";
 import NextLink from "next/link";
 
-function GenericCard({ index }) {
-  const post = posts[index];
+function GenericCard({ postID }) {
+  const post = posts[postID - 1];
 
   return (
     <>

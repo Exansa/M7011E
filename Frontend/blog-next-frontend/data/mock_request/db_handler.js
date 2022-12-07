@@ -6,7 +6,6 @@ import posts from "../mock_db/posts";
 import tags from "../mock_db/tags";
 import users from "../mock_db/users";
 
-
 function getAdmins() {
   return admins;
 }

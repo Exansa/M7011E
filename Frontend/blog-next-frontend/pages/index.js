@@ -53,13 +53,13 @@ export default function Home() {
               <h2>Examples &rarr;</h2>
               <p>Discover and deploy boilerplate example Next.js projects.</p>
             </a>
-            <GenericCard index={0} />
+            <GenericCard postID={1} />
 
-            <GenericCard index={1} />
+            <GenericCard postID={2} />
 
-            <GenericCard index={2} />
+            <GenericCard postID={3} />
 
-            <GenericCard index={3} />
+            <GenericCard postID={4} />
           </div>
         </main>
 
