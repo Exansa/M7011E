@@ -14,6 +14,32 @@ import { useRouter } from "next/router";
 //   featured: PropTypes.array,
 // };
 
+export const getStaticPaths = async () => {
+  //TODO: Swap posts in this  and get static props out for a call to the database
+  // const res = await fetch("https://jsonplaceholder.typicode.com/posts"); <-- DB call
+  // const data = await res.json();
+
+  const paths = posts.map((post) => {
+    return {
+      params: { postID: post.id.toString() },
+    };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps = async () => {
+  // const res = await fetch("https://jsonplaceholder.typicode.com/posts"); <-- DB call
+  // const data = await res.json();
+
+  return {
+    props: { posts },
+  };
+};
+
 const Post = () => {
   // const Post = () => {
   //   const router = useRouter();
