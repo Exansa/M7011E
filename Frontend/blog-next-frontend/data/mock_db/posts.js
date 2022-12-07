@@ -95,7 +95,7 @@ const posts = [
     created_at: "2022-06-13",
     content:
       "Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.\n\nPraesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.\n\nMorbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.",
-    user: users[1],
+    user: users[0],
     location: locations[7],
     category: categories[13],
     tags: [tags[0], tags[1], tags[2]],
@@ -107,7 +107,7 @@ const posts = [
     created_at: "2022-04-01",
     content:
       "Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.\n\nPhasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.\n\nProin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.\n\nDuis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.",
-    user: users[2],
+    user: users[0],
     location: locations[15],
     category: categories[12],
     tags: [tags[0], tags[1], tags[2]],
