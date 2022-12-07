@@ -1,7 +1,5 @@
-import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 import ResponsiveAppBar from "../resource/components/global/headerBar";
 import GenericCard from "../resource/components/global/card";
@@ -14,9 +12,7 @@ export default function Home() {
       <Page title="Index">
         <ResponsiveAppBar />
         <Box mx={"10%"} my="10%">
-          <h1 className={styles.title}>
-            Welcome to <a href="">the Blog!</a>
-          </h1>
+          <Typography variant="h1"> Welcome to the blog! </Typography>
           <Stack
             direction="row"
             flexWrap="wrap"

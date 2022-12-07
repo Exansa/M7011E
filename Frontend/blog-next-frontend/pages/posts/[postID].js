@@ -60,7 +60,7 @@ const Post = () => {
         <ResponsiveAppBar />
         <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
           <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
-            <Box component="img" src={post.image.href} />
+            <Image src={post.image.href} duration={1000} />
             <Typography variant="h1" component="h2">
               {post.title}
             </Typography>
