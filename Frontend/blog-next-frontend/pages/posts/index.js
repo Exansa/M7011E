@@ -5,7 +5,7 @@ import GenericCard from "../../resource/components/global/card";
 import { useState } from "react";
 
 export default function Browse() {
-  const sliceIncrement = 3;
+  const sliceIncrement = 4;
   const [maxSlice, setMaxSlice] = useState(sliceIncrement);
 
   const handleSliceChange = () => {
@@ -27,14 +27,11 @@ export default function Browse() {
             Featured
           </Typography>
 
-          <Stack
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            spacing={8}
-          >
+          <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
             {posts.slice(0, maxSlice).map((post) => (
-              <GenericCard postID={post.id} />
+              <Box sx={{ mx: 1, my: 2 }}>
+                <GenericCard postID={post.id} />
+              </Box>
             ))}
           </Stack>
           <Button onClick={handleSliceChange}>Load More</Button>

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 import * as React from "react";
 import {
   AppBar,
@@ -19,15 +19,17 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 
 //const pages = ["home", "about", "browse"];
-const pages = [{link: "/",       name: "Home"}, 
-               {link: "/browse", name: "Browse"}, 
-               {link: "/about",  name: "About"},
-               {link: "/post/makePost",       name: "Make Post"}];
-const settings = [{link: "/profile/",         name: "Profile"}, 
-                  {link: "/profile/settings", name: "Settings"}, 
-                  {link: "/post/makePost",    name: "Post"}, 
-                ];
-
+const pages = [
+  { link: "/", name: "Home" },
+  { link: "/posts", name: "Browse" },
+  { link: "/about", name: "About" },
+  { link: "/post/makePost", name: "Make Post" },
+];
+const settings = [
+  { link: "/profile/", name: "Profile" },
+  { link: "/profile/settings", name: "Settings" },
+  { link: "/post/makePost", name: "Post" },
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -49,14 +51,14 @@ function ResponsiveAppBar() {
   };
 
   const handleLogout = () => {
-      console.log("logout");
-  }
+    console.log("logout");
+  };
 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -64,18 +66,18 @@ function ResponsiveAppBar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             LOGO
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -90,18 +92,18 @@ function ResponsiveAppBar() {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
@@ -110,11 +112,10 @@ function ResponsiveAppBar() {
                     <Typography textAlign="center">{page.name}</Typography>
                   </MenuItem>
                 </Link>
-
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -122,27 +123,27 @@ function ResponsiveAppBar() {
             href=""
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             LOGO
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Link href={page.link}>
-                  <Button
-                    key={page.link}
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
-                  >
-                    {page.name}
-                  </Button>
+                <Button
+                  key={page.link}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.name}
+                </Button>
               </Link>
             ))}
           </Box>
@@ -154,38 +155,42 @@ function ResponsiveAppBar() {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
                 <Link href={setting.link}>
-                  <MenuItem key={setting.link} onClick={event => {
-                                //console.log("Click!");
-                                //handleSetting(setting);
-                                handleCloseUserMenu();
-                                }}>
-                    <Typography textAlign="center">
-                      {setting.name}
-                    </Typography>
+                  <MenuItem
+                    key={setting.link}
+                    onClick={(event) => {
+                      //console.log("Click!");
+                      //handleSetting(setting);
+                      handleCloseUserMenu();
+                    }}
+                  >
+                    <Typography textAlign="center">{setting.name}</Typography>
                   </MenuItem>
                 </Link>
               ))}
-              <MenuItem onClick={event => {
-                                console.log("Click!");
-                                handleLogout();
-                                handleCloseUserMenu();}}>
+              <MenuItem
+                onClick={(event) => {
+                  console.log("Click!");
+                  handleLogout();
+                  handleCloseUserMenu();
+                }}
+              >
                 Logout
               </MenuItem>
             </Menu>

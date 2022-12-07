@@ -12,7 +12,7 @@ function GenericCard({ postID }) {
 
   return (
     <>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
         <NextLink
           passHref
           href={Routes.posts.post(post.id)}
@@ -35,7 +35,9 @@ function GenericCard({ postID }) {
                 {post.title}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {post.content}
+                {post.content.length > 150
+                  ? post.content.substring(0, 150) + "..."
+                  : post.content}
               </Typography>
             </CardContent>
           </CardActionArea>
