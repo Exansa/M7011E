@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 const router = Router();
 
 export default () => {
-	router.post('/:user', async (req, res, next) => {
+	router.post('/', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -14,21 +14,18 @@ export default () => {
 			serverApi: ServerApiVersion.v1
 		});
 
-		const userId = req?.params?.user;
-
 		try {
-			checkCurrentUser(userId, req.body.user_id);
-			var tag = req.body.tag;
-			tag = generateTag(tag, userId);
-			validateTag(tag);
+			var category = req.body.category;
+			category = generateCategory(category);
+			validateCategory(category);
 
-			const collection = await client.db('blog').collection('tags');
+			const collection = await client.db('blog').collection('categories');
 
-			const result = await collection.insertOne(tag);
+			const result = await collection.insertOne(category);
 
 			result
-				? res.status(200).send(`Tag created successfully`)
-				: res.status(304).send(`Tag not created`);
+				? res.status(200).send(`Category created successfully`)
+				: res.status(304).send(`Category not created`);
 			console.log(result);
 		} catch (err) {
 			if (err instanceof Error) {
@@ -42,7 +39,7 @@ export default () => {
 		client.close();
 	});
 
-	router.patch('/:user/:tag', async (req, res, next) => {
+	router.patch('/:category', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -51,26 +48,28 @@ export default () => {
 			serverApi: ServerApiVersion.v1
 		});
 
-		const userId = req?.params?.user;
-		const tagId = req?.params?.tag;
+		const categoryId = req?.params?.category;
 
 		try {
-			checkCurrentUser(userId, req.body.user_id);
-			var tag = req.body.tag;
-			validateTag(tag);
+			var category = req.body.category;
+			validateCategory(category);
 
-			const collection = await client.db('blog').collection('tags');
-			const query = { _id: new ObjectId(tagId), user_id: userId };
+			const collection = await client.db('blog').collection('categories');
+			const query = { _id: new ObjectId(categoryId) };
 
 			const result = await collection.updateOne(query, {
-				$set: tag
+				$set: category
 			});
 
 			result
 				? res
 						.status(200)
-						.send(`Tag with id ${tagId} updated successfully`)
-				: res.status(304).send(`Tag with id ${tagId} not updated`);
+						.send(
+							`Category with id ${categoryId} updated successfully`
+						)
+				: res
+						.status(304)
+						.send(`Category with id ${categoryId} not updated`);
 			console.log(result);
 		} catch (err) {
 			if (err instanceof Error) {
@@ -86,16 +85,15 @@ export default () => {
 	return router;
 };
 
-function checkCurrentUser(userId: string, userId1: any) {
-	if (userId !== userId1) throw new Error('Not current user. Access denied');
-}
-
-function validateTag(tag: any) {
-	if (!tag.name) throw new Error('Name is not defined, invalid tag');
-}
-function generateTag(tag: any, userId: string): any {
+function generateCategory(category: any): any {
 	return {
-		user_id: userId,
-		name: tag.name
+		name: category.name,
+		description: category.description
 	};
+}
+function validateCategory(category: any) {
+	if (!category.name)
+		throw new Error('Name is not defined, invalid category');
+	if (!category.description)
+		throw new Error('Description is not defined, invalid category');
 }
