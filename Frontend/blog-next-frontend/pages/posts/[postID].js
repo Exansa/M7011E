@@ -1,10 +1,31 @@
 import { Stack, Typography, Button, Avatar, Box } from "@mui/material";
+import PropTypes from "prop-types";
 import { Image } from "mui-image"; //https://github.com/benmneb/mui-image
 import ResponsiveAppBar from "../../resource/components/global/headerBar";
 import posts from "../../data/mock_db/posts";
+import { useRouter } from "next/router";
 
-export default function Post() {
-  const post = posts[0];
+// Post.PropTypes = {
+//   post: PropTypes.shape({
+//     title: PropTypes.string.isRequired,
+//     content: PropTypes.string.isRequired,
+//     image: PropTypes.string.isRequired,
+//   }),
+//   featured: PropTypes.array,
+// };
+
+const Post = () => {
+  // const Post = () => {
+  //   const router = useRouter();
+  //   const { pid } = router.query;
+
+  //   return <p>Post: {pid}</p>;
+  // };
+  let router = useRouter();
+  const { postID } = router.query;
+
+  console.log(postID);
+  const post = posts[postID - 1];
 
   return (
     <>
@@ -28,4 +49,6 @@ export default function Post() {
       </Box>
     </>
   );
-}
+};
+
+export default Post;
