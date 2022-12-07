@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import post from './blog';
 import tag from './tag';
 import category from './category';
+import user from './user';
 
 // Initialize the express engine
 const app: express.Application = express();
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 app.use('/post', post());
 app.use('/tag', tag());
 app.use('/category', category());
+app.use('/user', user());
 
 // Server setup
 app.listen(port, () => {
