@@ -1,12 +1,13 @@
-import NextAuth from 'next-auth'
-import {SessionProviders} from 'next-auth/react'
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 
 const options = {
-  SessionProviders: [
-    SessionProviders.Google({
+  providers: [
+    GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     }),
+
   ],
   debug: false
 }
