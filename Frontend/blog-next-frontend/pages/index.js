@@ -5,8 +5,22 @@ import styles from "../styles/Home.module.css";
 import ResponsiveAppBar from "../resource/components/global/headerBar";
 import GenericCard from "../resource/components/global/card";
 import React from "react";
+import { Box } from "@mui/system";
 
 
+/*{GenericCard(1)};
+
+            {GenericCard(1)};
+
+            {GenericCard(1)};
+
+            {GenericCard(1)};*/
+
+//<GenericCard />
+
+//<GenericCard />
+
+//<GenericCard />
 export default function Home() {
   return (
     <>
@@ -56,13 +70,7 @@ export default function Home() {
             </a>
 
             
-            GenericCard(1);
 
-            <GenericCard />
-
-            <GenericCard />
-
-            <GenericCard />
             
           </div>
         </main>

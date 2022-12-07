@@ -3,8 +3,9 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, CardActions, Button } from "@mui/material";
-import { get_ValueByMatchingKV } from "../../../data/mock_request/db_handler";
-
+//import { get_ValueByMatchingKV } from "../../../data/mock_request/db_handler";
+//{get_ValueByMatchingKV("id", parameter, "title", "posts")};
+//{get_ValueByMatchingKV("id", parameter, "content", "posts")};
 function GenericCard(parameter) {
     return(
         <Card sx={{ maxWidth: 345 }}>
@@ -17,10 +18,10 @@ function GenericCard(parameter) {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {get_ValueByMatchingKV("id", parameter, "title", "posts")};
+              Title
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {get_ValueByMatchingKV("id", parameter, "content", "posts")};
+              Content
             </Typography>
           </CardContent>
         </CardActionArea>
