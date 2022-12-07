@@ -5,22 +5,7 @@ import styles from "../styles/Home.module.css";
 import ResponsiveAppBar from "../resource/components/global/headerBar";
 import GenericCard from "../resource/components/global/card";
 import React from "react";
-import { Box } from "@mui/system";
 
-
-/*{GenericCard(1)};
-
-            {GenericCard(1)};
-
-            {GenericCard(1)};
-
-            {GenericCard(1)};*/
-
-//<GenericCard />
-
-//<GenericCard />
-
-//<GenericCard />
 export default function Home() {
   return (
     <>
@@ -68,10 +53,13 @@ export default function Home() {
               <h2>Examples &rarr;</h2>
               <p>Discover and deploy boilerplate example Next.js projects.</p>
             </a>
+            <GenericCard index={0} />
 
-            
+            <GenericCard index={1} />
 
-            
+            <GenericCard index={2} />
+
+            <GenericCard index={3} />
           </div>
         </main>
 
