@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, Button } from "@mui/material";
+import { Box, Stack, Typography, Button, Grid } from "@mui/material";
 import ResponsiveAppBar from "../../resource/layout/headerBar";
 import Page from "../../resource/layout/page";
 import posts from "../../data/mock_db/posts";
@@ -28,17 +28,13 @@ export default function Browse() {
               Featured
             </Typography>
 
-            <Stack
-              direction="row"
-              flexWrap="wrap"
-              justifyContent="space-between"
-            >
+            <Grid container spacing={3} sx={{ mb: 2 }}>
               {posts.slice(0, maxSlice).map((post) => (
-                <Box sx={{ mx: 1, my: 2 }}>
+                <Grid item flexwrap="wrap">
                   <GenericCard postID={post.id} />
-                </Box>
+                </Grid>
               ))}
-            </Stack>
+            </Grid>
             <Button onClick={handleSliceChange}>Load More</Button>
           </Stack>
         </Box>
