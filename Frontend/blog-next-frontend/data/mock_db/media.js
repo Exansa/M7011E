@@ -33,31 +33,31 @@ const media = [
     id: 6,
     name: "blog_1",
     type: "blog",
-    href: "https://dummyimage.com/1200x630/000/fff&text=blog1",
+    href: "https://dummyimage.com/1200x630/000/fff&text=blogImage1",
   },
   {
     id: 7,
     name: "blog_2",
     type: "blog",
-    href: "https://dummyimage.com/1200x630/000/fff&text=blog2",
+    href: "https://dummyimage.com/1200x630/000/fff&text=blogImage2",
   },
   {
     id: 8,
     name: "blog_3",
     type: "blog",
-    href: "https://dummyimage.com/1200x630/000/fff&text=blog3",
+    href: "https://dummyimage.com/1200x630/000/fff&text=blogImage3",
   },
   {
     id: 9,
     name: "blog_4",
     type: "blog",
-    href: "https://dummyimage.com/1200x630/000/fff&text=blog4",
+    href: "https://dummyimage.com/1200x630/000/fff&text=blogImage4",
   },
   {
     id: 10,
     name: "blog_5",
     type: "blog",
-    href: "https://dummyimage.com/1200x630/000/fff&text=blog5",
+    href: "https://dummyimage.com/1200x630/000/fff&text=blogImage5",
   },
 ];
 
