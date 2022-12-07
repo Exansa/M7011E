@@ -19,7 +19,7 @@ export default () => {
 			user = generateUser(user);
 			validateUser(user);
 
-			const collection = await client.db('blog').collection('tags');
+			const collection = await client.db('blog').collection('users');
 
 			//checkTagExists(collection, tag);
 			const query = { username: user.username };
@@ -45,7 +45,7 @@ export default () => {
 		client.close();
 	});
 
-	router.patch('/:user/:tag', async (req, res, next) => {
+	router.patch('/:user', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -55,35 +55,35 @@ export default () => {
 		});
 
 		const userId = req?.params?.user;
-		const tagId = req?.params?.tag;
 
 		try {
 			checkCurrentUser(userId, req.body.user_id);
-			var tag = req.body.tag;
-			validateUser(tag);
+			var user = req.body.user;
+			formatUser(user);
+			validateUser(user);
 
-			const collection = await client.db('blog').collection('tags');
+			const collection = await client.db('blog').collection('users');
 
 			//checkTagExists(collection, tag);
 			const query1 = {
-				name: tag.name,
-				user_id: userId,
-				_id: { $ne: new ObjectId(tagId) }
+				username: user.username,
+				_id: { $ne: new ObjectId(userId) }
 			};
 			const alreadyExists = await collection.findOne(query1);
 			console.log(alreadyExists);
-			if (alreadyExists) throw new Error('Tag already exists');
+			if (alreadyExists)
+				throw new Error('A user with that username already exists');
 
-			const query = { _id: new ObjectId(tagId), user_id: userId };
+			const query = { _id: new ObjectId(userId) };
 			const result = await collection.updateOne(query, {
-				$set: tag
+				$set: user
 			});
 
 			result
 				? res
 						.status(200)
-						.send(`Tag with id ${tagId} updated successfully`)
-				: res.status(304).send(`Tag with id ${tagId} not updated`);
+						.send(`User with id ${userId} updated successfully`)
+				: res.status(304).send(`User with id ${userId} not updated`);
 			console.log(result);
 		} catch (err) {
 			if (err instanceof Error) {
@@ -112,15 +112,20 @@ function validateUser(user: any) {
 
 function generateUser(user: any): any {
 	return {
-		username: user.username,
-		email: user.email,
-		phone: user.phone,
-		pw: user.pw,
-		profilePicture_id: user.profilePicture_id,
+		...formatUser(user),
 		created_at: new Date()
 	};
 }
 
+function formatUser(user: any): any {
+	return {
+		username: user.username,
+		email: user.email,
+		phone: user.phone,
+		pw: user.pw,
+		profilePicture_id: user.profilePicture_id
+	};
+}
 async function checkTagExists(tag: any, collection: Collection<Document>) {
 	const query = { name: tag.name, user_id: tag.user_id };
 	const alreadyExists = await collection.findOne(query);
