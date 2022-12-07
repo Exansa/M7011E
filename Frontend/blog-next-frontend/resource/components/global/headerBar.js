@@ -18,17 +18,19 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 
+import Routes from "../../routes";
+
 //const pages = ["home", "about", "browse"];
 const pages = [
   { link: "/", name: "Home" },
-  { link: "/posts", name: "Browse" },
+  { link: Routes.posts.index, name: "Browse" },
   { link: "/about", name: "About" },
-  { link: "/post/makePost", name: "Make Post" },
+  { link: Routes.posts.make, name: "Make Post" },
 ];
 const settings = [
   { link: "/profile/", name: "Profile" },
   { link: "/profile/settings", name: "Settings" },
-  { link: "/post/makePost", name: "Post" },
+  { link: Routes.posts.make, name: "Post" },
 ];
 
 function ResponsiveAppBar() {
