@@ -19,15 +19,16 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 
 import Routes from "../../routes";
+import { signOut } from "next-auth/react";
 
 //const pages = ["home", "about", "browse"];
 const pages = [{link: "/",       name: "Home"}, 
                {link: "/browse", name: "Browse"}, 
                {link: "/about",  name: "About"},
-               {link: "/post/makePost",       name: "Make Post"}];
+               {link: "/posts/makePost",       name: "Make Post"}];
 const settings = [{link: "/profile/",         name: "Profile"}, 
                   {link: "/profile/settings", name: "Settings"}, 
-                  {link: "/post/makePost",    name: "Post"}, 
+                  {link: "/posts/makePost",    name: "Post"}, 
                 ];
 
 function ResponsiveAppBar() {
@@ -50,7 +51,7 @@ function ResponsiveAppBar() {
   };
 
   const handleLogout = () => {
-    console.log("logout");
+    signOut();
   };
 
   return (
@@ -183,15 +184,16 @@ function ResponsiveAppBar() {
                   </MenuItem>
                 </Link>
               ))}
-              <MenuItem
-                onClick={(event) => {
-                  console.log("Click!");
-                  handleLogout();
-                  handleCloseUserMenu();
-                }}
-              >
-                Logout
-              </MenuItem>
+                <MenuItem
+                  onClick={(event) => {
+                    signOut({
+                      callbackUrl: `${window.location.origin}`
+                    })
+                    handleCloseUserMenu();
+                  }}
+                >
+                  Logout
+                </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
