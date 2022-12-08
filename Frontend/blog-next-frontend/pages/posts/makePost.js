@@ -1,5 +1,5 @@
-import ResponsiveAppBar from "../../resource/components/global/headerBar";
-import { getSession, useSession } from "next-auth/react"
+import Page from "../../resource/layout/page";
+import { getSession, useSession } from "next-auth/react";
 import AccessDenied from "../../resource/components/accessDenied";
 import axios from "axios";
 import {
@@ -20,7 +20,6 @@ import {
 import * as React from "react";
 import Tags from "../../data/mock_db/tags";
 import Categories from "../../data/mock_db/categories";
-import Page from "../../resource/components/page";
 //import { Category } from "@mui/icons-material";
 
 //import { getCategories } from "../../data/mock_request/db_handler";
@@ -37,9 +36,15 @@ const MenuProps = {
 };
 
 export default function makePost() {
-  
-  
-  
+  const { data: session, status } = useSession();
+
+  if (status === "unauthenticated") {
+    return (
+      <Page>
+        <AccessDenied />
+      </Page>
+    );
+  }
 
   // If no session exists, display access denied message
   //if (!session) { return  <Page><AccessDenied/></Page> }
@@ -73,10 +78,7 @@ export default function makePost() {
   if (status === "unauthenticated"){ return  <Page><AccessDenied/></Page> }
   return (
     <>
-      <Box>
-        <ResponsiveAppBar />
-      </Box>
-      <Box>
+      <Page>
         <Container maxWidth="md">
           <TextField required fullWidth label="Title" margin="normal" />
 
@@ -135,7 +137,7 @@ export default function makePost() {
             Submit
           </Button>
         </Container>
-      </Box>
+      </Page>
     </>
   );
 }

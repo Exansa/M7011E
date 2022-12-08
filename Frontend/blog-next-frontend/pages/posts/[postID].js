@@ -1,8 +1,8 @@
 import { Stack, Typography, Button, Avatar, Box } from "@mui/material";
 import PropTypes from "prop-types";
-import Page from "../../resource/components/page";
+import Page from "../../resource/layout/page";
 import { Image } from "mui-image"; //https://github.com/benmneb/mui-image
-import ResponsiveAppBar from "../../resource/components/global/headerBar";
+import ResponsiveAppBar from "../../resource/layout/headerBar";
 import posts from "../../data/mock_db/posts";
 import { useRouter } from "next/router";
 
@@ -57,7 +57,6 @@ const Post = () => {
   return (
     <>
       <Page title={post.title}>
-        <ResponsiveAppBar />
         <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
           <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
             <Image src={post.image.href} duration={1000} />

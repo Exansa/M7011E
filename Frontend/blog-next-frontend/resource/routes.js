@@ -9,6 +9,7 @@ const Routes = {
     index: "/profile",
     login: "/profile/login",
     register: "/profile/register",
+    settings: "/profile/settings",
     specific: (username) => `/profile/${username}`,
   },
 };

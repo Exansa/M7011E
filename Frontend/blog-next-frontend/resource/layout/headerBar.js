@@ -18,18 +18,22 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 
+import Routes from "../routes";
 import Routes from "../../routes";
 import { signOut } from "next-auth/react";
 
 //const pages = ["home", "about", "browse"];
-const pages = [{link: "/",       name: "Home"}, 
-               {link: "/browse", name: "Browse"}, 
-               {link: "/about",  name: "About"},
-               {link: "/posts/makePost",       name: "Make Post"}];
-const settings = [{link: "/profile/",         name: "Profile"}, 
-                  {link: "/profile/settings", name: "Settings"}, 
-                  {link: "/posts/makePost",    name: "Post"}, 
-                ];
+const pages = [
+  { link: "/", name: "Home" },
+  { link: Routes.posts.index, name: "Browse" },
+  { link: "/about", name: "About" },
+  { link: Routes.posts.make, name: "Make Post" },
+];
+const settings = [
+  { link: Routes.users.index, name: "Profile" },
+  { link: Routes.users.settings, name: "Settings" },
+  { link: Routes.posts.make, name: "Post" },
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
