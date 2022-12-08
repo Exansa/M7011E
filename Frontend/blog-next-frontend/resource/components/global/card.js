@@ -6,10 +6,11 @@ import { CardActionArea, CardActions, Button } from "@mui/material";
 import posts from "../../../data/mock_db/posts";
 import Routes from "../../../resource/routes";
 import NextLink from "next/link";
+import { useSession } from "next-auth/react";
 
 function GenericCard({ postID }) {
   const post = posts[postID - 1];
-
+  const { data: session } = useSession()
   return (
     <>
       <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
@@ -45,6 +46,15 @@ function GenericCard({ postID }) {
             <Button size="small" color="primary">
               Share
             </Button>
+            {session
+              &&(
+                <>
+                  <Button size="small" color="primary">
+                    Edit
+                  </Button>
+                </>
+              )}
+          
           </CardActions>
         </NextLink>
       </Card>

@@ -1,5 +1,5 @@
 import Page from "../../resource/layout/page";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import AccessDenied from "../../resource/components/accessDenied";
 import axios from "axios";
 import {
@@ -35,22 +35,14 @@ const MenuProps = {
   },
 };
 
-export default function makePost() {
-  const { data: session, status } = useSession();
-
-  if (status === "unauthenticated") {
-    return (
-      <Page>
-        <AccessDenied />
-      </Page>
-    );
-  }
+export default function makePost() {  
 
   // If no session exists, display access denied message
   //if (!session) { return  <Page><AccessDenied/></Page> }
 
   const [setCategory] = React.useState("");
   const [tagName, setTagName] = React.useState([]);
+
 
 
   const handleChange = (event) => {
@@ -74,8 +66,8 @@ export default function makePost() {
     axios.put("/api/update", formData).then(console.log).catch(console.log);
   };
 
-  const { data: session,status } = useSession()
-  if (status === "unauthenticated"){ return  <Page><AccessDenied/></Page> }
+  const { data: session } = useSession()
+  if (session){ return  <Page><AccessDenied/></Page> }
   return (
     <>
       <Page>
