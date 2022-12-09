@@ -14,18 +14,15 @@ export default () => {
 			serverApi: ServerApiVersion.v1
 		});
 
-		const userId = req?.params?.user;
-
 		try {
-			checkCurrentUser(userId, req.body.user_id);
 			var tag = req.body.tag;
-			tag = generateTag(tag, userId);
+			tag = generateTag(tag);
 			validateTag(tag);
 
 			const collection = await client.db('blog').collection('tags');
 
 			//checkTagExists(collection, tag);
-			const query = { name: tag.name, user_id: tag.user_id };
+			const query = { name: tag.name };
 			const alreadyExists = await collection.findOne(query);
 			if (alreadyExists) throw new Error('Tag already exists');
 
@@ -47,7 +44,7 @@ export default () => {
 		client.close();
 	});
 
-	router.patch('/:user/:tag', async (req, res, next) => {
+	router.patch('/:tag', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -56,11 +53,9 @@ export default () => {
 			serverApi: ServerApiVersion.v1
 		});
 
-		const userId = req?.params?.user;
 		const tagId = req?.params?.tag;
 
 		try {
-			checkCurrentUser(userId, req.body.user_id);
 			var tag = req.body.tag;
 			validateTag(tag);
 
@@ -69,14 +64,13 @@ export default () => {
 			//checkTagExists(collection, tag);
 			const query1 = {
 				name: tag.name,
-				user_id: userId,
 				_id: { $ne: new ObjectId(tagId) }
 			};
 			const alreadyExists = await collection.findOne(query1);
 			console.log(alreadyExists);
 			if (alreadyExists) throw new Error('Tag already exists');
 
-			const query = { _id: new ObjectId(tagId), user_id: userId };
+			const query = { _id: new ObjectId(tagId) };
 			const result = await collection.updateOne(query, {
 				$set: tag
 			});
@@ -101,22 +95,17 @@ export default () => {
 	return router;
 };
 
-function checkCurrentUser(userId: string, userId1: any) {
-	if (userId !== userId1) throw new Error('Not current user. Access denied');
-}
-
 function validateTag(tag: any) {
 	if (!tag.name) throw new Error('Name is not defined, invalid tag');
 }
-function generateTag(tag: any, userId: string): any {
+function generateTag(tag: any): any {
 	return {
-		user_id: userId,
 		name: tag.name
 	};
 }
 
 async function checkTagExists(tag: any, collection: Collection<Document>) {
-	const query = { name: tag.name, user_id: tag.user_id };
+	const query = { name: tag.name };
 	const alreadyExists = await collection.findOne(query);
 	if (alreadyExists) throw new Error('Tag already exists');
 }
