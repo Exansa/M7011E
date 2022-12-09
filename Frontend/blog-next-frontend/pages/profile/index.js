@@ -10,14 +10,11 @@ export function Profile() {
   return (
     <>
       <Page title={"Profile: " + currentUser.username}>
-        <Box justifyContent={"flex-start"} sx={{ mx: 4, my: 4 }}>
-          <Stack
-            direction="column"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-            spacing={2}
-          >
-            <UserCard user={currentUser} />
+        <Box sx={{ minHeight: "80vh", top: 0, my: 4, mx: 4 }}>
+          <Stack direction="column" spacing={2}>
+            <Box sx={{ top: 0 }}>
+              <UserCard user={currentUser} />
+            </Box>
             <ProfileTabs user={currentUser} />
           </Stack>
         </Box>
