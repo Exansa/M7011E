@@ -19,6 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 
 import Routes from "../routes";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 //const pages = ["home", "about", "browse"];
 const pages = [
@@ -53,9 +54,10 @@ function ResponsiveAppBar() {
   };
 
   const handleLogout = () => {
-    console.log("logout");
+    signOut();
   };
 
+  const {data: session} = useSession();
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -78,8 +80,17 @@ function ResponsiveAppBar() {
           >
             LOGO
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -149,29 +160,31 @@ function ResponsiveAppBar() {
               </Link>
             ))}
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+              <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+              {session
+              ?(
+              <>
               {settings.map((setting) => (
                 <Link href={setting.link}>
                   <MenuItem
@@ -186,17 +199,29 @@ function ResponsiveAppBar() {
                   </MenuItem>
                 </Link>
               ))}
-              <MenuItem
-                onClick={(event) => {
-                  console.log("Click!");
-                  handleLogout();
-                  handleCloseUserMenu();
-                }}
-              >
-                Logout
+                <MenuItem
+                  onClick={(event) => {
+                    signOut({
+                      callbackUrl: `${window.location.origin}`
+                    })
+                    handleCloseUserMenu();
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </>)
+              :(
+              <MenuItem onClick={(event) => {
+                signIn({
+                  callbackUrl: `${window.location.origin}`
+                })
+                handleCloseUserMenu();
+              }}>
+                Sign in
               </MenuItem>
-            </Menu>
-          </Box>
+              )}
+              </Menu>             
+          </Box>          
         </Toolbar>
       </Container>
     </AppBar>
