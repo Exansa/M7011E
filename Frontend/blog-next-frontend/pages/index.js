@@ -1,7 +1,5 @@
-import styles from "../styles/Home.module.css";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 
-import ResponsiveAppBar from "../resource/layout/headerBar";
 import GenericCard from "../resource/components/global/card";
 import React from "react";
 import Page from "../resource/layout/page";
@@ -12,20 +10,23 @@ export default function Home() {
       <Page title="Index">
         <Box mx={"10%"} my="10%">
           <Typography variant="h1"> Welcome to the blog! </Typography>
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            justifyContent="space-between"
-            alignContent={"center"}
-          >
-            <GenericCard postID={1} />
+          <Grid container spacing={3} sx={{ mb: 2 }}>
+            <Grid item flexwrap="wrap">
+              <GenericCard postID={1} />
+            </Grid>
 
-            <GenericCard postID={2} />
+            <Grid item flexwrap="wrap">
+              <GenericCard postID={2} />
+            </Grid>
 
-            <GenericCard postID={3} />
+            <Grid item flexwrap="wrap">
+              <GenericCard postID={3} />
+            </Grid>
 
-            <GenericCard postID={4} />
-          </Stack>
+            <Grid item flexwrap="wrap">
+              <GenericCard postID={4} />
+            </Grid>
+          </Grid>
         </Box>
       </Page>
     </>
