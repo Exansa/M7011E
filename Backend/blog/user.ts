@@ -19,14 +19,9 @@ export default () => {
 			user = generateUser(user);
 			validateUser(user);
 
+			await checkUserTaken(user, client);
+
 			const collection = await client.db('blog').collection('users');
-
-			//checkTagExists(collection, tag);
-			const query = { username: user.username };
-			const alreadyExists = await collection.findOne(query);
-			if (alreadyExists)
-				throw new Error('A user with that username already exists');
-
 			const result = await collection.insertOne(user);
 
 			result
@@ -104,6 +99,8 @@ export default () => {
 			formatUser(user);
 			validateUser(user);
 
+			await checkAccess(userId, user, client);
+
 			const collection = await client.db('blog').collection('users');
 
 			//checkTagExists(collection, tag);
@@ -168,8 +165,21 @@ function formatUser(user: any): any {
 		profilePicture_id: user.profilePicture_id
 	};
 }
-async function checkTagExists(tag: any, collection: Collection<Document>) {
-	const query = { name: tag.name, user_id: tag.user_id };
+
+async function checkUserTaken(user: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('users');
+	const query = {
+		$or: [
+			{ username: user.username },
+			{ email: user.email },
+			{ phone: user.phone }
+		]
+	};
 	const alreadyExists = await collection.findOne(query);
-	if (alreadyExists) throw new Error('Tag already exists');
+	if (alreadyExists)
+		throw new Error('A user with those credentials already exists');
+}
+function checkAccess(userId: string, user: any, client: MongoClient) {
+	//TODO
+	throw new Error('Function not implemented.');
 }
