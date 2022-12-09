@@ -5,6 +5,7 @@ import { Image } from "mui-image"; //https://github.com/benmneb/mui-image
 import ResponsiveAppBar from "../../resource/layout/headerBar";
 import posts from "../../data/mock_db/posts";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 // Post.PropTypes = {
 //   post: PropTypes.shape({
@@ -54,6 +55,7 @@ const Post = () => {
   console.log(postID);
   const post = posts[postID - 1];
 
+  const { data: session } = useSession()
   return (
     <>
       <Page title={post.title}>
@@ -73,6 +75,12 @@ const Post = () => {
               {post.content}
             </Typography>
           </Stack>
+          {/*{session
+          &&(
+          <Button>
+            Edit
+          </Button>
+          )}*/}
         </Box>
       </Page>
     </>

@@ -67,7 +67,7 @@ export default function makePost() {
   };
 
   const { data: session } = useSession()
-  if (session){ return  <Page><AccessDenied/></Page> }
+  if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     <>
       <Page>
