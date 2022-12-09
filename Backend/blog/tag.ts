@@ -69,7 +69,7 @@ export default () => {
 				$set: tag
 			});
 
-			result
+			result && result.modifiedCount
 				? res
 						.status(200)
 						.send(`Tag with id ${tagId} updated successfully`)
