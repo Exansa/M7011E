@@ -29,7 +29,7 @@ export default () => {
 			//check admin exists
 			await checkAdminExists(admin, client);
 
-			const collection = await client.db('blog').collection('admin');
+			const collection = await client.db('blog').collection('admins');
 			const result = await collection.insertOne(admin);
 
 			result
@@ -68,7 +68,7 @@ export default () => {
 			//check access
 			await checkAccess(userId, client);
 
-			const collection = await client.db('blog').collection('admin');
+			const collection = await client.db('blog').collection('admins');
 			const query = {
 				_id: new ObjectId(adminId),
 				user_id: admin.user_id
@@ -115,7 +115,7 @@ export default () => {
 			//check access
 			await checkAccess(userId, client);
 
-			const collection = await client.db('blog').collection('admin');
+			const collection = await client.db('blog').collection('admins');
 			const query = { _id: new ObjectId(adminId) };
 			const result = await collection.deleteOne(query);
 
@@ -157,7 +157,7 @@ function generateAdmin(admin: any): any {
 }
 
 async function checkAccess(userId: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('admin');
+	const collection = await client.db('blog').collection('admins');
 	const query = { user_id: userId };
 	const result = await collection.findOne(query);
 	if (!result || result.access != 'superAdmin')
@@ -170,7 +170,7 @@ async function checkUserExists(admin: any, client: MongoClient) {
 	if (!result) throw new Error('User does not exist');
 }
 async function checkAdminExists(admin: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('admin');
+	const collection = await client.db('blog').collection('admins');
 	const query = { user_id: admin.user_id };
 	const alreadyExists = await collection.findOne(query);
 	if (alreadyExists) throw new Error('Admin already exists');

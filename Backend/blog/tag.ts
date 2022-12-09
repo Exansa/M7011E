@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 const router = Router();
 
 export default () => {
-	router.post('/:user', async (req, res, next) => {
+	router.post('/', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -15,17 +15,16 @@ export default () => {
 		});
 
 		try {
+			var userId = req.body.user_id;
 			var tag = req.body.tag;
 			tag = generateTag(tag);
 			validateTag(tag);
 
+			await checkAccess(userId, client);
+
+			await checkTagExists(tag, client);
+
 			const collection = await client.db('blog').collection('tags');
-
-			//checkTagExists(collection, tag);
-			const query = { name: tag.name };
-			const alreadyExists = await collection.findOne(query);
-			if (alreadyExists) throw new Error('Tag already exists');
-
 			const result = await collection.insertOne(tag);
 
 			result
@@ -56,20 +55,15 @@ export default () => {
 		const tagId = req?.params?.tag;
 
 		try {
+			var userId = req.body.user_id;
 			var tag = req.body.tag;
 			validateTag(tag);
 
+			await checkAccess(userId, client);
+
+			await checkUniuqeTag(tag, tagId, client);
+
 			const collection = await client.db('blog').collection('tags');
-
-			//checkTagExists(collection, tag);
-			const query1 = {
-				name: tag.name,
-				_id: { $ne: new ObjectId(tagId) }
-			};
-			const alreadyExists = await collection.findOne(query1);
-			console.log(alreadyExists);
-			if (alreadyExists) throw new Error('Tag already exists');
-
 			const query = { _id: new ObjectId(tagId) };
 			const result = await collection.updateOne(query, {
 				$set: tag
@@ -104,8 +98,24 @@ function generateTag(tag: any): any {
 	};
 }
 
-async function checkTagExists(tag: any, collection: Collection<Document>) {
+async function checkTagExists(tag: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('tags');
 	const query = { name: tag.name };
 	const alreadyExists = await collection.findOne(query);
 	if (alreadyExists) throw new Error('Tag already exists');
+}
+async function checkAccess(userId: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('admins');
+	const query = { user_id: userId };
+	const result = await collection.findOne(query);
+	if (!result) throw new Error('Access denied');
+}
+async function checkUniuqeTag(tag: any, tagId: string, client: MongoClient) {
+	const collection = await client.db('blog').collection('tags');
+	const query1 = {
+		name: tag.name,
+		_id: { $ne: new ObjectId(tagId) }
+	};
+	const alreadyExists = await collection.findOne(query1);
+	if (alreadyExists) throw new Error('Tag with that name already exists');
 }
