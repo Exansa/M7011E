@@ -94,25 +94,15 @@ export default () => {
 		const userId = req?.params?.user;
 
 		try {
-			checkCurrentUser(userId, req.body.user_id);
+			var currentUser = req.body.user_id;
 			var user = req.body.user;
 			formatUser(user);
 			validateUser(user);
 
-			await checkAccess(userId, user, client);
+			await checkAccess(currentUser, userId, user, client);
+			await checkUserTaken(user, client);
 
 			const collection = await client.db('blog').collection('users');
-
-			//checkTagExists(collection, tag);
-			const query1 = {
-				username: user.username,
-				_id: { $ne: new ObjectId(userId) }
-			};
-			const alreadyExists = await collection.findOne(query1);
-			console.log(alreadyExists);
-			if (alreadyExists)
-				throw new Error('A user with that username already exists');
-
 			const query = { _id: new ObjectId(userId) };
 			const result = await collection.updateOne(query, {
 				$set: user
@@ -135,12 +125,53 @@ export default () => {
 		}
 		client.close();
 	});
+
+	router.delete('/:user', async (req, res, next) => {
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		const userId = req?.params?.user;
+
+		try {
+			var currentUser = req.body.user_id;
+			var user = req.body.user;
+			formatUser(user);
+
+			await checkAccess(currentUser, userId, user, client);
+
+			const collection = await client.db('blog').collection('users');
+			const query = { _id: new ObjectId(userId) };
+			const result = await collection.deleteOne(query);
+
+			if (result && result.deletedCount) {
+				res.status(202).send(
+					`Successfully removed post with id ${userId}`
+				);
+			} else if (!result) {
+				res.status(400).send(`Failed to remove post with id ${userId}`);
+			} else if (!result.deletedCount) {
+				res.status(404).send(`Post with id ${userId} does not exist`);
+			}
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+
+		client.close();
+	});
+
 	return router;
 };
-
-function checkCurrentUser(userId: string, userId1: any) {
-	if (userId !== userId1) throw new Error('Not current user. Access denied');
-}
 
 function validateUser(user: any) {
 	if (!user.username) throw new Error('Name is not defined, invalid user');
@@ -179,7 +210,16 @@ async function checkUserTaken(user: any, client: MongoClient) {
 	if (alreadyExists)
 		throw new Error('A user with those credentials already exists');
 }
-function checkAccess(userId: string, user: any, client: MongoClient) {
-	//TODO
-	throw new Error('Function not implemented.');
+async function checkAccess(
+	currentUser: string,
+	userId: string,
+	user: any,
+	client: MongoClient
+) {
+	if (userId == user.user_id) return;
+	const collection = await client.db('blog').collection('admin');
+	const query = { user_id: currentUser };
+	const admin = await collection.findOne(query);
+	if (admin != null && admin.access == 'superAdmin') return;
+	throw new Error('Access denied');
 }
