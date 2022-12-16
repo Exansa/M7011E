@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Browse extends StatelessWidget {
+class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
