@@ -43,7 +43,7 @@ export default () => {
 		client.close();
 	});
 
-	router.get('/:user', async (req, res, next) => {
+	router.get('/user/:user', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 		const client = new MongoClient(uri, {
@@ -58,33 +58,86 @@ export default () => {
 			const collection = await client.db('blog').collection('posts');
 			const query = { user_id: userId };
 
-			var myCursor = await collection.findOne(query);
-			console.log('my  cursor: ' + myCursor);
+			var myCursor = await collection.find(query);
+			const result = await myCursor.toArray();
 
-			//TODO: find a way to iterate through the cursor
-
-			/*
-            var runCursor = function (cursor : MongoCursor){
-                cursor.next(function(error : any, record : any){
-
-			if (myCursor != null) {
-				var myDocument = myCursor.next();
-				console.log('my document: ' + myDocument);
-				if (myDocument) {
-					var title = myDocument.title;
-					console.log('title: ' + title);
-				}
-			} else {
-				console.log('No document found');
-			}*/
-
-			const result = null;
 			result
 				? res.status(200).send(result)
 				: res
 						.status(304)
 						.send(`Blogposts form user ${userId} not retrieved`);
-			//console.log(result);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+		client.close();
+	});
+
+	router.get('/category/:category', async (req, res, next) => {
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		const categoryId = req?.params?.category;
+
+		try {
+			const collection = await client.db('blog').collection('posts');
+			const query = { categories_id: { $all: [categoryId] } };
+
+			var myCursor = await collection.find(query);
+			const result = await myCursor.toArray();
+
+			result
+				? res.status(200).send(result)
+				: res
+						.status(304)
+						.send(
+							`Blogposts form user ${categoryId} not retrieved`
+						);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+		client.close();
+	});
+
+	router.get('/tag/:tag', async (req, res, next) => {
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		const tagId = req?.params?.tag;
+
+		try {
+			const collection = await client.db('blog').collection('posts');
+			const query = { tags_id: { $all: [tagId] } };
+
+			var myCursor = await collection.find(query);
+			const result = await myCursor.toArray();
+
+			result
+				? res.status(200).send(result)
+				: res
+						.status(304)
+						.send(`Blogposts form user ${tagId} not retrieved`);
 		} catch (err) {
 			if (err instanceof Error) {
 				console.error(err.message);
