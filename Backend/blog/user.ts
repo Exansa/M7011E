@@ -40,6 +40,40 @@ export default () => {
 		client.close();
 	});
 
+	router.get('', async (req, res, next) => {
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		try {
+			const collection = await client.db('blog').collection('users');
+			var myCursor = await collection.find(
+				{},
+				{
+					projection: { pw: 0 }
+				}
+			);
+			const result = await myCursor.toArray();
+
+			result
+				? res.status(200).send(result)
+				: res.status(304).send(`Blogposts not retrieved`);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+		client.close();
+	});
+
 	router.get('/:user', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';

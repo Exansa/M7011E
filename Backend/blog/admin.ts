@@ -48,6 +48,44 @@ export default () => {
 		client.close();
 	});
 
+	router.get('', async (req, res, next) => {
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		try {
+			var userId = req.body.user_id;
+			var admin = req.body.admin;
+			admin = generateAdmin(admin);
+			validateAdmin(admin);
+
+			//check access
+			await checkAccess(userId, client);
+
+			const collection = await client.db('blog').collection('admins');
+			const myCursor = await collection.find();
+			const result = await myCursor.toArray();
+
+			result
+				? res.status(200).send(result)
+				: res.status(304).send('Could not retrieve admins');
+			console.log(result);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.error(err.message);
+				res.status(400).send(err.message);
+			} else {
+				console.log('Unexpected error', err);
+				res.status(400).send('Unexpected error');
+			}
+		}
+		client.close();
+	});
+
 	router.patch('/:admin', async (req, res, next) => {
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
