@@ -3,7 +3,7 @@
 // Import the express in typescript file
 import express from 'express';
 import bodyParser from 'body-parser';
-import post from './blog';
+import post from './post';
 import tag from './tag';
 import category from './category';
 import user from './user';
