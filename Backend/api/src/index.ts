@@ -38,9 +38,9 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/test', Test(rabbitmq.channel('test')));
+app.use('/test', Test(rabbitmq));
 
 // Start the Server
 app.listen(PORT, async () => {
-	console.log(`Server started at url http://localhost:${PORT}/`);
+	console.info(`Server started at url http://localhost:${PORT}/`);
 });
