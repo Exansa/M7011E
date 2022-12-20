@@ -8,6 +8,7 @@ import tag from './tag';
 import category from './category';
 import user from './user';
 import admin from './admin';
+import media from './media';
 
 // Initialize the express engine
 const app: express.Application = express();
@@ -23,6 +24,7 @@ app.use('/tag', tag());
 app.use('/category', category());
 app.use('/user', user());
 app.use('/admin', admin());
+app.use('/media', media());
 
 // Server setup
 app.listen(port, () => {
