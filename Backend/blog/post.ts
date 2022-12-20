@@ -336,7 +336,6 @@ function generatePost(inPost: any, userId: string) {
 		created_at: new Date(),
 		content: inPost.content,
 		user_id: userId,
-		location_id: inPost.location_id,
 		categories_id: inPost.categories_id,
 		tags_id: inPost.tags_id,
 		media_id: inPost.media_id
