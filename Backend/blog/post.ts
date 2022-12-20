@@ -54,7 +54,7 @@ export default () => {
 
 		try {
 			const collection = await client.db('blog').collection('posts');
-			var myCursor = await collection.find();
+			var myCursor = await collection.find().sort({ created_at: -1 });
 			const result = await myCursor.toArray();
 
 			result
@@ -87,7 +87,9 @@ export default () => {
 			const collection = await client.db('blog').collection('posts');
 			const query = { user_id: userId };
 
-			var myCursor = await collection.find(query);
+			var myCursor = await collection
+				.find(query)
+				.sort({ created_at: -1 });
 			const result = await myCursor.toArray();
 
 			result
@@ -122,7 +124,9 @@ export default () => {
 			const collection = await client.db('blog').collection('posts');
 			const query = { categories_id: { $all: [categoryId] } };
 
-			var myCursor = await collection.find(query);
+			var myCursor = await collection
+				.find(query)
+				.sort({ created_at: -1 });
 			const result = await myCursor.toArray();
 
 			result
@@ -159,7 +163,9 @@ export default () => {
 			const collection = await client.db('blog').collection('posts');
 			const query = { tags_id: { $all: [tagId] } };
 
-			var myCursor = await collection.find(query);
+			var myCursor = await collection
+				.find(query)
+				.sort({ created_at: -1 });
 			const result = await myCursor.toArray();
 
 			result
