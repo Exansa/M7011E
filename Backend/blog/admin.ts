@@ -67,7 +67,15 @@ export default () => {
 			await checkAccess(userId, client);
 
 			const collection = await client.db('blog').collection('admins');
-			const myCursor = await collection.find();
+
+			var set = req.body.set;
+			set ? set : (set = 1);
+
+			const myCursor = await collection
+				.find()
+				.sort({ _id: 1 })
+				.skip((set - 1) * 10)
+				.limit(10);
 			const result = await myCursor.toArray();
 
 			result

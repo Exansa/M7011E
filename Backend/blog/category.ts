@@ -53,8 +53,14 @@ export default () => {
 		});
 
 		try {
+			var set = req.body.set;
+			set ? set : (set = 1);
 			const collection = await client.db('blog').collection('categories');
-			var myCursor = await collection.find();
+			var myCursor = await collection
+				.find()
+				.sort({ _id: 1 })
+				.skip((set - 1) * 10)
+				.limit(10);
 			const result = await myCursor.toArray();
 
 			result
