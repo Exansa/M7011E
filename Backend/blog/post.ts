@@ -53,8 +53,14 @@ export default () => {
 		});
 
 		try {
+			var set = req.body.set;
+			set ? set : (set = 1);
 			const collection = await client.db('blog').collection('posts');
-			var myCursor = await collection.find().sort({ created_at: -1 });
+			var myCursor = await collection
+				.find()
+				.sort({ created_at: -1 })
+				.skip((set - 1) * 10)
+				.limit(10);
 			const result = await myCursor.toArray();
 
 			result
@@ -84,12 +90,16 @@ export default () => {
 		const userId = req?.params?.user;
 
 		try {
+			var set = req.body.set;
+			set ? set : (set = 1);
 			const collection = await client.db('blog').collection('posts');
 			const query = { user_id: userId };
 
 			var myCursor = await collection
 				.find(query)
-				.sort({ created_at: -1 });
+				.sort({ created_at: -1 })
+				.skip((set - 1) * 10)
+				.limit(10);
 			const result = await myCursor.toArray();
 
 			result
@@ -121,12 +131,16 @@ export default () => {
 		const categoryId = req?.params?.category;
 
 		try {
+			var set = req.body.set;
+			set ? set : (set = 1);
 			const collection = await client.db('blog').collection('posts');
 			const query = { categories_id: { $all: [categoryId] } };
 
 			var myCursor = await collection
 				.find(query)
-				.sort({ created_at: -1 });
+				.sort({ created_at: -1 })
+				.skip((set - 1) * 10)
+				.limit(10);
 			const result = await myCursor.toArray();
 
 			result
@@ -160,12 +174,16 @@ export default () => {
 		const tagId = req?.params?.tag;
 
 		try {
+			var set = req.body.set;
+			set ? set : (set = 1);
 			const collection = await client.db('blog').collection('posts');
 			const query = { tags_id: { $all: [tagId] } };
 
 			var myCursor = await collection
 				.find(query)
-				.sort({ created_at: -1 });
+				.sort({ created_at: -1 })
+				.skip((set - 1) * 10)
+				.limit(10);
 			const result = await myCursor.toArray();
 
 			result
