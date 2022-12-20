@@ -80,7 +80,7 @@ export default () => {
 
 			const array = await myCursor.toArray();
 
-			const result = await aggregateAdmins(array, client);
+			const result = await getUserFromAdmins(array, client);
 
 			result
 				? res.status(200).send(result)
@@ -226,7 +226,10 @@ async function checkAdminExists(admin: any, client: MongoClient) {
 	if (alreadyExists) throw new Error('Admin already exists');
 }
 
-async function aggregateAdmins(array: WithId<Document>[], client: MongoClient) {
+async function getUserFromAdmins(
+	array: WithId<Document>[],
+	client: MongoClient
+) {
 	for (let i = 0; i < array.length; i++) {
 		const collection = await client.db('blog').collection('users');
 		const query = {

@@ -1,6 +1,6 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import { Router, Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
 const router = Router();
 
@@ -100,7 +100,9 @@ export default () => {
 				.sort({ created_at: -1 })
 				.skip((set - 1) * 10)
 				.limit(10);
-			const result = await myCursor.toArray();
+			const array = await myCursor.toArray();
+
+			const result = await getUserFromPost(array, client);
 
 			result
 				? res.status(200).send(result)
@@ -349,4 +351,17 @@ function validatePost(post: any) {
 	if (!post.content) throw new Error('Content is required');
 	if (!post.created_at) throw new Error('Created at is required');
 	if (!post.user_id) throw new Error('User id is required');
+}
+
+async function getUserFromPost(array: any, client: MongoClient) {
+	for (let i = 0; i < array.length; i++) {
+		const collection = await client.db('blog').collection('users');
+		const query = {
+			_id: new ObjectId(array[i].user_id)
+		};
+		const result = await collection.findOne(query);
+		array[i].user = result;
+		console.log(array);
+	}
+	return array;
 }
