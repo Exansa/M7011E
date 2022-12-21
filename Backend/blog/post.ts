@@ -61,7 +61,9 @@ export default () => {
 				.sort({ created_at: -1 })
 				.skip((set - 1) * 10)
 				.limit(10);
-			const result = await myCursor.toArray();
+			const array = await myCursor.toArray();
+
+			const result = await getDataFromPost(array, client);
 
 			result
 				? res.status(200).send(result)
@@ -102,7 +104,7 @@ export default () => {
 				.limit(10);
 			const array = await myCursor.toArray();
 
-			const result = await getUserFromPost(array, client);
+			const result = await getDataFromPost(array, client);
 
 			result
 				? res.status(200).send(result)
@@ -143,7 +145,9 @@ export default () => {
 				.sort({ created_at: -1 })
 				.skip((set - 1) * 10)
 				.limit(10);
-			const result = await myCursor.toArray();
+			const array = await myCursor.toArray();
+
+			const result = await getDataFromPost(array, client);
 
 			result
 				? res.status(200).send(result)
@@ -186,7 +190,9 @@ export default () => {
 				.sort({ created_at: -1 })
 				.skip((set - 1) * 10)
 				.limit(10);
-			const result = await myCursor.toArray();
+			const array = await myCursor.toArray();
+
+			const result = await getDataFromPost(array, client);
 
 			result
 				? res.status(200).send(result)
@@ -221,7 +227,9 @@ export default () => {
 			const collection = await client.db('blog').collection('posts');
 			const query = { _id: new ObjectId(postId), user_id: userId };
 
-			const result = await collection.findOne(query);
+			const array = [await collection.findOne(query)];
+
+			const result = await getDataFromPost(array, client);
 
 			result
 				? res.status(200).send(result)
@@ -353,15 +361,56 @@ function validatePost(post: any) {
 	if (!post.user_id) throw new Error('User id is required');
 }
 
-async function getUserFromPost(array: any, client: MongoClient) {
-	for (let i = 0; i < array.length; i++) {
-		const collection = await client.db('blog').collection('users');
+async function getDataFromPost(array: any, client: MongoClient) {
+	const arrayLength = array?.length ?? 0;
+	for (let i = 0; i < arrayLength; i++) {
+		var collection = await client.db('blog').collection('users');
 		const query = {
 			_id: new ObjectId(array[i].user_id)
 		};
-		const result = await collection.findOne(query);
+		const result = await collection.findOne(query, {
+			projection: { username: 1 }
+		});
 		array[i].user = result;
-		console.log(array);
+
+		collection = await client.db('blog').collection('categories');
+		var categoryLength = array[i].categories_id?.length ?? 0;
+		array[i].categories = [];
+		for (let j = 0; j < categoryLength; j++) {
+			const query = {
+				_id: new ObjectId(array[i].categories_id[j])
+			};
+			const result = await collection.findOne(query, {
+				projection: { name: 1 }
+			});
+			array[i].categories[j] = result;
+		}
+
+		collection = await client.db('blog').collection('tags');
+		var tagsLength = array[i].tags_id?.length ?? 0;
+		array[i].tags = [];
+		for (let j = 0; j < tagsLength; j++) {
+			const query = {
+				_id: new ObjectId(array[i].tags_id[j])
+			};
+			const result = await collection.findOne(query, {
+				projection: { name: 1 }
+			});
+			array[i].tags[j] = result ?? null;
+		}
+
+		collection = await client.db('blog').collection('media');
+		var mediaLength = array[i].media_id?.length ?? 0;
+		array[i].media = [];
+		for (let j = 0; j < mediaLength; j++) {
+			const query = {
+				_id: new ObjectId(array[i].media_id[j])
+			};
+			const result = await collection.findOne(query, {
+				projection: { href: 1 }
+			});
+			array[i].media[j] = result ?? null;
+		}
 	}
 	return array;
 }
