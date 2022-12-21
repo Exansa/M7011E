@@ -44,7 +44,7 @@ const app: express.Application = express();
 const PORT = process.env.PORT ?? 8080;
 
 const rabbitmq = new Rabbitmq();
-rabbitmq.listen('$SERVICE_NAME', async (message: any) => {
+rabbitmq.listen('$SERVICE_NAME', async (message) => {
 	return { success: true, response: message.content.toString() };
 });
 

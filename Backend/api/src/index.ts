@@ -11,6 +11,7 @@ import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 
 // Routes imports
 import Test from './routes/test';
+import User from './routes/user';
 import Auth from './routes/auth';
 
 // Configs
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/test', Test(rabbitmq));
+app.use('/user', User(rabbitmq));
 app.use('/auth', Auth(rabbitmq));
 
 app.get('/healthcheck', (_req, _res) => {
