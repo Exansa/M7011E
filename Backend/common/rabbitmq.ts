@@ -1,4 +1,6 @@
-import amqp from 'amqplib';
+'use strict';
+
+import amqp, { ConsumeMessage } from 'amqplib';
 import { v4 as uuidv4 } from 'uuid';
 
 const HOST = process.env.NODE_ENV === 'production' ? 'rabbitmq' : 'localhost';
@@ -33,7 +35,7 @@ export default class Rabbitmq {
 		});
 
 		return new Promise((resolve, _) => {
-			channel.consume(rpcQueue.queue, (msg) => {
+			channel.consume(rpcQueue.queue, (msg: any) => {
 				if (msg) {
 					if (msg.properties.correlationId === correlationId) {
 						const content = msg.content.toString();
@@ -56,17 +58,21 @@ export default class Rabbitmq {
 	 */
 	listen = async (
 		queue: string,
-		method: () => { success: boolean; response: string }
+		method: (message: ConsumeMessage) => Promise<{
+			success: boolean;
+			response: string;
+		}>
 	): Promise<void> => {
 		try {
 			const connection = await amqp.connect(AMQP_SERVER);
 			const channel = await connection.createChannel();
+			await channel.assertQueue(queue);
 
-			await channel.consume(queue, (data) => {
+			await channel.consume(queue, async (data: any) => {
 				if (data) {
 					channel.sendToQueue(
 						data?.properties.replyTo,
-						Buffer.from(JSON.stringify(method())),
+						Buffer.from(JSON.stringify(await method(data))),
 						{
 							correlationId: data.properties.correlationId
 						}

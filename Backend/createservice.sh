@@ -28,49 +28,54 @@ mkdir $SERVICE_NAME
 cd $SERVICE_NAME
 
 npm init -y
-npm i express
+npm i express amqplib uuid
 npm i typescript ts-node nodemon @types/node @types/express eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier eslint-config-prettier eslint-plugin-prettier --save-dev
 mkdir src
 
 # Create boilerplate files
-cat > index.ts << EOF
+cat > src/index.ts << EOF
 'use strict';
 
-// Import the express in typescript file
 import express from 'express';
+import Rabbitmq from '../../common/rabbitmq';
 
-// Initialize the express engine
 const app: express.Application = express();
 
-// Take a port 8080 for running server.
-const port = 8080;
+const PORT = process.env.PORT ?? 8080;
 
-// Handling '/' Request
-app.get('/', (_req, _res) => {
-    _res.send("TypeScript With Express");
+const rabbitmq = new Rabbitmq();
+rabbitmq.listen('$SERVICE_NAME', async (message: any) => {
+	return { success: true, response: message.content.toString() };
+});
+
+app.get('/healthcheck', (_req, _res) => {
+	_res.send({ status: 'ok' });
 });
 
 // Server setup
-app.listen(port, () => {
-    console.log(\`TypeScript with Express http://localhost:\${port}/\`);
+app.listen(PORT, () => {
+	console.info(`Started service $SERVICE_NAME`);
 });
+
 EOF
 
 cat > tsconfig.json << EOF
 {
     "compilerOptions": {
         "target": "es6",
-        "module": "commonjs",
-        "rootDir": "./",
-        "outDir": "./build",
-        "esModuleInterop": true,
-        "strict": true
+		"module": "commonjs",
+		"rootDirs": ["./src", "../common"],
+		"outDir": "./build",
+		"esModuleInterop": true,
+		"moduleResolution": "node",
+		"strict": true,
+		"forceConsistentCasingInFileNames": true
     }
 }
 EOF
 
 # Add scripts to package.json
-awk '/scripts/ { print; print "\t\t\"start\": \"nodemon index.ts\",\n\t\t\"build\": \"tsc\","; next }1' package.json > tmp.package.json
+awk -v service_name=$SERVICE_NAME '/scripts/ { print; print "\t\t\"start:dev\": \"nodemon src/index.ts\",\n\t\t\"start\": \"node ./build/"service_name"/src/index.js\",\n\t\t\"build\": \"tsc\","; next }1' package.json > tmp.package.json
 mv tmp.package.json package.json
 
 # TODO: Add scripts for linting and formatting
@@ -268,25 +273,21 @@ EOF
 cat > Dockerfile << EOF
 FROM node:19-alpine
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/common
+COPY common/package*.json .
+RUN npm ci --only=production
+COPY common/. .
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
-
-# Bundle app source
-COPY . .
+WORKDIR /usr/src/app/$SERVICE_NAME
+COPY $SERVICE_NAME/package*.json .
+RUN npm ci --only=production
+COPY $SERVICE_NAME/. .
 
 RUN npm run build
 
 EXPOSE 8080
-CMD ["node", "./build/index.js"]
+ENV NODE_ENV production
+CMD ["node", "./build/$SERVICE_NAME/src/index.js"]
 EOF
 
 cat > .dockerignore << EOF

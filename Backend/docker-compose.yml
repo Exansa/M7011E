@@ -11,15 +11,15 @@ services:
   api:
     container_name: "api"
     build:
-      context: ./api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./api/Dockerfile
     ports:
       - "5001:8080"
 
   test:
     container_name: "test"
     build:
-      context: ./test
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./test/Dockerfile
     ports:
       - "5002:8080"

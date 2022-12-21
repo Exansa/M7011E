@@ -7,10 +7,11 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 // Custom Dependencies
-import Rabbitmq from './rabbitmq';
+import Rabbitmq from '../../common/rabbitmq';
 
 // Routes imports
 import Test from './routes/test';
+import Auth from './routes/auth';
 
 // Configs
 const PORT = process.env.PORT || 8080;
@@ -39,6 +40,11 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/test', Test(rabbitmq));
+app.use('/auth', Auth(rabbitmq));
+
+app.get('/healthcheck', (_req, _res) => {
+	_res.send({ status: 'ok' });
+});
 
 // Start the Server
 app.listen(PORT, async () => {

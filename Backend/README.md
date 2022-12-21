@@ -1,10 +1,17 @@
 # M7011E Backend
 
-## Quick Deploy
+## Quick Deploy Locally
 
-1. Make sure to have
+1. Make sure you have installed Docker and Docker Compose
 2. Navigate to Backend folder in a terminal
-3. `$ docker compose up -d`
+3. Create a file named `.env` containing
+
+```
+JWT_SECRET='V3ry53cr3t'
+```
+
+4. `$ docker compose up -d`
+5. You can now make HTTP requests to the API Service using http://localhost:5001
 
 ## Prerequisities
 
@@ -42,4 +49,4 @@ To orchestrate and administrate the entire backend [Docker Compose](https://docs
 
 One of the deployed services is a [RabbitMQ](https://www.rabbitmq.com) broker. This service listens for messages that are sent to _`queues`_ and deploys those messages to services that listens to the particular queue.
 
-If no service is actively listening, the messages is requeued for later deployment.
+If no service is actively listening, the messages is requeued for later deployment, unless other specified.
