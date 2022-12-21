@@ -5,25 +5,19 @@ const router = Router();
 
 export default (rabbitmq: Rabbitmq) => {
 	router.post('/', async (req: Request, res: Response) => {
-		const data = {
-			...req.body,
-			date: new Date()
-		};
+		const data = req.body;
 		const result = await rabbitmq.sendRPC(
-			JSON.stringify(data),
-			'authentication.verify'
+			'authentication.verify',
+			JSON.stringify(data)
 		);
 		res.send(result);
 	});
 
 	router.post('/sign', async (req: Request, res: Response) => {
-		const data = {
-			...req.body,
-			date: new Date()
-		};
+		const data = req.body;
 		const result = await rabbitmq.sendRPC(
-			JSON.stringify(data),
-			'authentication.sign'
+			'authentication.sign',
+			JSON.stringify(data)
 		);
 		res.send(result);
 	});

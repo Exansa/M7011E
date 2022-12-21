@@ -1,23 +1,14 @@
 import { Router, Request, Response } from 'express';
 import Rabbitmq from '../rabbitmq';
+import { respond } from '..';
 
 const router = Router();
 
 export default (rabbitmq: Rabbitmq) => {
 	router.post('/', async (req: Request, res: Response) => {
-		const data = {
-			...req.body,
-			date: new Date()
-		};
-
-		const result = await rabbitmq.sendRPC(JSON.stringify(data), 'test');
-
-		res.send(
-			'Test message was sent with data: ' +
-				JSON.stringify(data) +
-				' and recieved the response: ' +
-				result
-		);
+		const data = req.body;
+		const result = await rabbitmq.sendRPC('test', JSON.stringify(data));
+		respond(res, result);
 	});
 
 	return router;

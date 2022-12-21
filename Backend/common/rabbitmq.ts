@@ -6,24 +6,24 @@ import { v4 as uuidv4 } from 'uuid';
 const HOST = process.env.NODE_ENV === 'production' ? 'rabbitmq' : 'localhost';
 const AMQP_SERVER = `amqp://${HOST}:5672`;
 
+export type RPCResponse = {
+	success: boolean;
+	status?: number;
+	response: string;
+};
+
 export default class Rabbitmq {
 	/**
 	 * Send a quick RPC-like message using RabbitMQ to a Queue. Not optimized for high workloads.
 	 *
-	 * @param message The message to be sent
 	 * @param queue The queue to send the message
-	 * @param serviceName An optional, but recommended, service name to distinguish in the AMQP queue
+	 * @param message The message to be sent
 	 * @returns Promise containing string
 	 */
-	sendRPC = async (
-		message: string,
-		queue: string,
-		serviceName = undefined
-	): Promise<string> => {
+	sendRPC = async (queue: string, message: string): Promise<RPCResponse> => {
 		const connection = await amqp.connect(AMQP_SERVER);
 		const channel = await connection.createChannel();
-		const rpcQueueName = serviceName ? 'rpc.' + serviceName : 'rpc';
-		const rpcQueue = await channel.assertQueue(rpcQueueName, {
+		const rpcQueue = await channel.assertQueue(queue + '.rpc', {
 			durable: false
 		});
 		await channel.assertQueue(queue);
@@ -41,7 +41,7 @@ export default class Rabbitmq {
 						const content = msg.content.toString();
 						channel.ack(msg);
 						connection.close();
-						resolve(content.toString());
+						resolve(JSON.parse(content));
 					}
 				}
 			});
@@ -58,10 +58,7 @@ export default class Rabbitmq {
 	 */
 	listen = async (
 		queue: string,
-		method: (message: ConsumeMessage) => Promise<{
-			success: boolean;
-			response: string;
-		}>
+		method: (message: ConsumeMessage) => Promise<RPCResponse>
 	): Promise<void> => {
 		try {
 			const connection = await amqp.connect(AMQP_SERVER);

@@ -1,13 +1,13 @@
 'use strict';
 
 // Third Party Dependencies
-import express from 'express';
+import express, { Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 
 // Custom Dependencies
-import Rabbitmq from '../../common/rabbitmq';
+import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 
 // Routes imports
 import Test from './routes/test';
@@ -50,3 +50,22 @@ app.get('/healthcheck', (_req, _res) => {
 app.listen(PORT, async () => {
 	console.info(`Server started at url http://localhost:${PORT}/`);
 });
+
+/**
+ * Quick and easy HTTP Response from a RPCResponse.
+ *
+ * Automatically sets the status code and sends the RPCResponse response object as JSON.
+ *
+ * @param res the Response instance
+ * @param response the RPCResponse
+ * @param fallbackStatusCode Optional status code to use if the RPCResponse status is undefined and success is false
+ */
+export const respond = (
+	res: Response,
+	response: RPCResponse,
+	fallbackStatusCode = 500
+): void => {
+	res.status(
+		response.status ?? (response.success ? 200 : fallbackStatusCode)
+	).json(response.response);
+};

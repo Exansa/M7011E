@@ -2,7 +2,7 @@
 
 // Import the express in typescript file
 import express, { Request, Response } from 'express';
-import Rabbitmq from '../../common/rabbitmq';
+import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 
 // Initialize the express engine
 const app: express.Application = express();
@@ -15,7 +15,12 @@ app.use(express.json());
 
 const rabbitmq = new Rabbitmq();
 rabbitmq.listen('test', async () => {
-	return { success: true, response: 'testdata' };
+	const response: RPCResponse = {
+		success: true,
+		status: 202,
+		response: 'testdata'
+	};
+	return response;
 });
 
 app.get('/healthcheck', (_: Request, res: Response) => {
