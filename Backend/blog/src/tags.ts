@@ -100,12 +100,65 @@ export default (rabbitmq: Rabbitmq) => {
 			await checkAccess(userId, client);
 			await checkTagExists(tag, client);
 			client.close();
-			var set = data.set;
+
 			const result = await DB.performQuery(
 				'blog',
 				'tags',
 				async (collection) => {
 					const result = await collection.insertOne(tag);
+					return result;
+				}
+			);
+
+			const response: RPCResponse = {
+				success: result !== null,
+				response: result
+			};
+			return response;
+		} catch (error: any) {
+			const response = {
+				success: false,
+				response: error?.message.toString()
+			};
+			return response;
+		}
+	});
+
+	rabbitmq.listen('tags.patch', async (message) => {
+		const data = JSON.parse(message.content.toString());
+
+		if (!data.tag) {
+			return { success: false, response: 'Missing param tag' };
+		}
+		if (!data.id) {
+			return { success: false, response: 'Missing param id' };
+		}
+
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		try {
+			const { id, user_id } = data;
+			const tag = generateTag(data.tag);
+			validateTag(tag);
+
+			await checkAccess(user_id, client);
+			await checkUniuqeTag(tag, id, client);
+			client.close();
+
+			const result = await DB.performQuery(
+				'blog',
+				'tags',
+				async (collection) => {
+					const query = { _id: new ObjectId(id) };
+					const result = await collection.updateOne(query, {
+						$set: tag
+					});
 					return result;
 				}
 			);
