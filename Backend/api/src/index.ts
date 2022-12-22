@@ -14,6 +14,7 @@ import Test from './routes/test';
 import User from './routes/user';
 import Auth from './routes/auth';
 import TOTP from './routes/totp';
+import Tags from './routes/tags';
 
 // Configs
 const PORT = process.env.PORT || 8080;
@@ -45,6 +46,7 @@ app.use('/test', Test(rabbitmq));
 app.use('/user', User(rabbitmq));
 app.use('/auth', Auth(rabbitmq));
 app.use('/totp', TOTP(rabbitmq));
+app.use('/tags', Tags(rabbitmq));
 
 app.get('/healthcheck', (_req, _res) => {
 	_res.send({ status: 'ok' });
