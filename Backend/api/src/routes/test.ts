@@ -1,20 +1,14 @@
-import { Channel } from 'amqplib';
 import { Router, Request, Response } from 'express';
+import Rabbitmq from '../../../common/rabbitmq';
+import { respond } from '..';
 
 const router = Router();
 
-export default (channel: Promise<Channel>) => {
+export default (rabbitmq: Rabbitmq) => {
 	router.post('/', async (req: Request, res: Response) => {
-		if (!channel) {
-			res.status(500).send('Channel not initialized');
-		}
-
-		const data = {
-			...req.body,
-			date: new Date()
-		};
-		(await channel).sendToQueue('test', Buffer.from(JSON.stringify(data)));
-		res.send('Test message was sent with data: ' + JSON.stringify(data));
+		const data = req.body;
+		const result = await rabbitmq.sendRPC('test', JSON.stringify(data));
+		respond(res, result);
 	});
 
 	return router;

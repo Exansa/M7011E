@@ -1,16 +1,19 @@
 'use strict';
 
 // Third Party Dependencies
-import express from 'express';
+import express, { Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 
 // Custom Dependencies
-import Rabbitmq from './rabbitmq';
+import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 
 // Routes imports
 import Test from './routes/test';
+import User from './routes/user';
+import Auth from './routes/auth';
+import TOTP from './routes/totp';
 
 // Configs
 const PORT = process.env.PORT || 8080;
@@ -38,9 +41,35 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/test', Test(rabbitmq.channel('test')));
+app.use('/test', Test(rabbitmq));
+app.use('/user', User(rabbitmq));
+app.use('/auth', Auth(rabbitmq));
+app.use('/totp', TOTP(rabbitmq));
+
+app.get('/healthcheck', (_req, _res) => {
+	_res.send({ status: 'ok' });
+});
 
 // Start the Server
 app.listen(PORT, async () => {
-	console.log(`Server started at url http://localhost:${PORT}/`);
+	console.info(`Server started at url http://localhost:${PORT}/`);
 });
+
+/**
+ * Quick and easy HTTP Response from a RPCResponse.
+ *
+ * Automatically sets the status code and sends the RPCResponse response object as JSON.
+ *
+ * @param res the Response instance
+ * @param response the RPCResponse
+ * @param fallbackStatusCode Optional status code to use if the RPCResponse status is undefined and success is false
+ */
+export const respond = (
+	res: Response,
+	response: RPCResponse,
+	fallbackStatusCode = 500
+): void => {
+	res.status(
+		response.status ?? (response.success ? 200 : fallbackStatusCode)
+	).json(response.response);
+};

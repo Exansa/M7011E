@@ -1,11 +1,8 @@
-import ResponsiveAppBar from "../resource/components/global/headerBar";
+import ResponsiveAppBar from "../resource/layout/headerBar";
+import { Box } from "@mui/system";
+import Page from "../resource/layout/page";
 
 export function About() {
-    return (
-        <div>
-          <ResponsiveAppBar />
-        </div>
-
-    );
+  return <Page></Page>;
 }
 export default About;

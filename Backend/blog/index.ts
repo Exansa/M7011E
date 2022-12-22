@@ -3,8 +3,12 @@
 // Import the express in typescript file
 import express from 'express';
 import bodyParser from 'body-parser';
-import post from './blog';
+import post from './post';
 import tag from './tag';
+import category from './category';
+import user from './user';
+import admin from './admin';
+import media from './media';
 
 // Initialize the express engine
 const app: express.Application = express();
@@ -15,8 +19,7 @@ const port = 8080;
 app.use(bodyParser.json());
 
 // Handling '/' Request
-app.use('/post', post());
-app.use('/tag', tag());
+app.use('/', db());
 
 // Server setup
 app.listen(port, () => {
