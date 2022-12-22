@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import Rabbitmq from '../rabbitmq';
+import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
 
 const router = Router();

@@ -5,79 +5,56 @@ import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
 const DB_SERVER_URI = `mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority`;
 
 export default class DB {
-	private performQuery = async (
-		dbName: string,
-		collectionName: string,
-		query: (collection: Collection) => Promise<any>
+	private client?: MongoClient;
+
+	private connect = (): void => {
+		this.client = new MongoClient(DB_SERVER_URI, {
+			serverApi: ServerApiVersion.v1
+		});
+	};
+
+	/**
+	 * Get a database collection. Automatically connects the client if it is not connected. However, don't forget to disconnect the client when you are done.
+	 *
+	 * @param db The name of the database
+	 * @param collection The name of the collection
+	 * @returns The collection
+	 */
+	collection = (db: string, collection: string): Collection => {
+		if (!this.client) {
+			this.connect();
+		}
+		return this.client!.db(db).collection(collection);
+	};
+
+	/**
+	 * Disconnect the client.
+	 */
+	disconnect = async (): Promise<void> => {
+		if (this.client) {
+			await this.client.close();
+		}
+	};
+
+	/**
+	 * Make a quick query to the database. Automatically connects and disconnects the client for each query.
+	 *
+	 * @param db The name of the database
+	 * @param collection The name of the collection
+	 * @param callback The callback method to be executed on the collection
+	 * @returns
+	 */
+	static performQuery = async (
+		db: string,
+		collection: string,
+		callback: (collection: Collection) => Promise<any>
 	): Promise<any> => {
 		const client = new MongoClient(DB_SERVER_URI, {
 			serverApi: ServerApiVersion.v1
 		});
-		const collection = client.db(dbName).collection(collectionName);
-		const result = await query(collection);
+		const _collection = client.db(db).collection(collection);
+		const result = await callback(_collection);
 		client.close();
 		return result;
 	};
-
-	findAll = async (
-		dbName: string,
-		collectionName: string,
-		projection?: Object
-	): Promise<any> =>
-		await this.performQuery(
-			dbName,
-			collectionName,
-			async (collection) =>
-				await collection.find({}, { projection }).toArray()
-		);
-
-	findOne = async (
-		dbName: string,
-		collectionName: string,
-		query: Object,
-		projection?: Object
-	): Promise<any> =>
-		this.performQuery(
-			dbName,
-			collectionName,
-			async (collection) =>
-				await collection.findOne(query, { projection })
-		);
-
-	find = async (
-		dbName: string,
-		collectionName: string,
-		query: Object,
-		projection?: Object
-	): Promise<any> =>
-		this.performQuery(
-			dbName,
-			collectionName,
-			async (collection) =>
-				await collection.find(query, { projection }).toArray()
-		);
-
-	insertOne = async (
-		dbName: string,
-		collectionName: string,
-		data: Object
-	): Promise<any> =>
-		this.performQuery(
-			dbName,
-			collectionName,
-			async (collection) => await collection.insertOne(data)
-		);
-
-	updateOne = async (
-		dbName: string,
-		collectionName: string,
-		id: string,
-		data: Object
-	): Promise<any> =>
-		this.performQuery(
-			dbName,
-			collectionName,
-			async (collection) =>
-				await collection.updateOne({ _id: id }, { $set: data })
-		);
 }
