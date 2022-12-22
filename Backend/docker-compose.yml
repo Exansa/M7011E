@@ -23,3 +23,27 @@ services:
       dockerfile: ./test/Dockerfile
     ports:
       - "5002:8080"
+
+  authentication:
+    container_name: "authentication"
+    build:
+      context: .
+      dockerfile: ./authentication/Dockerfile
+    ports:
+      - "5003:8080"
+
+  totp:
+    container_name: "totp"
+    build:
+      context: .
+      dockerfile: ./totp/Dockerfile
+    ports:
+      - "5004:8080"
+
+  blog:
+    container_name: "blog"
+    build:
+      context: .
+      dockerfile: ./blog/Dockerfile
+    ports:
+      - "5005:8080"
