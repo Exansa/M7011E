@@ -75,4 +75,83 @@ export default (rabbitmq: Rabbitmq) => {
 			return response;
 		}
 	});
+
+	rabbitmq.listen('tags.post', async (message) => {
+		const data = JSON.parse(message.content.toString());
+
+		if (!data.tag) {
+			return { success: false, response: 'Missing param tag' };
+		}
+
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		try {
+			var userId = data.user_id;
+			var tag = data.tag;
+			tag = generateTag(tag);
+			validateTag(tag);
+
+			await checkAccess(userId, client);
+			await checkTagExists(tag, client);
+			client.close();
+			var set = data.set;
+			const result = await DB.performQuery(
+				'blog',
+				'tags',
+				async (collection) => {
+					const result = await collection.insertOne(tag);
+					return result;
+				}
+			);
+
+			const response: RPCResponse = {
+				success: result !== null,
+				response: result
+			};
+			return response;
+		} catch (error: any) {
+			const response = {
+				success: false,
+				response: error?.message.toString()
+			};
+			return response;
+		}
+	});
 };
+
+function validateTag(tag: any) {
+	if (!tag.name) throw new Error('Name is not defined, invalid tag');
+}
+function generateTag(tag: any): any {
+	return {
+		name: tag.name
+	};
+}
+
+async function checkTagExists(tag: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('tags');
+	const query = { name: tag.name };
+	const alreadyExists = await collection.findOne(query);
+	if (alreadyExists) throw new Error('Tag already exists');
+}
+async function checkAccess(userId: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('admins');
+	const query = { user_id: userId };
+	const result = await collection.findOne(query);
+	if (!result) throw new Error('Access denied');
+}
+async function checkUniuqeTag(tag: any, tagId: string, client: MongoClient) {
+	const collection = await client.db('blog').collection('tags');
+	const query1 = {
+		name: tag.name,
+		_id: { $ne: new ObjectId(tagId) }
+	};
+	const alreadyExists = await collection.findOne(query1);
+	if (alreadyExists) throw new Error('Tag with that name already exists');
+}
