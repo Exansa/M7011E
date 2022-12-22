@@ -1,5 +1,6 @@
 import { Collection, Document, MongoClient, ServerApiVersion } from 'mongodb';
 import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
+import { ObjectId, WithId } from 'mongodb';
 import DB from '../../common/db';
 
 export default (rabbitmq: Rabbitmq) => {
@@ -50,16 +51,12 @@ export default (rabbitmq: Rabbitmq) => {
 
 		try {
 			var set = data.set;
+			const query = { _id: new ObjectId(data.id) };
 			const result = await DB.performQuery(
 				'blog',
 				'tags',
 				async (collection) => {
-					const result = await collection
-						.find()
-						.sort({ _id: 1 })
-						.skip((set - 1) * 10)
-						.limit(10)
-						.toArray();
+					const result = await collection.findOne(query);
 					return result;
 				}
 			);

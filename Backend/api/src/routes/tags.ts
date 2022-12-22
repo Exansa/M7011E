@@ -14,7 +14,7 @@ export default (rabbitmq: Rabbitmq) => {
 		respond(res, result);
 	});
 
-	router.get('/:id/:hi', async (req: Request, res: Response) => {
+	router.get('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await rabbitmq.sendRPC(
 			'tags.get_one',
