@@ -14,11 +14,12 @@ const port = 8079;
 app.use(express.json());
 
 const rabbitmq = new Rabbitmq();
-rabbitmq.listen('test', async () => {
+rabbitmq.listen('test', async (message) => {
+	const data = JSON.parse(message.content.toString());
 	const response: RPCResponse = {
 		success: true,
 		status: 202,
-		response: 'testdata'
+		response: JSON.stringify({ data })
 	};
 	return response;
 });
@@ -29,5 +30,5 @@ app.get('/healthcheck', (_: Request, res: Response) => {
 
 // Server setup
 app.listen(port, () => {
-	console.info(`TypeScript with Express http://localhost:${port}/`);
+	console.info(`Started Service test`);
 });
