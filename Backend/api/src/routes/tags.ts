@@ -41,14 +41,5 @@ export default (rabbitmq: Rabbitmq) => {
 		respond(res, result);
 	});
 
-	router.delete('/:id', async (req: Request, res: Response) => {
-		const data = { ...req.body, ...req?.params };
-		const result = await rabbitmq.sendRPC(
-			'tags.delete',
-			JSON.stringify(data)
-		);
-		respond(res, result);
-	});
-
 	return router;
 };
