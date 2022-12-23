@@ -7,7 +7,7 @@ import post from '../post';
 import Tags from './tags';
 import Categories from './categories';
 import user from '../user';
-import admin from '../admin';
+import Admins from './admins';
 import media from '../media';
 
 // Initialize the express engine
@@ -20,6 +20,7 @@ const rabbitmq = new Rabbitmq();
 
 Tags(rabbitmq);
 Categories(rabbitmq);
+Admins(rabbitmq);
 
 app.get('/healthcheck', (_: Request, res: Response) => {
 	res.send({ status: 'ok' });

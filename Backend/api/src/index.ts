@@ -20,6 +20,7 @@ import Auth from './routes/auth';
 import TOTP from './routes/totp';
 import Tags from './routes/tags';
 import Categories from './routes/categories';
+import Admins from './routes/admins';
 
 // Configs
 const PORT = process.env.PORT || 8080;
@@ -54,6 +55,7 @@ app.use('/auth', Auth(rabbitmq));
 app.use('/totp', TOTP(rabbitmq));
 app.use('/tags', Tags(rabbitmq));
 app.use('/categories', Categories(rabbitmq));
+app.use('/admins', Admins(rabbitmq));
 
 app.get('/healthcheck', (_req, _res) => {
 	_res.send({ status: 'ok' });
@@ -80,5 +82,5 @@ export const respond = (
 ): void => {
 	res.status(
 		response.status ?? (response.success ? 200 : fallbackStatusCode)
-	).json(JSON.parse(response.response));
+	).json(JSON.parse(JSON.stringify(response.response)));
 };

@@ -36,7 +36,7 @@ export default (rabbitmq: Rabbitmq) => {
 		} catch (error: any) {
 			const response = {
 				success: false,
-				response: error
+				response: error?.message.toString()
 			};
 			return response;
 		}
@@ -70,7 +70,7 @@ export default (rabbitmq: Rabbitmq) => {
 		} catch (error: any) {
 			const response = {
 				success: false,
-				response: error
+				response: error?.message.toString()
 			};
 			return response;
 		}
