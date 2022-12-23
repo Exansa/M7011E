@@ -1,0 +1,222 @@
+import { Collection, Document, MongoClient, ServerApiVersion } from 'mongodb';
+import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
+import { ObjectId, WithId } from 'mongodb';
+import DB from '../../common/db';
+
+export default (rabbitmq: Rabbitmq) => {
+	rabbitmq.listen('categories.get_all', async (message) => {
+		const data = JSON.parse(message.content.toString());
+
+		if (!data.set) {
+			return { success: false, response: 'Missing param set' };
+		}
+
+		try {
+			var set = data.set;
+			const result = await DB.performQuery(
+				'blog',
+				'categories',
+				async (collection) => {
+					const result = await collection
+						.find()
+						.sort({ _id: 1 })
+						.skip((set - 1) * 10)
+						.limit(10)
+						.toArray();
+					return result;
+				}
+			);
+
+			const response: RPCResponse = {
+				success: true,
+				status: 200,
+				response: result
+			};
+			return response;
+		} catch (error: any) {
+			const response = {
+				success: false,
+				response: error
+			};
+			return response;
+		}
+	});
+
+	rabbitmq.listen('categories.get_one', async (message) => {
+		const data = JSON.parse(message.content.toString());
+
+		if (!data.id) {
+			return { success: false, response: 'Missing param id' };
+		}
+
+		try {
+			var set = data.set;
+			const query = { _id: new ObjectId(data.id) };
+			const result = await DB.performQuery(
+				'blog',
+				'categories',
+				async (collection) => {
+					const result = await collection.findOne(query);
+					return result;
+				}
+			);
+
+			const response: RPCResponse = {
+				success: true,
+				status: 200,
+				response: result
+			};
+			return response;
+		} catch (error: any) {
+			const response = {
+				success: false,
+				response: error
+			};
+			return response;
+		}
+	});
+
+	rabbitmq.listen('categories.post', async (message) => {
+		const data = JSON.parse(message.content.toString());
+
+		if (!data.category) {
+			return { success: false, response: 'Missing param category' };
+		}
+
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		try {
+			var userId = data.user_id;
+			var category = data.category;
+			category = generateCategory(category);
+			validateCategory(category);
+
+			await checkAccess(userId, client);
+			await checkCategoryExists(category, client);
+			client.close();
+
+			const result = await DB.performQuery(
+				'blog',
+				'categories',
+				async (collection) => {
+					const result = await collection.insertOne(category);
+					return result;
+				}
+			);
+
+			const response: RPCResponse = {
+				success: result !== null,
+				response: result
+			};
+			return response;
+		} catch (error: any) {
+			const response = {
+				success: false,
+				response: error?.message.toString()
+			};
+			return response;
+		}
+	});
+
+	rabbitmq.listen('categories.patch', async (message) => {
+		const data = JSON.parse(message.content.toString());
+
+		if (!data.category) {
+			return { success: false, response: 'Missing param category' };
+		}
+		if (!data.id) {
+			return { success: false, response: 'Missing param id' };
+		}
+
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		try {
+			const { id, user_id } = data;
+			const category = generateCategory(data.category);
+			validateCategory(category);
+
+			await checkAccess(user_id, client);
+			await checkUniuqeCategory(category, id, client);
+			client.close();
+
+			const result = await DB.performQuery(
+				'blog',
+				'categories',
+				async (collection) => {
+					const query = { _id: new ObjectId(id) };
+					const result = await collection.updateOne(query, {
+						$set: category
+					});
+					return result;
+				}
+			);
+
+			const response: RPCResponse = {
+				success: result !== null,
+				response: result
+			};
+			return response;
+		} catch (error: any) {
+			const response = {
+				success: false,
+				response: error?.message.toString()
+			};
+			return response;
+		}
+	});
+};
+
+function generateCategory(category: any): any {
+	return {
+		name: category.name,
+		description: category.description
+	};
+}
+function validateCategory(category: any) {
+	if (!category.name)
+		throw new Error('Name is not defined, invalid category');
+	if (!category.description)
+		throw new Error('Description is not defined, invalid category');
+}
+
+async function checkAccess(userId: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('admins');
+	const query = { user_id: userId };
+	const result = await collection.findOne(query);
+	if (!result) throw new Error('Access denied');
+}
+async function checkCategoryExists(category: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('categories');
+	const query1 = {
+		name: category.name
+	};
+	const alreadyExists = await collection.findOne(query1);
+	if (alreadyExists) throw new Error('Category already exists');
+}
+
+async function checkUniuqeCategory(
+	category: any,
+	categoryId: string,
+	client: MongoClient
+) {
+	const collection = await client.db('blog').collection('categories');
+	const query1 = {
+		name: category.name,
+		_id: { $ne: new ObjectId(categoryId) }
+	};
+	const alreadyExists = await collection.findOne(query1);
+	if (alreadyExists)
+		throw new Error('Category with that name already exists');
+}
