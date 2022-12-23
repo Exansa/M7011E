@@ -5,8 +5,10 @@ import express, { Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
 
 // Middlewares
+import swaggerSpec from './middlewares/swagger';
 import { unpackJWT } from './middlewares/unpack';
 import authenticate from './middlewares/authenticate';
 
@@ -25,11 +27,14 @@ import Media from './routes/media';
 
 // Configs
 const PORT = process.env.PORT || 8080;
+
 const rabbitmq = new Rabbitmq();
 
 // Setup Express and middlewares
 const app: express.Application = express();
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec()));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 app.use((req, res, next) => {
@@ -84,5 +89,5 @@ export const respond = (
 ): void => {
 	res.status(
 		response.status ?? (response.success ? 200 : fallbackStatusCode)
-	).json(JSON.parse(JSON.stringify(response.response)));
+	).json(response.response);
 };

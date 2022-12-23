@@ -18,8 +18,8 @@ rabbitmq.listen('test', async (message) => {
 	const data = JSON.parse(message.content.toString());
 	const response: RPCResponse = {
 		success: true,
-		status: 202,
-		response: JSON.stringify({ data })
+		status: 200,
+		response: data
 	};
 	return response;
 });
