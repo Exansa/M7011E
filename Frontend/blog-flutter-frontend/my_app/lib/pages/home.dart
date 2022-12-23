@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:my_app/pages/browse.dart';
 
 class Home extends StatelessWidget {
+  const Home({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +15,7 @@ class Home extends StatelessWidget {
               onPressed: () {
                 Get.to(Browse());
               },
-              child: Text("Open other screen"))
+              child: const Text("Open other screen"))
         ],
       ),
     );

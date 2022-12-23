@@ -5,7 +5,7 @@ import 'widgets/navigationBar.dart';
 class AppView extends StatelessWidget {
   final Widget child;
 
-  const AppView({@required this.child});
+  const AppView({Key key, @required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -12,21 +12,21 @@ appRoutes() => [
         name: '/home',
         page: () => Home(),
         transition: Transition.leftToRightWithFade,
-        transitionDuration: Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: '/about',
         page: () => About(),
         middlewares: [MyMiddelware()],
         transition: Transition.leftToRightWithFade,
-        transitionDuration: Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: '/browse',
         page: () => Browse(),
         middlewares: [MyMiddelware()],
         transition: Transition.leftToRightWithFade,
-        transitionDuration: Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 500),
       )
     ];
 
