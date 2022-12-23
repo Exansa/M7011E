@@ -6,7 +6,8 @@ class NavigationItem extends StatelessWidget {
   final String title;
   final String route;
 
-  const NavigationItem({@required this.title, this.route});
+  const NavigationItem({Key key, @required this.title, this.route})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class NavigationItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 50.0),
         child: Text(
           title,
-          style: TextStyle(fontSize: 20.0),
+          style: const TextStyle(fontSize: 20.0, color: Colors.white),
         ),
       ),
     );

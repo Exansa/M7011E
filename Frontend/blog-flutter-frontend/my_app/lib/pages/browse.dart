@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_app/pages/home.dart';
 
 class Browse extends StatelessWidget {
+  const Browse({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,9 +13,9 @@ class Browse extends StatelessWidget {
         children: [
           ElevatedButton(
               onPressed: () {
-                Get.back();
+                Get.to(Home());
               },
-              child: Text("Open other screen"))
+              child: const Text("Open other screen"))
         ],
       ),
     );
