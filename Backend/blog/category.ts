@@ -163,7 +163,7 @@ async function checkUniuqeCategory(
 	categoryId: string,
 	client: MongoClient
 ) {
-	const collection = await client.db('blog').collection('tags');
+	const collection = await client.db('blog').collection('categories');
 	const query1 = {
 		name: category.name,
 		_id: { $ne: new ObjectId(categoryId) }

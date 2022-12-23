@@ -8,7 +8,7 @@ export default (rabbitmq: Rabbitmq) => {
 	router.get('/', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await rabbitmq.sendRPC(
-			'tags.get_all',
+			'categories.get_all',
 			JSON.stringify(data)
 		);
 		respond(res, result);
@@ -17,7 +17,7 @@ export default (rabbitmq: Rabbitmq) => {
 	router.get('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await rabbitmq.sendRPC(
-			'tags.get_one',
+			'categories.get_one',
 			JSON.stringify(data)
 		);
 		respond(res, result);
@@ -26,7 +26,7 @@ export default (rabbitmq: Rabbitmq) => {
 	router.post('/', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await rabbitmq.sendRPC(
-			'tags.post',
+			'categories.post',
 			JSON.stringify(data)
 		);
 		respond(res, result);
@@ -35,7 +35,7 @@ export default (rabbitmq: Rabbitmq) => {
 	router.patch('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await rabbitmq.sendRPC(
-			'tags.patch',
+			'categories.patch',
 			JSON.stringify(data)
 		);
 		respond(res, result);

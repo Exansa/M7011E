@@ -5,10 +5,10 @@ import express, { Request, Response } from 'express';
 import Rabbitmq from '../../common/rabbitmq';
 import post from '../post';
 import Tags from './tags';
-import category from '../category';
+import Categories from './categories';
 import user from '../user';
-import admin from '../admin';
-import media from '../media';
+import Admins from './admins';
+import Media from './media';
 
 // Initialize the express engine
 const app: express.Application = express();
@@ -19,6 +19,9 @@ const port = 8090;
 const rabbitmq = new Rabbitmq();
 
 Tags(rabbitmq);
+Categories(rabbitmq);
+Admins(rabbitmq);
+Media(rabbitmq);
 
 app.get('/healthcheck', (_: Request, res: Response) => {
 	res.send({ status: 'ok' });

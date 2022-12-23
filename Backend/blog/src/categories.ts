@@ -4,7 +4,7 @@ import { ObjectId, WithId } from 'mongodb';
 import DB from '../../common/db';
 
 export default (rabbitmq: Rabbitmq) => {
-	rabbitmq.listen('tags.get_all', async (message) => {
+	rabbitmq.listen('categories.get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.set) {
@@ -15,7 +15,7 @@ export default (rabbitmq: Rabbitmq) => {
 			var set = data.set;
 			const result = await DB.performQuery(
 				'blog',
-				'tags',
+				'categories',
 				async (collection) => {
 					const result = await collection
 						.find()
@@ -42,7 +42,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('tags.get_one', async (message) => {
+	rabbitmq.listen('categories.get_one', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.id) {
@@ -54,7 +54,7 @@ export default (rabbitmq: Rabbitmq) => {
 			const query = { _id: new ObjectId(data.id) };
 			const result = await DB.performQuery(
 				'blog',
-				'tags',
+				'categories',
 				async (collection) => {
 					const result = await collection.findOne(query);
 					return result;
@@ -76,11 +76,11 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('tags.post', async (message) => {
+	rabbitmq.listen('categories.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
-		if (!data.tag) {
-			return { success: false, response: 'Missing param tag' };
+		if (!data.category) {
+			return { success: false, response: 'Missing param category' };
 		}
 
 		const uri =
@@ -93,19 +93,19 @@ export default (rabbitmq: Rabbitmq) => {
 
 		try {
 			var userId = data.user_id;
-			var tag = data.tag;
-			tag = generateTag(tag);
-			validateTag(tag);
+			var category = data.category;
+			category = generateCategory(category);
+			validateCategory(category);
 
 			await checkAccess(userId, client);
-			await checkTagExists(tag, client);
+			await checkCategoryExists(category, client);
 			client.close();
 
 			const result = await DB.performQuery(
 				'blog',
-				'tags',
+				'categories',
 				async (collection) => {
-					const result = await collection.insertOne(tag);
+					const result = await collection.insertOne(category);
 					return result;
 				}
 			);
@@ -124,11 +124,11 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('tags.patch', async (message) => {
+	rabbitmq.listen('categories.patch', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
-		if (!data.tag) {
-			return { success: false, response: 'Missing param tag' };
+		if (!data.category) {
+			return { success: false, response: 'Missing param category' };
 		}
 		if (!data.id) {
 			return { success: false, response: 'Missing param id' };
@@ -144,20 +144,20 @@ export default (rabbitmq: Rabbitmq) => {
 
 		try {
 			const { id, user_id } = data;
-			const tag = generateTag(data.tag);
-			validateTag(tag);
+			const category = generateCategory(data.category);
+			validateCategory(category);
 
 			await checkAccess(user_id, client);
-			await checkUniuqeTag(tag, id, client);
+			await checkUniuqeCategory(category, id, client);
 			client.close();
 
 			const result = await DB.performQuery(
 				'blog',
-				'tags',
+				'categories',
 				async (collection) => {
 					const query = { _id: new ObjectId(id) };
 					const result = await collection.updateOne(query, {
-						$set: tag
+						$set: category
 					});
 					return result;
 				}
@@ -178,33 +178,45 @@ export default (rabbitmq: Rabbitmq) => {
 	});
 };
 
-function validateTag(tag: any) {
-	if (!tag.name) throw new Error('Name is not defined, invalid tag');
-}
-function generateTag(tag: any): any {
+function generateCategory(category: any): any {
 	return {
-		name: tag.name
+		name: category.name,
+		description: category.description
 	};
 }
-
-async function checkTagExists(tag: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('tags');
-	const query = { name: tag.name };
-	const alreadyExists = await collection.findOne(query);
-	if (alreadyExists) throw new Error('Tag already exists');
+function validateCategory(category: any) {
+	if (!category.name)
+		throw new Error('Name is not defined, invalid category');
+	if (!category.description)
+		throw new Error('Description is not defined, invalid category');
 }
+
 async function checkAccess(userId: any, client: MongoClient) {
 	const collection = await client.db('blog').collection('admins');
 	const query = { user_id: userId };
 	const result = await collection.findOne(query);
 	if (!result) throw new Error('Access denied');
 }
-async function checkUniuqeTag(tag: any, tagId: string, client: MongoClient) {
-	const collection = await client.db('blog').collection('tags');
+async function checkCategoryExists(category: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('categories');
 	const query1 = {
-		name: tag.name,
-		_id: { $ne: new ObjectId(tagId) }
+		name: category.name
 	};
 	const alreadyExists = await collection.findOne(query1);
-	if (alreadyExists) throw new Error('Tag with that name already exists');
+	if (alreadyExists) throw new Error('Category already exists');
+}
+
+async function checkUniuqeCategory(
+	category: any,
+	categoryId: string,
+	client: MongoClient
+) {
+	const collection = await client.db('blog').collection('categories');
+	const query1 = {
+		name: category.name,
+		_id: { $ne: new ObjectId(categoryId) }
+	};
+	const alreadyExists = await collection.findOne(query1);
+	if (alreadyExists)
+		throw new Error('Category with that name already exists');
 }
