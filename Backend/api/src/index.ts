@@ -6,6 +6,10 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 
+// Middlewares
+import { unpackJWT } from './middlewares/unpack';
+import authenticate from './middlewares/authenticate';
+
 // Custom Dependencies
 import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 
@@ -41,9 +45,10 @@ app.use((req, res, next) => {
 	}
 	next();
 });
+app.use(unpackJWT);
 
 // Routes
-app.use('/test', Test(rabbitmq));
+app.use('/test', authenticate, Test(rabbitmq));
 app.use('/user', User(rabbitmq));
 app.use('/auth', Auth(rabbitmq));
 app.use('/totp', TOTP(rabbitmq));
@@ -75,5 +80,5 @@ export const respond = (
 ): void => {
 	res.status(
 		response.status ?? (response.success ? 200 : fallbackStatusCode)
-	).json(response.response);
+	).json(JSON.parse(response.response));
 };
