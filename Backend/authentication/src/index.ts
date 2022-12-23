@@ -15,18 +15,15 @@ const rabbitmq = new Rabbitmq();
 
 rabbitmq.listen('authentication.verify', async (message) => {
 	const data = JSON.parse(message.content.toString());
-	if (!data.jwt) {
-		return { success: false, response: 'Missing param jwt' };
+	if (!data) {
+		return { success: false, response: 'Missing JWT data' };
 	}
-	let response;
-	let success = false;
 	try {
-		response = JWT.verify(data.jwt, SECRET);
-		success = true;
+		const user = JWT.verify(data, SECRET);
+		return { success: true, response: JSON.stringify(user) };
 	} catch (e) {
-		response = e;
+		return { success: false, response: JSON.stringify(e) };
 	}
-	return { success, response: JSON.stringify(response) };
 });
 
 rabbitmq.listen('authentication.sign', async (message) => {
@@ -37,7 +34,7 @@ rabbitmq.listen('authentication.sign', async (message) => {
 	if (!data.password) {
 		return { success: false, response: 'Missing param password' };
 	}
-	const result = DB.performQuery('blog', 'users', (collection) =>
+	const result = await DB.performQuery('blog', 'users', (collection) =>
 		collection.findOne(
 			{
 				$or: [{ email: data.email }, { username: data.username }],

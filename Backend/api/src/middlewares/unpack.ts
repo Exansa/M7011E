@@ -9,10 +9,10 @@ export const unpackJWT = async (
 	_res: Response,
 	next: NextFunction
 ) => {
-	const jwt = req.body?.jwt;
+	const jwt = req.header('Authorization')?.split(' ')[1];
 	if (jwt) {
 		await rabbitmq
-			.sendRPC('authentication.verify', JSON.stringify({ jwt }))
+			.sendRPC('authentication.verify', JSON.stringify(jwt))
 			.then((result) => {
 				if (result.success) {
 					const user = JSON.parse(result.response);
