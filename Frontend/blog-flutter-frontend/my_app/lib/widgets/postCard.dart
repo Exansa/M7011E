@@ -1,27 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/resource/globalVar.dart';
 
 class GenericPostCard extends StatelessWidget {
-  final String post_title;
-  final String description;
-  final String image;
-  final String author;
-  final String authorImage;
-  final String category;
-  final String date;
+  // ignore: prefer_typing_uninitialized_variables
+  final post;
 
-  const GenericPostCard(
-      {Key key,
-      @required this.post_title,
-      @required this.description,
-      @required this.image,
-      @required this.author,
-      @required this.authorImage,
-      @required this.category,
-      @required this.date})
-      : super(key: key);
+  const GenericPostCard({Key key, this.post}) : super(key: key);
 
-  static const cardWidth = 500.0;
-  static const cardHeight = 400.0;
+  static final cardWidth = Globals.CARD_DIMENSIONS["width"];
+  static final cardHeight = Globals.CARD_DIMENSIONS["height"];
 
   @override
   Widget build(BuildContext context) {
@@ -36,29 +23,31 @@ class GenericPostCard extends StatelessWidget {
             width: cardWidth,
             height: 630 / 1200 * cardWidth,
             child: Image.network(
-              image,
+              post["image"]["href"],
               fit: BoxFit.fitWidth,
             ),
           ),
           ListTile(
-              leading: CircleAvatar(backgroundImage: NetworkImage(authorImage)),
-              title: Text(post_title),
-              subtitle: Text("by $author")),
-          Flexible(
-              child: RichText(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                          //Subject to change :)
-                          text: category.toUpperCase(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[800])),
-                      TextSpan(text: " - $description")
-                    ],
-                  ))),
+              leading: CircleAvatar(
+                  backgroundImage: NetworkImage(post["user"]["image"]["href"])),
+              title: Text(post["title"]),
+              // ignore: prefer_interpolation_to_compose_strings
+              subtitle: Text("by " + post["user"]["username"])),
+          RichText(
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                      //Subject to change :)
+                      text: post["category"]["name"],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[800])),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  TextSpan(text: " - " + post["content"])
+                ],
+              )),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
