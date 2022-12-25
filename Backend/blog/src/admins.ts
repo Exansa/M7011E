@@ -31,7 +31,7 @@ export default (rabbitmq: Rabbitmq) => {
 			//check access
 			await checkAccess(userId, client);
 
-			const array = await DB.performQuery(
+			var result = await DB.performQuery(
 				'blog',
 				'admins',
 				async (collection) => {
@@ -45,7 +45,9 @@ export default (rabbitmq: Rabbitmq) => {
 				}
 			);
 
-			const result = (await getUserFromAdminArray(array, client)) as any;
+			if (result) {
+				result = (await getUserFromAdminArray(result, client)) as any;
+			}
 			client.close();
 
 			const response: RPCResponse = {
@@ -97,7 +99,9 @@ export default (rabbitmq: Rabbitmq) => {
 				}
 			);
 
-			result = await getUserFromAdmin(result, client);
+			if (result) {
+				result = (await getUserFromAdmin(result, client)) as any;
+			}
 			client.close();
 
 			const response: RPCResponse = {
@@ -107,7 +111,6 @@ export default (rabbitmq: Rabbitmq) => {
 			};
 			return response;
 		} catch (error: any) {
-			console.log(error);
 			const response = {
 				success: false,
 				response: error?.message.toString()
@@ -323,7 +326,6 @@ async function getUserFromAdminArray(
 ) {
 	for (let i = 0; i < array.length; i++) {
 		array[i] = await getUserFromAdmin(array[i], client);
-		console.log(array[i]);
 	}
 	return array;
 }
