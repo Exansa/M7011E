@@ -3,12 +3,13 @@
 // Import the express in typescript file
 import express, { Request, Response } from 'express';
 import Rabbitmq from '../../common/rabbitmq';
-import post from '../post';
+import Posts from './posts';
 import Tags from './tags';
 import Categories from './categories';
 import user from '../user';
 import Admins from './admins';
 import Media from './media';
+import posts from './posts';
 
 // Initialize the express engine
 const app: express.Application = express();
@@ -22,6 +23,7 @@ Tags(rabbitmq);
 Categories(rabbitmq);
 Admins(rabbitmq);
 Media(rabbitmq);
+posts(rabbitmq);
 
 app.get('/healthcheck', (_: Request, res: Response) => {
 	res.send({ status: 'ok' });
