@@ -25,6 +25,7 @@ import Categories from './routes/categories';
 import Admins from './routes/admins';
 import Media from './routes/media';
 import Posts from './routes/posts';
+import Search from './routes/search';
 
 // Configs
 const PORT = process.env.PORT || 8080;
@@ -65,6 +66,7 @@ app.use('/categories', Categories(rabbitmq));
 app.use('/admins', Admins(rabbitmq));
 app.use('/media', Media(rabbitmq));
 app.use('/posts', Posts(rabbitmq));
+app.use('/search', Search(rabbitmq));
 
 app.get('/healthcheck', (_req, _res) => {
 	_res.send({ status: 'ok' });
