@@ -46,6 +46,8 @@ class BrowseState extends State<Browse> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -62,12 +64,22 @@ class BrowseState extends State<Browse> {
                   itemBuilder: (context, index) {
                     return GenericPostCard(post: posts[index]);
                   })),
-          Visibility(
-            visible: loading,
-            child: const CircularProgressIndicator(),
+          SizedBox(
+              width: 200,
+              height: 75,
+              child: ElevatedButton(
+                onPressed: handleLoadMore,
+                child: ListTile(
+                    leading: Visibility(
+                      visible: loading,
+                      child:
+                          const CircularProgressIndicator(color: Colors.white),
+                    ),
+                    title: Text("Load more")),
+              )),
+          SizedBox(
+            height: screenSize.height / 100,
           ),
-          ElevatedButton(
-              onPressed: handleLoadMore, child: const Text("Load more")),
         ],
       ),
     );
