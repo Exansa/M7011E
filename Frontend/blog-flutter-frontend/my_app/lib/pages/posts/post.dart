@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:my_app/widgets/postCard.dart';
 
 class Post extends StatefulWidget {
   final post;
@@ -15,5 +17,7 @@ class SpecificPost extends State<Post> {
   SpecificPost(this.post);
 
   @override
-  Widget build(BuildContext context) {}
+  Widget build(BuildContext context) {
+    return Scaffold(body: Column(children: [GenericPostCard(post: post)]));
+  }
 }

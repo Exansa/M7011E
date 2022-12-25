@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:my_app/pages/posts/post.dart';
 import 'package:my_app/resource/globalVar.dart';
 
 class GenericPostCard extends StatelessWidget {
@@ -53,7 +55,9 @@ class GenericPostCard extends StatelessWidget {
             children: <Widget>[
               TextButton(
                 child: const Text('VISIT'),
-                onPressed: () {/* ... */},
+                onPressed: () {
+                  Get.to(Post(post));
+                },
               ),
               const SizedBox(width: 8),
               TextButton(
