@@ -20,8 +20,8 @@ class SpecificPost extends State<Post> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-        body: Stack(
+    return Container(
+        child: Stack(
             fit: StackFit.expand,
             clipBehavior: Clip.antiAlias,
             children: [
