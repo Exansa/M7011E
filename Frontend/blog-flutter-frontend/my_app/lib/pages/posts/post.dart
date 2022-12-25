@@ -19,52 +19,48 @@ class SpecificPost extends State<Post> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    var screenSize = MediaQuery.of(context).size;
 
-    return Container(
-        child: Stack(
-            fit: StackFit.expand,
-            clipBehavior: Clip.antiAlias,
-            children: [
-          Column(
-            children: [
-              SizedBox(
-                width: 1200,
-                height: 630,
-                child: FittedBox(
-                    clipBehavior: Clip.hardEdge,
-                    child: Image.network(
-                      post["image"]["href"],
-                      fit: BoxFit.fitWidth,
-                    )),
-              ),
-              Row(children: [
-                CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(post["user"]["image"]["href"])),
-                Column(children: [
-                  Text(post["title"], style: theme.textTheme.displaySmall),
-                  Text("by ${post["user"]["username"]}",
-                      style: theme.textTheme.subtitle1)
-                ])
-              ]),
-              RichText(
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                          //Subject to change :)
-                          text: post["category"]["name"],
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[800])),
-                      // ignore: prefer_interpolation_to_compose_strings
-                      TextSpan(
-                          text: " - ${post["content"]}",
-                          style: theme.textTheme.bodyMedium)
-                    ],
-                  ))
-            ],
-          )
-        ]));
+    return Center(
+        child: SizedBox(
+            width: 1200,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.network(
+                  post["image"]["href"],
+                  fit: BoxFit.fitWidth,
+                ),
+                Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenSize.height / 50,
+                    ),
+                    child: Row(children: [
+                      CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(post["user"]["image"]["href"])),
+                      Column(children: [
+                        Text(post["title"],
+                            style: theme.textTheme.displaySmall),
+                        Text("by ${post["user"]["username"]}",
+                            style: theme.textTheme.subtitle1)
+                      ])
+                    ])),
+                RichText(
+                    text: TextSpan(
+                  children: [
+                    TextSpan(
+                        //Subject to change :)
+                        text: post["category"]["name"],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[800])),
+                    TextSpan(
+                        text: " - ${post["content"]}",
+                        style: theme.textTheme.bodyMedium)
+                  ],
+                ))
+              ],
+            )));
   }
 }
