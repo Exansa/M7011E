@@ -37,23 +37,25 @@ class GenericPostCard extends StatelessWidget {
               title: Text(post["title"]),
               // ignore: prefer_interpolation_to_compose_strings
               subtitle: Text("by ${post["user"]["username"]}")),
-          RichText(
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                      //Subject to change :)
-                      text: post["category"]["name"],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[800])),
-                  // ignore: prefer_interpolation_to_compose_strings
-                  TextSpan(
-                      text: " - ${post["content"]}",
-                      style: theme.textTheme.bodyMedium)
-                ],
-              )),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: cardWidth / 20),
+              child: RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                          //Subject to change :)
+                          text: post["category"]["name"],
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800])),
+                      // ignore: prefer_interpolation_to_compose_strings
+                      TextSpan(
+                          text: " - ${post["content"]}",
+                          style: theme.textTheme.bodyMedium)
+                    ],
+                  ))),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
