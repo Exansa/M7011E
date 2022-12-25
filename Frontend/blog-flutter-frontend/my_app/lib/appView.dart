@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_app/widgets/navigationItem.dart';
 import 'widgets/navigationBar.dart';
 
 class AppView extends StatelessWidget {
@@ -9,10 +10,15 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
+      appBar: PreferredSize(
+          preferredSize: Size(screenSize.width, 1000),
+          child: NavigationBarWeb()),
       backgroundColor: Colors.white,
       body: Column(
-        children: [NavigationBarWeb(), Expanded(child: child)],
+        children: [Expanded(child: child)],
       ),
     );
   }

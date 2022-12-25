@@ -2,29 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_app/pages/home.dart';
 
-class NavigationItem extends StatelessWidget {
+class NavigationItem extends StatefulWidget {
   final String title;
   final String route;
+  final double textSize;
 
-  const NavigationItem({Key key, @required this.title, this.route})
+  const NavigationItem(
+      {Key key, @required this.title, this.route, this.textSize})
       : super(key: key);
 
   @override
+  State<StatefulWidget> createState() =>
+      NavigationItemState(this.title, this.route, this.textSize);
+}
+
+class NavigationItemState extends State<NavigationItem> {
+  final String title;
+  final String route;
+  final double textSize;
+  var hovering = false;
+
+  NavigationItemState(this.title, this.route, this.textSize);
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      onHover: (value) => setState(() {
+        hovering = value;
+      }),
       onTap: () {
-        if (route == "/home") {
-          Get.to(Home());
-        } else {
-          Get.toNamed(route);
-        }
+        Get.toNamed(route);
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50.0),
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 20.0, color: Colors.white),
-        ),
+      child: Text(
+        title,
+        style: TextStyle(
+            fontSize: textSize, color: hovering ? Colors.white : Colors.black),
       ),
     );
   }
