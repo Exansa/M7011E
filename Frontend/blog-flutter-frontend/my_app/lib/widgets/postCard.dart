@@ -14,6 +14,8 @@ class GenericPostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
         child: SizedBox(
       width: cardWidth,
@@ -34,7 +36,7 @@ class GenericPostCard extends StatelessWidget {
                   backgroundImage: NetworkImage(post["user"]["image"]["href"])),
               title: Text(post["title"]),
               // ignore: prefer_interpolation_to_compose_strings
-              subtitle: Text("by " + post["user"]["username"])),
+              subtitle: Text("by ${post["user"]["username"]}")),
           RichText(
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -47,7 +49,9 @@ class GenericPostCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[800])),
                   // ignore: prefer_interpolation_to_compose_strings
-                  TextSpan(text: " - " + post["content"])
+                  TextSpan(
+                      text: " - ${post["content"]}",
+                      style: theme.textTheme.bodyMedium)
                 ],
               )),
           Row(
@@ -56,7 +60,7 @@ class GenericPostCard extends StatelessWidget {
               TextButton(
                 child: const Text('VISIT'),
                 onPressed: () {
-                  Get.to(Post(post));
+                  Get.to(() => Post(post));
                 },
               ),
               const SizedBox(width: 8),
