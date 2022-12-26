@@ -13,8 +13,10 @@ class Home extends StatelessWidget {
               onPressed: () {
                 Get.to(Browse());
               },
-              child: Text("Open other screen"))
+              child: Text("Open other screen")),
+          const Card(),
         ],
+        /*Card(), Card(), Card()*/
       ),
     );
   }
