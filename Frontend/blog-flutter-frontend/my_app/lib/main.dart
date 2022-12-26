@@ -9,6 +9,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,21 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/home',
       getPages: appRoutes(),
-      //home: Home(),
+      home: HomePage(),
     );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
+
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

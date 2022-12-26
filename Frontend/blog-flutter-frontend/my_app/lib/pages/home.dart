@@ -3,18 +3,19 @@ import 'package:get/get.dart';
 import 'package:my_app/pages/browse.dart';
 
 class Home extends StatelessWidget {
+  const Home({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return Container(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
               onPressed: () {
                 Get.to(Browse());
               },
-              child: Text("Open other screen")),
-          const Card(),
+              child: const Text("Open other screen"))
         ],
         /*Card(), Card(), Card()*/
       ),

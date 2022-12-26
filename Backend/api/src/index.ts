@@ -1,24 +1,42 @@
 'use strict';
 
 // Third Party Dependencies
-import express from 'express';
+import express, { Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
+
+// Middlewares
+import swaggerSpec from './middlewares/swagger';
+import { unpackJWT } from './middlewares/unpack';
+import authenticate from './middlewares/authenticate';
 
 // Custom Dependencies
-import Rabbitmq from './rabbitmq';
+import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 
 // Routes imports
 import Test from './routes/test';
+import User from './routes/user';
+import Auth from './routes/auth';
+import TOTP from './routes/totp';
+import Tags from './routes/tags';
+import Categories from './routes/categories';
+import Admins from './routes/admins';
+import Media from './routes/media';
+import Posts from './routes/posts';
+import Search from './routes/search';
 
 // Configs
 const PORT = process.env.PORT || 8080;
+
 const rabbitmq = new Rabbitmq();
 
 // Setup Express and middlewares
 const app: express.Application = express();
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec()));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 app.use((req, res, next) => {
@@ -36,11 +54,44 @@ app.use((req, res, next) => {
 	}
 	next();
 });
+app.use(unpackJWT);
 
 // Routes
-app.use('/test', Test(rabbitmq.channel('test')));
+app.use('/test', authenticate, Test(rabbitmq));
+app.use('/user', User(rabbitmq));
+app.use('/auth', Auth(rabbitmq));
+app.use('/totp', TOTP(rabbitmq));
+app.use('/tags', Tags(rabbitmq));
+app.use('/categories', Categories(rabbitmq));
+app.use('/admins', Admins(rabbitmq));
+app.use('/media', Media(rabbitmq));
+app.use('/posts', Posts(rabbitmq));
+app.use('/search', Search(rabbitmq));
+
+app.get('/healthcheck', (_req, _res) => {
+	_res.send({ status: 'ok' });
+});
 
 // Start the Server
 app.listen(PORT, async () => {
-	console.log(`Server started at url http://localhost:${PORT}/`);
+	console.info(`Server started at url http://localhost:${PORT}/`);
 });
+
+/**
+ * Quick and easy HTTP Response from a RPCResponse.
+ *
+ * Automatically sets the status code and sends the RPCResponse response object as JSON.
+ *
+ * @param res the Response instance
+ * @param response the RPCResponse
+ * @param fallbackStatusCode Optional status code to use if the RPCResponse status is undefined and success is false
+ */
+export const respond = (
+	res: Response,
+	response: RPCResponse,
+	fallbackStatusCode = 500
+): void => {
+	res.status(
+		response.status ?? (response.success ? 200 : fallbackStatusCode)
+	).json(response.response);
+};
