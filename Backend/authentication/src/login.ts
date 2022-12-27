@@ -1,5 +1,5 @@
 import { ConsumeMessage } from 'amqplib';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 import DB from '../../common/db';
 

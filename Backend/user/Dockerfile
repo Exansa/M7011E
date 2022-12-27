@@ -13,5 +13,6 @@ COPY user/. .
 RUN npm run build
 
 EXPOSE 8080
+ENV PORT 8080
 ENV NODE_ENV production
 CMD ["node", "./build/user/src/index.js"]

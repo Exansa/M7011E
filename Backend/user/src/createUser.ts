@@ -1,6 +1,6 @@
 import { ConsumeMessage } from 'amqplib';
 import { RPCResponse } from '../../common/rabbitmq';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import DB from '../../common/db';
 
 export default async (message: ConsumeMessage): Promise<RPCResponse> => {

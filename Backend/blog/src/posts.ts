@@ -1,10 +1,10 @@
-import { Collection, Document, MongoClient, ServerApiVersion } from 'mongodb';
+import { Document, MongoClient, ServerApiVersion } from 'mongodb';
 import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 import { ObjectId, WithId } from 'mongodb';
 import DB from '../../common/db';
 
-export default (rabbitmq: Rabbitmq) => {
-	rabbitmq.listen('posts.get_all', async (message) => {
+export default () => {
+	Rabbitmq.listen('posts.get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.set) {
@@ -20,8 +20,8 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var set = data.set;
-			var result = await DB.performQuery(
+			const set = data.set;
+			let result = await DB.performQuery(
 				'blog',
 				'posts',
 				async (collection) => {
@@ -55,7 +55,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('posts.user_get_all', async (message) => {
+	Rabbitmq.listen('posts.user_get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.set) {
@@ -74,8 +74,8 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var set = data.set;
-			var result = await DB.performQuery(
+			const set = data.set;
+			let result = await DB.performQuery(
 				'blog',
 				'posts',
 				async (collection) => {
@@ -110,7 +110,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('posts.search', async (message) => {
+	Rabbitmq.listen('posts.search', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.set) {
@@ -129,10 +129,10 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var set = data.set;
+			const set = data.set;
 			const search = generateSearch(data.search);
 
-			var result = await DB.performQuery(
+			let result = await DB.performQuery(
 				'blog',
 				'posts',
 				async (collection) => {
@@ -166,7 +166,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('posts.get_one', async (message) => {
+	Rabbitmq.listen('posts.get_one', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.id) {
@@ -182,7 +182,7 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var result = await DB.performQuery(
+			let result = await DB.performQuery(
 				'blog',
 				'posts',
 				async (collection) => {
@@ -213,7 +213,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('posts.post', async (message) => {
+	Rabbitmq.listen('posts.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.post) {
@@ -229,7 +229,7 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var post = data.post;
+			let post = data.post;
 			post = generatePost(post, data.user_id);
 			validatePost(post);
 
@@ -256,7 +256,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('posts.patch', async (message) => {
+	Rabbitmq.listen('posts.patch', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.tag) {
@@ -275,7 +275,7 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var post = data.post;
+			const post = data.post;
 			validatePost(post);
 
 			await checkAccess(data.id, data.user_id, client);
@@ -308,7 +308,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('posts.delete', async (message) => {
+	Rabbitmq.listen('posts.delete', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.id) {
@@ -324,7 +324,7 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var userId = data.user_id;
+			const userId = data.user_id;
 
 			//check access
 			await checkAccess(data.id, userId, client);
@@ -359,7 +359,7 @@ export default (rabbitmq: Rabbitmq) => {
 };
 
 function generatePost(inPost: any, userId: string) {
-	var post = {
+	const post = {
 		title: inPost.title,
 		created_at: new Date(),
 		content: inPost.content,
@@ -388,7 +388,7 @@ async function getDataFromPostsArray(
 }
 
 async function getDataFromPost(post: any, client: MongoClient) {
-	var collection = await client.db('blog').collection('users');
+	let collection = await client.db('blog').collection('users');
 	const query = {
 		_id: new ObjectId(post.user_id)
 	};
@@ -398,7 +398,7 @@ async function getDataFromPost(post: any, client: MongoClient) {
 	post.user = result;
 
 	collection = await client.db('blog').collection('categories');
-	var categoryLength = post.categories_id?.length ?? 0;
+	const categoryLength = post.categories_id?.length ?? 0;
 	post.categories = [];
 	for (let j = 0; j < categoryLength; j++) {
 		const query = {
@@ -411,7 +411,7 @@ async function getDataFromPost(post: any, client: MongoClient) {
 	}
 
 	collection = await client.db('blog').collection('tags');
-	var tagsLength = post.tags_id?.length ?? 0;
+	const tagsLength = post.tags_id?.length ?? 0;
 	post.tags = [];
 	for (let j = 0; j < tagsLength; j++) {
 		const query = {
@@ -424,7 +424,7 @@ async function getDataFromPost(post: any, client: MongoClient) {
 	}
 
 	collection = await client.db('blog').collection('media');
-	var mediaLength = post.media_id?.length ?? 0;
+	const mediaLength = post.media_id?.length ?? 0;
 	post.media = [];
 	for (let j = 0; j < mediaLength; j++) {
 		const query = {
