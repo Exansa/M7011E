@@ -8,7 +8,7 @@ export default () => {
 	router.get('/', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
-			'media.get_all',
+			'posts.get_all',
 			JSON.stringify(data)
 		);
 		respond(res, result);
@@ -17,7 +17,7 @@ export default () => {
 	router.get('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
-			'media.get_one',
+			'posts.get_one',
 			JSON.stringify(data)
 		);
 		respond(res, result);
@@ -26,7 +26,7 @@ export default () => {
 	router.post('/', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
-			'media.post',
+			'posts.post',
 			JSON.stringify(data)
 		);
 		respond(res, result);
@@ -35,7 +35,16 @@ export default () => {
 	router.patch('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
-			'media.patch',
+			'posts.patch',
+			JSON.stringify(data)
+		);
+		respond(res, result);
+	});
+
+	router.delete('/:id', async (req: Request, res: Response) => {
+		const data = { ...req.body, ...req?.params };
+		const result = await Rabbitmq.sendRPC(
+			'posts.delete',
 			JSON.stringify(data)
 		);
 		respond(res, result);

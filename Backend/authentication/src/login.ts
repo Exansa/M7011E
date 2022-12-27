@@ -77,7 +77,7 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 
 	// Remove the password from the user object.
 	const { password: _, ...user } = unauthenticatedUser;
-	const exp = Date.now() + 1000 * (lts ? 60 * 60 * 24 * 365 : 60 * 60);
+	const exp = Date.now() + 1000 * (lts === true ? 31536000 : 3600);
 
 	// Sign JWT
 	const jwtResponse = await Rabbitmq.sendRPC(

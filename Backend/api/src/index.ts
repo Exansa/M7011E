@@ -23,6 +23,8 @@ import Tags from './routes/tags';
 import Categories from './routes/categories';
 import Admins from './routes/admins';
 import Media from './routes/media';
+import Posts from './routes/posts';
+import Search from './routes/search';
 
 // Configs
 const PORT = process.env.PORT || 8080;
@@ -59,6 +61,8 @@ app.use('/tags', Tags());
 app.use('/categories', Categories());
 app.use('/admins', Admins());
 app.use('/media', Media());
+app.use('/posts', Posts());
+app.use('/search', Search());
 
 app.get('/healthcheck', (_req, _res) => {
 	_res.send({ status: 'ok' });

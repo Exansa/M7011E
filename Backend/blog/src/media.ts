@@ -4,39 +4,24 @@ import { ObjectId, WithId } from 'mongodb';
 import DB from '../../common/db';
 
 export default (rabbitmq: Rabbitmq) => {
-	rabbitmq.listen('admins.get_all', async (message) => {
+	rabbitmq.listen('media.get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.set) {
 			return { success: false, response: 'Missing param set' };
 		}
-		if (!data.admin) {
-			return { success: false, response: 'Missing param admin' };
-		}
-
-		const uri =
-			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
-		const client = new MongoClient(uri, {
-			// useNewUrlParser: true,
-			// useUnifiedTopology: true,
-			serverApi: ServerApiVersion.v1
-		});
 
 		try {
 			const set = data.set;
-			const userId = data.user_id;
-			const admin = generateAdmin(data.admin);
-			validateAdmin(admin);
+			const user_id = data.user_id;
 
-			//check access
-			await checkAccess(userId, client);
-
-			const array = await DB.performQuery(
+			const result = await DB.performQuery(
 				'blog',
-				'admins',
+				'media',
 				async (collection) => {
+					const query = { user_id: user_id };
 					const result = await collection
-						.find()
+						.find(query)
 						.sort({ _id: 1 })
 						.skip((set - 1) * 10)
 						.limit(10)
@@ -44,9 +29,6 @@ export default (rabbitmq: Rabbitmq) => {
 					return result;
 				}
 			);
-
-			const result = (await getUserFromAdminArray(array, client)) as any;
-			client.close();
 
 			const response: RPCResponse = {
 				success: true,
@@ -63,42 +45,25 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('admins.get_one', async (message) => {
+	rabbitmq.listen('media.get_one', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.id) {
 			return { success: false, response: 'Missing param id' };
 		}
 
-		const uri =
-			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
-		const client = new MongoClient(uri, {
-			// useNewUrlParser: true,
-			// useUnifiedTopology: true,
-			serverApi: ServerApiVersion.v1
-		});
-
 		try {
-			const userId = data.user_id;
-
-			//check access
-			await checkAccess(userId, client);
-
 			var result = await DB.performQuery(
 				'blog',
-				'admins',
+				'media',
 				async (collection) => {
 					const query = {
-						_id: new ObjectId(data.id),
-						user_id: data.admin.user_id
+						_id: new ObjectId(data.id)
 					};
 					const result = await collection.findOne(query);
 					return result;
 				}
 			);
-
-			result = await getUserFromAdmin(result, client);
-			client.close();
 
 			const response: RPCResponse = {
 				success: true,
@@ -116,42 +81,24 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('admins.post', async (message) => {
+	rabbitmq.listen('media.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
-		if (!data.admin) {
-			return { success: false, response: 'Missing param admin' };
+		if (!data.media) {
+			return { success: false, response: 'Missing param media' };
 		}
-
-		const uri =
-			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
-		const client = new MongoClient(uri, {
-			// useNewUrlParser: true,
-			// useUnifiedTopology: true,
-			serverApi: ServerApiVersion.v1
-		});
 
 		try {
 			var userId = data.user_id;
-			var admin = data.admin;
-			admin = generateAdmin(admin);
-			validateAdmin(admin);
-
-			//check access
-			await checkAccess(userId, client);
-
-			//check user exists
-			await checkUserExists(admin, client);
-
-			//check admin exists
-			await checkAdminExists(admin, client);
-			client.close();
+			var media = data.media;
+			media = generateMedia(media, userId);
+			validateMedia(media);
 
 			const result = await DB.performQuery(
 				'blog',
-				'admins',
+				'media',
 				async (collection) => {
-					const result = await collection.insertOne(admin);
+					const result = await collection.insertOne(media);
 					return result;
 				}
 			);
@@ -170,11 +117,11 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('admins.patch', async (message) => {
+	rabbitmq.listen('media.patch', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
-		if (!data.admin) {
-			return { success: false, response: 'Missing param admin' };
+		if (!data.media) {
+			return { success: false, response: 'Missing param media' };
 		}
 		if (!data.id) {
 			return { success: false, response: 'Missing param id' };
@@ -190,83 +137,24 @@ export default (rabbitmq: Rabbitmq) => {
 
 		try {
 			var userId = data.user_id;
-			var admin = data.admin;
-			admin = generateAdmin(admin);
-			validateAdmin(admin);
+			var media = data.media;
+			media = generateMedia(media, userId);
+			validateMedia(media);
 
-			//check access
-			await checkAccess(userId, client);
-
-			//check user exists
-			await checkUserExists(admin, client);
-
+			await checkAccess(data.id, userId, client);
 			client.close();
 
 			const result = await DB.performQuery(
 				'blog',
-				'admins',
+				'media',
 				async (collection) => {
 					const query = {
 						_id: new ObjectId(data.id),
-						user_id: admin.user_id
+						user_id: data.user_id
 					};
 					const result = await collection.updateOne(query, {
-						$set: admin
+						$set: media
 					});
-					return result;
-				}
-			);
-
-			const response: RPCResponse = {
-				success: result !== null,
-				response: result
-			};
-			return response;
-		} catch (error: any) {
-			const response = {
-				success: false,
-				response: error?.message.toString()
-			};
-			return response;
-		}
-	});
-
-	rabbitmq.listen('admins.delete', async (message) => {
-		const data = JSON.parse(message.content.toString());
-
-		if (!data.admin) {
-			return { success: false, response: 'Missing param admin' };
-		}
-		if (!data.id) {
-			return { success: false, response: 'Missing param id' };
-		}
-
-		const uri =
-			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
-		const client = new MongoClient(uri, {
-			// useNewUrlParser: true,
-			// useUnifiedTopology: true,
-			serverApi: ServerApiVersion.v1
-		});
-
-		try {
-			var userId = data.user_id;
-
-			//check access
-			await checkAccess(userId, client);
-
-			await lastSuperAdmin(data.id, client);
-
-			client.close();
-
-			const result = await DB.performQuery(
-				'blog',
-				'admins',
-				async (collection) => {
-					const query = {
-						_id: new ObjectId(data.id)
-					};
-					const result = await collection.deleteOne(query);
 					return result;
 				}
 			);
@@ -286,65 +174,25 @@ export default (rabbitmq: Rabbitmq) => {
 	});
 };
 
-function validateAdmin(admin: any) {
-	if (!admin.user_id) throw new Error('Name is not defined, invalid admin');
-	if (!admin.access) throw new Error('Access is not defined, invalid admin');
+function validateMedia(media: any) {
+	if (!media.user_id)
+		throw new Error('User id is not defined, invalid media');
+	if (!media.name) throw new Error('Name is not defined, invalid media');
+	if (!media.type) throw new Error('Type is not defined, invalid media');
+	if (!media.href) throw new Error('Href is not defined, invalid media');
 }
-function generateAdmin(admin: any): any {
+function generateMedia(media: any, user_id: any): any {
 	return {
-		user_id: admin.user_id,
-		access: admin.access
+		user_id: user_id,
+		name: media.name,
+		type: media.type,
+		href: media.href
 	};
 }
 
-async function checkAccess(userId: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('admins');
-	const query = { user_id: userId };
+async function checkAccess(id: any, userId: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('media');
+	const query = { _id: new ObjectId(id), user_id: userId };
 	const result = await collection.findOne(query);
-	if (!result || result.access != 'superAdmin')
-		throw new Error('Access denied');
-}
-async function checkUserExists(admin: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('users');
-	const query = { _id: new ObjectId(admin.user_id) };
-	const result = await collection.findOne(query);
-	if (!result) throw new Error('User does not exist');
-}
-async function checkAdminExists(admin: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('admins');
-	const query = { user_id: admin.user_id };
-	const alreadyExists = await collection.findOne(query);
-	if (alreadyExists) throw new Error('Admin already exists');
-}
-
-async function getUserFromAdminArray(
-	array: WithId<Document>[],
-	client: MongoClient
-) {
-	for (let i = 0; i < array.length; i++) {
-		array[i] = await getUserFromAdmin(array[i], client);
-		console.log(array[i]);
-	}
-	return array;
-}
-async function getUserFromAdmin(admin: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('users');
-	const query = {
-		_id: new ObjectId(admin.user_id)
-	};
-	const result = await collection.findOne(query, {
-		projection: { pw: 0 }
-	});
-	if (!result) throw new Error('User does not exist');
-
-	admin.user = result;
-	return admin;
-}
-
-async function lastSuperAdmin(id: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('admins');
-	const query = { access: 'superAdmin' };
-	const result = await collection.find(query).toArray();
-	if (result.length == 1 && result[0]._id == id)
-		throw new Error('Cant delete last super admin');
+	if (!result) throw new Error('Access denied');
 }

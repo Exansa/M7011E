@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:my_app/pages/posts/post.dart';
 import 'package:my_app/resource/globalVar.dart';
 
 class GenericPostCard extends StatelessWidget {
@@ -12,6 +14,8 @@ class GenericPostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
         child: SizedBox(
       width: cardWidth,
@@ -32,28 +36,34 @@ class GenericPostCard extends StatelessWidget {
                   backgroundImage: NetworkImage(post["user"]["image"]["href"])),
               title: Text(post["title"]),
               // ignore: prefer_interpolation_to_compose_strings
-              subtitle: Text("by " + post["user"]["username"])),
-          RichText(
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                      //Subject to change :)
-                      text: post["category"]["name"],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[800])),
-                  // ignore: prefer_interpolation_to_compose_strings
-                  TextSpan(text: " - " + post["content"])
-                ],
-              )),
+              subtitle: Text("by ${post["user"]["username"]}")),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: cardWidth / 20),
+              child: RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                          //Subject to change :)
+                          text: post["category"]["name"],
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800])),
+                      // ignore: prefer_interpolation_to_compose_strings
+                      TextSpan(
+                          text: " - ${post["content"]}",
+                          style: theme.textTheme.bodyMedium)
+                    ],
+                  ))),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               TextButton(
                 child: const Text('VISIT'),
-                onPressed: () {/* ... */},
+                onPressed: () {
+                  Get.to(() => Post(post));
+                },
               ),
               const SizedBox(width: 8),
               TextButton(

@@ -5,28 +5,53 @@ import 'package:my_app/pages/home.dart';
 import 'package:my_app/resource/globalVar.dart';
 import 'package:my_app/widgets/postCard.dart';
 
-class Browse extends StatelessWidget {
+class Browse extends StatefulWidget {
   Browse({Key key}) : super(key: key);
 
+  @override
+  BrowseState createState() => BrowseState();
+}
+
+class BrowseState extends State<Browse> {
   final posts = getPosts();
 
   static final cardWidth = Globals.CARD_DIMENSIONS["width"];
   static final cardHeight = Globals.CARD_DIMENSIONS["height"];
 
-  var i_count = 4;
+  var cardCount = 4;
   var increaseBy = 4;
+  var loading = false;
+
+  //TODO: load more from db, this whole function is just a simulation
+  handleLoadMore() {
+    setState(() {
+      loading = true;
+    });
+    Future.delayed(
+        const Duration(seconds: 2),
+        () => setState(() {
+              loading = false;
+            }));
+
+    if (cardCount + increaseBy < posts.length) {
+      setState(() {
+        cardCount += increaseBy;
+      });
+    } else {
+      setState(() {
+        cardCount = posts.length;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    var screenSize = MediaQuery.of(context).size;
+
+    return Container(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(
-              onPressed: () {
-                Get.to(Home());
-              },
-              child: const Text("Open other screen")),
           Flexible(
               child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -35,15 +60,26 @@ class Browse extends StatelessWidget {
                       childAspectRatio: 1.0,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10),
-                  itemCount: 9,
+                  itemCount: cardCount,
                   itemBuilder: (context, index) {
                     return GenericPostCard(post: posts[index]);
                   })),
-          ElevatedButton(
-              onPressed: () {
-                //TODO: implement load more
-              },
-              child: const Text("Load more")),
+          SizedBox(
+              width: 200,
+              height: 75,
+              child: ElevatedButton(
+                onPressed: handleLoadMore,
+                child: ListTile(
+                    leading: Visibility(
+                      visible: loading,
+                      child:
+                          const CircularProgressIndicator(color: Colors.white),
+                    ),
+                    title: Text("Load more")),
+              )),
+          SizedBox(
+            height: screenSize.height / 100,
+          ),
         ],
       ),
     );

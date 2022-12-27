@@ -85,5 +85,14 @@ export default () => {
 		respond(res, result);
 	});
 
+	router.get('/posts', async (req: Request, res: Response) => {
+		const data = req.body;
+		const result = await Rabbitmq.sendRPC(
+			'posts.user_get_all',
+			JSON.stringify(data)
+		);
+		respond(res, result);
+	});
+
 	return router;
 };
