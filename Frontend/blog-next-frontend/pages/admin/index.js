@@ -9,9 +9,9 @@ import Page from "../resource/layout/page";
 export default function AdminDashboard() {
   return (
     <>
-      <Page title="Index">
+      <adminPage title="Admin dashboard">
         
-      </Page>
+      </adminPage>
     </>
   );
 }
