@@ -14,5 +14,14 @@ export default () => {
 		respond(res, result);
 	});
 
+	router.get('/users', async (req: Request, res: Response) => {
+		const data = req.body;
+		const result = await Rabbitmq.sendRPC(
+			'users.search',
+			JSON.stringify(data)
+		);
+		respond(res, result);
+	});
+
 	return router;
 };

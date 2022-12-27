@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
+import { unpackParams } from '../middlewares/unpack';
 
 const router = Router();
 
@@ -89,6 +90,33 @@ export default () => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'posts.user_get_all',
+			JSON.stringify(data)
+		);
+		respond(res, result);
+	});
+
+	router.get('/', async (req: Request, res: Response) => {
+		const data = req.body;
+		const result = await Rabbitmq.sendRPC(
+			'users.get_all',
+			JSON.stringify(data)
+		);
+		respond(res, result);
+	});
+
+	router.get('/:id', unpackParams, async (req: Request, res: Response) => {
+		const data = req.body;
+		const result = await Rabbitmq.sendRPC(
+			'users.get_one',
+			JSON.stringify(data)
+		);
+		respond(res, result);
+	});
+
+	router.delete('/:id', unpackParams, async (req: Request, res: Response) => {
+		const data = req.body;
+		const result = await Rabbitmq.sendRPC(
+			'user.delete',
 			JSON.stringify(data)
 		);
 		respond(res, result);
