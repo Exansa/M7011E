@@ -2,13 +2,13 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from "next-auth/providers/credentials";
 import { get_KV } from '../../../data/mock_request/db_handler';
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
+//import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import connectDB from './lib/connectDB';
-connectDB();
+//connectDB();
 
 const options = {
 
-  adapter: MongoDBAdapter(clientPromise),
+  //adapter: MongoDBAdapter(clientPromise),
 
   providers: [
     GoogleProvider({

@@ -10,7 +10,7 @@ import Footer from "./footer";
 
 // ----------------------------------------------------------------------
 
-const adminPage = forwardRef(({ children, meta, title, ...other }, ref) => (
+const AdminPage = forwardRef(({ children, meta, title, ...other }, ref) => (
   <>
     <Head>
       <title>{`${title} | Blog`}</title>
@@ -46,4 +46,4 @@ const adminPage = forwardRef(({ children, meta, title, ...other }, ref) => (
   </>
 ));
 
-export default Page;
+export default AdminPage;

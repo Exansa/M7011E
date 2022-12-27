@@ -32,6 +32,7 @@ const settings = [
   { link: Routes.users.index, name: "Profile" },
   { link: Routes.users.settings, name: "Settings" },
   { link: Routes.posts.make, name: "Post" },
+  { link: Routes.admin.index, name: "Admin" },
 ];
 
 function ResponsiveAppBar() {

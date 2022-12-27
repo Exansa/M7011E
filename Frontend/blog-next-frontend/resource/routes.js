@@ -12,6 +12,10 @@ const Routes = {
     settings: "/profile/settings",
     specific: (username) => `/profile/${username}`,
   },
+
+  admin: {
+    index: "/admin",
+  }
 };
 
 export default Routes;
