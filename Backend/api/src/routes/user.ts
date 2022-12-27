@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
 import { unpackParams } from '../middlewares/unpack';
+import authenticate from '../middlewares/authenticate';
 
 const router = Router();
 
@@ -113,14 +114,33 @@ export default () => {
 		respond(res, result);
 	});
 
-	router.delete('/:id', unpackParams, async (req: Request, res: Response) => {
-		const data = req.body;
-		const result = await Rabbitmq.sendRPC(
-			'user.delete',
-			JSON.stringify(data)
-		);
-		respond(res, result);
-	});
+	router.patch(
+		'/:id',
+		unpackParams,
+		authenticate,
+		async (req: Request, res: Response) => {
+			const data = req.body;
+			const result = await Rabbitmq.sendRPC(
+				'user.patch',
+				JSON.stringify(data)
+			);
+			respond(res, result);
+		}
+	);
+
+	router.delete(
+		'/:id',
+		unpackParams,
+		authenticate,
+		async (req: Request, res: Response) => {
+			const data = req.body;
+			const result = await Rabbitmq.sendRPC(
+				'user.delete',
+				JSON.stringify(data)
+			);
+			respond(res, result);
+		}
+	);
 
 	return router;
 };
