@@ -20,7 +20,10 @@ export default class Rabbitmq {
 	 * @param message The message to be sent
 	 * @returns Promise containing string
 	 */
-	sendRPC = async (queue: string, message: string): Promise<RPCResponse> => {
+	static sendRPC = async (
+		queue: string,
+		message: string
+	): Promise<RPCResponse> => {
 		const connection = await amqp.connect(AMQP_SERVER);
 		const channel = await connection.createChannel();
 		const rpcQueue = await channel.assertQueue(queue + '.rpc', {
@@ -56,7 +59,7 @@ export default class Rabbitmq {
 	 * @param queue Which queue to listen for
 	 * @param method The method to be invoked on message
 	 */
-	listen = async (
+	static listen = async (
 		queue: string,
 		method: (message: ConsumeMessage) => Promise<RPCResponse>
 	): Promise<void> => {

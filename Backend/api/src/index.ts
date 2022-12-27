@@ -13,12 +13,11 @@ import { unpackJWT } from './middlewares/unpack';
 import authenticate from './middlewares/authenticate';
 
 // Custom Dependencies
-import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
+import { RPCResponse } from '../../common/rabbitmq';
 
 // Routes imports
 import Test from './routes/test';
 import User from './routes/user';
-import Auth from './routes/auth';
 import TOTP from './routes/totp';
 import Tags from './routes/tags';
 import Categories from './routes/categories';
@@ -27,8 +26,6 @@ import Media from './routes/media';
 
 // Configs
 const PORT = process.env.PORT || 8080;
-
-const rabbitmq = new Rabbitmq();
 
 // Setup Express and middlewares
 const app: express.Application = express();
@@ -55,14 +52,13 @@ app.use((req, res, next) => {
 app.use(unpackJWT);
 
 // Routes
-app.use('/test', authenticate, Test(rabbitmq));
-app.use('/user', User(rabbitmq));
-app.use('/auth', Auth(rabbitmq));
-app.use('/totp', TOTP(rabbitmq));
-app.use('/tags', Tags(rabbitmq));
-app.use('/categories', Categories(rabbitmq));
-app.use('/admins', Admins(rabbitmq));
-app.use('/media', Media(rabbitmq));
+app.use('/test', authenticate, Test());
+app.use('/user', User());
+app.use('/totp', authenticate, TOTP());
+app.use('/tags', Tags());
+app.use('/categories', Categories());
+app.use('/admins', Admins());
+app.use('/media', Media());
 
 app.get('/healthcheck', (_req, _res) => {
 	_res.send({ status: 'ok' });
