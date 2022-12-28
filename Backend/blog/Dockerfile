@@ -1,21 +1,18 @@
 FROM node:19-alpine
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/common
+COPY common/package*.json .
+RUN npm ci --only=production
+COPY common/. .
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
-
-# Bundle app source
-COPY . .
+WORKDIR /usr/src/app/blog
+COPY blog/package*.json .
+RUN npm ci --only=production
+COPY blog/. .
 
 RUN npm run build
 
 EXPOSE 8080
-CMD ["node", "./build/index.js"]
+ENV PORT 8080
+ENV NODE_ENV production
+CMD ["node", "./build/blog/src/index.js"]

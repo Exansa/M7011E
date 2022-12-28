@@ -13,8 +13,7 @@ const port = 8079;
 // parse the request body
 app.use(express.json());
 
-const rabbitmq = new Rabbitmq();
-rabbitmq.listen('test', async (message) => {
+Rabbitmq.listen('test', async (message) => {
 	const data = JSON.parse(message.content.toString());
 	const response: RPCResponse = {
 		success: true,
