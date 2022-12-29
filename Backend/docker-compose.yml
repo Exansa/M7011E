@@ -40,10 +40,10 @@ services:
     ports:
       - "5004:8080"
 
-  blog:
-    container_name: "blog"
-    build:
-      context: .
-      dockerfile: ./blog/Dockerfile
-    ports:
-      - "5005:8080"
+  #blog:
+  #  container_name: "blog"
+  #  build:
+  #    context: .
+  #    dockerfile: ./blog/Dockerfile
+  #  ports:
+  #    - "5005:8080"
