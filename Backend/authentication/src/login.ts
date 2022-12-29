@@ -4,6 +4,7 @@ import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 import DB from '../../common/db';
 
 export default async (message: ConsumeMessage): Promise<RPCResponse> => {
+	console.info('authentication.login');
 	const { email, username, password, totp, lts } = JSON.parse(
 		message.content.toString()
 	);
@@ -33,6 +34,10 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 			status: 404,
 			response: 'User not found'
 		};
+	}
+	// Ugly solution to check if the result is a user object that contains a password field. Else return as probably error.
+	if (!unauthenticatedUser.password) {
+		return { success: false, status: 500, response: unauthenticatedUser };
 	}
 	if (!bcrypt.compareSync(password, unauthenticatedUser.password)) {
 		return {
