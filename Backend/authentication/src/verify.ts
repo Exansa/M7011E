@@ -9,6 +9,7 @@ import { SECRET } from '.';
  * Updates 'users.sessions' database collection to update the last_used field
  */
 export default async (message: ConsumeMessage): Promise<RPCResponse> => {
+	console.info('authentication.verify');
 	const data = JSON.parse(message.content.toString());
 	if (!data) {
 		return { success: false, response: 'Missing JWT data' };

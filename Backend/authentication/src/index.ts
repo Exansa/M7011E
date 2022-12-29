@@ -15,6 +15,7 @@ Rabbitmq.listen('authentication.login', login);
 Rabbitmq.listen('authentication.verify', verify);
 
 Rabbitmq.listen('authentication.sign', async (message) => {
+	console.info('authentication.sign');
 	const data = JSON.parse(message.content.toString());
 	const token = JWT.sign(data, SECRET);
 	return { success: true, response: token };
