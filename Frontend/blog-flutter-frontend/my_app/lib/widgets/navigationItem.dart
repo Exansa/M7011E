@@ -32,14 +32,15 @@ class NavigationItemState extends State<NavigationItem> {
         hovering = value;
       }),
       onTap: () {
-        if (route != "/login" && route != "/logout") {
-          Get.toNamed(route);
-        } else if (route == "/login") {
-          print("Login pressed");
-          GoogleSignInApi.Login();
-        } else {
-          GoogleSignInApi.SignOut();
-        }
+        Get.toNamed(route);
+        // if (route != "/login" && route != "/logout") {
+        //   Get.toNamed(route);
+        // } else if (route == "/login") {
+        //   print("Login pressed");
+        //   GoogleSignInApi.Login();
+        // } else {
+        //   GoogleSignInApi.SignOut();
+        // }
       },
       child: Text(
         title,
