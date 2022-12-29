@@ -1,10 +1,10 @@
-import { Collection, Document, MongoClient, ServerApiVersion } from 'mongodb';
-import Rabbitmq, { RPCResponse } from './rabbitmq';
+import { Document, MongoClient, ServerApiVersion } from 'mongodb';
+import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 import { ObjectId, WithId } from 'mongodb';
 import DB from '../../common/db';
 
-export default (rabbitmq: Rabbitmq) => {
-	rabbitmq.listen('admins.get_all', async (message) => {
+export default () => {
+	Rabbitmq.listen('admins.get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.set) {
@@ -31,7 +31,7 @@ export default (rabbitmq: Rabbitmq) => {
 			//check access
 			await checkAccess(userId, client);
 
-			var result = await DB.performQuery(
+			let result = await DB.performQuery(
 				'blog',
 				'admins',
 				async (collection) => {
@@ -65,7 +65,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('admins.get_one', async (message) => {
+	Rabbitmq.listen('admins.get_one', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.id) {
@@ -86,7 +86,7 @@ export default (rabbitmq: Rabbitmq) => {
 			//check access
 			await checkAccess(userId, client);
 
-			var result = await DB.performQuery(
+			let result = await DB.performQuery(
 				'blog',
 				'admins',
 				async (collection) => {
@@ -119,7 +119,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('admins.post', async (message) => {
+	Rabbitmq.listen('admins.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.admin) {
@@ -135,8 +135,8 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var userId = data.user_id;
-			var admin = data.admin;
+			const userId = data.user_id;
+			let admin = data.admin;
 			admin = generateAdmin(admin);
 			validateAdmin(admin);
 
@@ -173,7 +173,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('admins.patch', async (message) => {
+	Rabbitmq.listen('admins.patch', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.admin) {
@@ -192,8 +192,8 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var userId = data.user_id;
-			var admin = data.admin;
+			const userId = data.user_id;
+			let admin = data.admin;
 			admin = generateAdmin(admin);
 			validateAdmin(admin);
 
@@ -234,7 +234,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('admins.delete', async (message) => {
+	Rabbitmq.listen('admins.delete', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.admin) {
@@ -253,7 +253,7 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var userId = data.user_id;
+			const userId = data.user_id;
 
 			//check access
 			await checkAccess(userId, client);

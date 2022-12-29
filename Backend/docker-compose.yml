@@ -32,18 +32,26 @@ services:
     ports:
       - "5003:8080"
 
+  user:
+    container_name: "user"
+    build:
+      context: .
+      dockerfile: ./user/Dockerfile
+    ports:
+      - "5004:8080"
+
   totp:
     container_name: "totp"
     build:
       context: .
       dockerfile: ./totp/Dockerfile
     ports:
-      - "5004:8080"
+      - "5005:8080"
 
-  #blog:
-  #  container_name: "blog"
-  #  build:
-  #    context: .
-  #    dockerfile: ./blog/Dockerfile
-  #  ports:
-  #    - "5005:8080"
+  blog:
+    container_name: "blog"
+    build:
+      context: .
+      dockerfile: ./blog/Dockerfile
+    ports:
+      - "5006:8080"

@@ -5,7 +5,7 @@ import { unpackParams } from '../middlewares/unpack';
 
 const router = Router();
 
-export default (rabbitmq: Rabbitmq) => {
+export default () => {
 	/**
 	 * @swagger
 	 * /test:
@@ -37,8 +37,9 @@ export default (rabbitmq: Rabbitmq) => {
 	 *         description: Internal Server Error
 	 */
 	router.post('/', async (req: Request, res: Response) => {
-		const data = await req.body;
-		const result = await rabbitmq.sendRPC('test', JSON.stringify(data));
+		const jwt = req.header('Authorization')?.split(' ')[1];
+		const data = { ...req.body, jwt };
+		const result = await Rabbitmq.sendRPC('test', JSON.stringify(data));
 		respond(res, result);
 	});
 
@@ -80,7 +81,7 @@ export default (rabbitmq: Rabbitmq) => {
 	 */
 	router.post('/:id', unpackParams, async (req: Request, res: Response) => {
 		const data = req.body;
-		const result = await rabbitmq.sendRPC('test', JSON.stringify(data));
+		const result = await Rabbitmq.sendRPC('test', JSON.stringify(data));
 		respond(res, result);
 	});
 

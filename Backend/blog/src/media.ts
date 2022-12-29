@@ -1,10 +1,10 @@
-import { Collection, Document, MongoClient, ServerApiVersion } from 'mongodb';
-import Rabbitmq, { RPCResponse } from './rabbitmq';
-import { ObjectId, WithId } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
+import { ObjectId } from 'mongodb';
 import DB from '../../common/db';
 
-export default (rabbitmq: Rabbitmq) => {
-	rabbitmq.listen('media.get_all', async (message) => {
+export default () => {
+	Rabbitmq.listen('media.get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.set) {
@@ -45,7 +45,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('media.get_one', async (message) => {
+	Rabbitmq.listen('media.get_one', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.id) {
@@ -53,7 +53,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 
 		try {
-			var result = await DB.performQuery(
+			const result = await DB.performQuery(
 				'blog',
 				'media',
 				async (collection) => {
@@ -72,7 +72,6 @@ export default (rabbitmq: Rabbitmq) => {
 			};
 			return response;
 		} catch (error: any) {
-			console.log(error);
 			const response = {
 				success: false,
 				response: error?.message.toString()
@@ -81,7 +80,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('media.post', async (message) => {
+	Rabbitmq.listen('media.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.media) {
@@ -89,8 +88,8 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 
 		try {
-			var userId = data.user_id;
-			var media = data.media;
+			const userId = data.user_id;
+			let media = data.media;
 			media = generateMedia(media, userId);
 			validateMedia(media);
 
@@ -117,7 +116,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('media.patch', async (message) => {
+	Rabbitmq.listen('media.patch', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.media) {
@@ -136,8 +135,8 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var userId = data.user_id;
-			var media = data.media;
+			const userId = data.user_id;
+			let media = data.media;
 			media = generateMedia(media, userId);
 			validateMedia(media);
 

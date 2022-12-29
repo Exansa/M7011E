@@ -1,10 +1,10 @@
-import { Collection, Document, MongoClient, ServerApiVersion } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
-import { ObjectId, WithId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import DB from '../../common/db';
 
-export default (rabbitmq: Rabbitmq) => {
-	rabbitmq.listen('categories.get_all', async (message) => {
+export default () => {
+	Rabbitmq.listen('categories.get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.set) {
@@ -12,7 +12,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 
 		try {
-			var set = data.set;
+			const set = data.set;
 			const result = await DB.performQuery(
 				'blog',
 				'categories',
@@ -42,7 +42,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('categories.get_one', async (message) => {
+	Rabbitmq.listen('categories.get_one', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.id) {
@@ -50,7 +50,6 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 
 		try {
-			var set = data.set;
 			const query = { _id: new ObjectId(data.id) };
 			const result = await DB.performQuery(
 				'blog',
@@ -76,7 +75,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('categories.post', async (message) => {
+	Rabbitmq.listen('categories.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.category) {
@@ -92,8 +91,8 @@ export default (rabbitmq: Rabbitmq) => {
 		});
 
 		try {
-			var userId = data.user_id;
-			var category = data.category;
+			const userId = data.user_id;
+			let category = data.category;
 			category = generateCategory(category);
 			validateCategory(category);
 
@@ -124,7 +123,7 @@ export default (rabbitmq: Rabbitmq) => {
 		}
 	});
 
-	rabbitmq.listen('categories.patch', async (message) => {
+	Rabbitmq.listen('categories.patch', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
 		if (!data.category) {
