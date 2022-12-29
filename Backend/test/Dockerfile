@@ -2,12 +2,12 @@ FROM node:19-alpine
 
 WORKDIR /usr/src/app/common
 COPY common/package*.json .
-RUN npm ci --only=production
+RUN npm i
 COPY common/. .
 
 WORKDIR /usr/src/app/test
 COPY test/package*.json .
-RUN npm ci --only=production
+RUN npm i
 COPY test/. .
 
 RUN npm run build
