@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:my_app/pages/user/login.dart';
 import 'package:my_app/pages/user/signup.dart';
 
 import '../../resource/globalVar.dart';
 
-class Login extends StatefulWidget {
+class SignUp extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
-  TextEditingController idController = TextEditingController();
+class _SignUpState extends State<SignUp> {
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   final RegExp emailCheck = Globals.REGEXP['email'];
@@ -22,23 +24,19 @@ class _LoginState extends State<Login> {
     return emailCheck.hasMatch(input) || userCheck.hasMatch(input);
   }
 
-  handleLogin() {
-    var requestParams = {};
-
-    if (!validate(idController.text) ||
+  handleSignUp() {
+    if (!emailCheck.hasMatch(emailController.text) ||
+        !userCheck.hasMatch(userNameController.text) ||
         !passwordCheck.hasMatch(passwordController.text)) {
       print("Invalid input!"); //TODO: Handle this
       return;
     }
 
-    if (emailCheck.hasMatch(idController.text)) {
-      requestParams['email'] = idController.text;
-    } else {
-      requestParams['username'] = idController.text;
-    }
-
-    //TODO: Don't send password in plaintext
-    requestParams['password'] = passwordController.text;
+    final requestParams = {
+      'email': emailController.text,
+      'username': userNameController.text,
+      'password': passwordController.text
+    };
 
     print(requestParams);
   }
@@ -58,7 +56,7 @@ class _LoginState extends State<Login> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Login', style: theme.textTheme.displaySmall),
+                Text('Sign up', style: theme.textTheme.displaySmall),
                 const SizedBox(
                   height: 50,
                 ),
@@ -66,12 +64,24 @@ class _LoginState extends State<Login> {
                   height: 100,
                   child: TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (input) => validate(input)
+                    validator: (input) => userCheck.hasMatch(input)
                         ? null
-                        : "Please input a valid username or email.",
-                    controller: idController,
+                        : "Allowed characters: [a-z, A-Z, 0-9, _]",
+                    controller: userNameController,
                     decoration: const InputDecoration(
-                      hintText: 'Username or E-mail',
+                      hintText: 'Username',
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
+                  child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (input) =>
+                        emailCheck.hasMatch(input) ? null : "Invalid E-mail",
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      hintText: 'E-mail',
                     ),
                   ),
                 ),
@@ -82,7 +92,7 @@ class _LoginState extends State<Login> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (input) => passwordCheck.hasMatch(input)
                           ? null
-                          : "Password must be between 1 and 50 characters.",
+                          : "Invalid password. Must be 1-50 characters.",
                       controller: passwordController,
                       decoration: InputDecoration(
                         hintText: 'Password',
@@ -102,23 +112,21 @@ class _LoginState extends State<Login> {
                       )),
                 ),
                 ElevatedButton(
-                  child: const Text('Login'),
-                  onPressed: () {
-                    handleLogin();
-                  },
+                  child: const Text('Sign up'),
+                  onPressed: handleSignUp,
                 ),
                 const SizedBox(
                   height: 50,
                 ),
                 InkWell(
                     onTap: () {
-                      Get.to(SignUp(), transition: Transition.zoom);
+                      Get.to(Login(), transition: Transition.zoom);
                     },
                     onHover: (value) => setState(() {
                           _hoveringLink = value;
                         }),
                     hoverColor: Colors.transparent,
-                    child: Text("Don't have an account? Sign up here!",
+                    child: Text('Already have an account? Sign in here!',
                         style: theme.textTheme.bodySmall.copyWith(
                             color: _hoveringLink
                                 ? theme.primaryColor
