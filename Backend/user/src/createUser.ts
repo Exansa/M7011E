@@ -1,12 +1,10 @@
 import { ConsumeMessage } from 'amqplib';
-import { RPCResponse } from '../../common/rabbitmq';
-import bcrypt from 'bcryptjs';
+import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 import DB from '../../common/db';
 
 export default async (message: ConsumeMessage): Promise<RPCResponse> => {
-	const { username, email, password } = JSON.parse(
-		message.content.toString()
-	);
+	console.log(message.content.toString());
+	const { username, bearer } = JSON.parse(message.content.toString());
 	if (!username) {
 		return {
 			success: false,
@@ -14,23 +12,24 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 			response: 'Missing parameter username'
 		};
 	}
-	if (!email) {
+	if (!bearer) {
 		return {
 			success: false,
 			status: 400,
-			response: 'Missing parameter email'
+			response: 'Missing parameter bearer'
 		};
 	}
-	if (!password) {
-		return {
-			success: false,
-			status: 400,
-			response: 'Missing parameter password'
-		};
-	}
+
+	const userResponse = await Rabbitmq.sendRPC(
+		'authentication.verify',
+		JSON.stringify(bearer)
+	);
+	if (!userResponse.success) return userResponse;
+	const { sub: auth0_id, email, picture } = JSON.parse(userResponse.response);
+
 	return await DB.performQuery('users', 'users', async (collection) => {
 		const existingUser = await collection.findOne({
-			$or: [{ username }, { email }]
+			$or: [{ username }, { email }, { auth0_id }]
 		});
 		if (existingUser) {
 			return {
@@ -39,19 +38,17 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 				response: 'User already exists'
 			};
 		}
-		const hashedPassword = await bcrypt.hash(password, 10);
-		const createdAt = new Date();
 		const createdUser = await collection.insertOne({
+			auth0_id,
 			username,
 			email,
-			password: hashedPassword,
-			profile_picture_url: null,
-			createdAt
+			picture,
+			createdAt: new Date()
 		});
 		if (!createdUser) {
 			return {
 				success: false,
-				response: 'User could not be created'
+				response: 'User could not be created for unknown reason'
 			};
 		}
 		return { success: true, status: 201, response: 'User created' };

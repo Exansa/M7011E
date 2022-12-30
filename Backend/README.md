@@ -4,14 +4,8 @@
 
 1. Make sure you have installed Docker and Docker Compose
 2. Navigate to Backend folder in a terminal
-3. Create a file named `.env` containing
-
-```
-JWT_SECRET='V3ry53cr3t'
-```
-
-4. `$ docker compose up -d`
-5. You can now make HTTP requests to the API Service using http://localhost:5001
+3. `$ docker compose up -d`
+4. You can now make HTTP requests to the API Service using http://localhost:5001
 
 ## Prerequisities
 

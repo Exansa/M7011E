@@ -9,7 +9,6 @@ import swaggerUi from 'swagger-ui-express';
 
 // Middlewares
 import swaggerSpec from './middlewares/swagger';
-import { unpackJWT } from './middlewares/unpack';
 import authenticate from './middlewares/authenticate';
 
 // Custom Dependencies
@@ -51,7 +50,6 @@ app.use((req, res, next) => {
 	}
 	next();
 });
-app.use(unpackJWT);
 
 // Routes
 app.use('/test', authenticate, Test());
