@@ -6,8 +6,20 @@ class SessionProvider {
   static const apiPort = "5000";
   static const apiURL = "http://$apiAddress:$apiPort";
 
-  static Future<Map<String, dynamic>> login(Map request) async {
-    var response = await postRequest("$apiURL/user/login", request);
+  static Future<Map<String, dynamic>> login(Map params) async {
+    if (params["username"] != null) {
+      //Add auth header if username is provided
+      params["Bearer"] =
+          base64Encode("${params["username"]}:${params["password"]}".codeUnits);
+    } else if (params["email"] != null) {
+      //Add auth header if email is provided
+      params["Bearer"] =
+          base64Encode("${params["email"]}:${params["password"]}".codeUnits);
+    } else {
+      return null; //TODO: ERR?
+    }
+
+    var response = await postRequest("$apiURL/user/login", params);
     var bearerToken = response["token"];
     //TODO: Save bearer token to local storage
 
@@ -35,16 +47,9 @@ class SessionProvider {
     //Setup request
     var request = await httpClient.postUrl(uri);
 
-    if (params["username"] != null) {
-      var bearerAuth =
-          'Bearer ${base64Encode("${params["username"]}:${params["password"]}".codeUnits)}';
-      request.headers.set('authorization', bearerAuth);
-    }
-
-    if (params["email"] != null) {
-      var bearerAuth =
-          'Bearer ${base64Encode("${params["email"]}:${params["password"]}".codeUnits)}';
-      request.headers.set('authorization', bearerAuth);
+    if (params["Bearer"] != null) {
+      request.headers.set('Authorization', 'Bearer ${params["Bearer"]}');
+      params.remove("Bearer");
     }
 
     //Make request
