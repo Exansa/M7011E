@@ -39,7 +39,9 @@ class SessionProvider {
       var bearerAuth =
           'Bearer ${base64Encode("${params["username"]}:${params["password"]}".codeUnits)}';
       request.headers.set('authorization', bearerAuth);
-    } else if (params["email"] != null) {
+    }
+
+    if (params["email"] != null) {
       var bearerAuth =
           'Bearer ${base64Encode("${params["email"]}:${params["password"]}".codeUnits)}';
       request.headers.set('authorization', bearerAuth);

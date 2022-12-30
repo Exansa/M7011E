@@ -5,6 +5,7 @@ import 'package:my_app/pages/user/login.dart';
 import 'package:my_app/pages/user/signup.dart';
 
 import '../../resource/globalVar.dart';
+import '../../resource/sessionProvider.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -38,7 +39,7 @@ class _SignUpState extends State<SignUp> {
       'password': passwordController.text
     };
 
-    print(requestParams);
+    SessionProvider.signup(requestParams);
   }
 
   var _obscurePassword = true;
