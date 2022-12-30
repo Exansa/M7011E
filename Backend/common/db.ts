@@ -2,7 +2,7 @@
 
 import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
 
-const DB_SERVER_URI = `mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority`;
+const DB_SERVER_URI = `mongodb+srv://backend:backend@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority`;
 
 export default class DB {
 	private client?: MongoClient;
@@ -49,12 +49,17 @@ export default class DB {
 		collection: string,
 		callback: (collection: Collection) => Promise<any>
 	): Promise<any> => {
-		const client = new MongoClient(DB_SERVER_URI, {
-			serverApi: ServerApiVersion.v1
-		});
-		const _collection = client.db(db).collection(collection);
-		const result = await callback(_collection);
-		client.close();
-		return result;
+		try {
+			const client = new MongoClient(DB_SERVER_URI, {
+				serverApi: ServerApiVersion.v1
+			});
+			const _collection = client.db(db).collection(collection);
+			const result = await callback(_collection);
+			client.close();
+			return result;
+		} catch (error) {
+			console.error(error);
+			return error;
+		}
 	};
 }

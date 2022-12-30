@@ -130,8 +130,12 @@ export default () => {
 		},
 		servers: [
 			{
+				url: 'http://localhost:5001',
+				description: 'Docker server'
+			},
+			{
 				url: 'http://localhost:8080',
-				description: 'Development server'
+				description: 'Local server'
 			}
 		]
 	};
