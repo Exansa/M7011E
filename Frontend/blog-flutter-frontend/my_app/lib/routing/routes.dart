@@ -5,6 +5,7 @@ import 'package:my_app/pages/about.dart';
 import 'package:my_app/pages/home.dart';
 import 'package:my_app/pages/browse.dart';
 import 'package:my_app/pages/user/login.dart';
+import 'package:my_app/pages/user/profile.dart';
 import 'package:my_app/pages/user/signup.dart';
 
 //guide used was:
@@ -43,7 +44,13 @@ appRoutes() => [
         middlewares: [MyMiddelware()],
         transition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 500),
-      )
+      ),
+      // GetPage(
+      //     name: '/profile',
+      //     page: () => Profile(user: user),
+      //     transition: Transition.fadeIn),
+      GetPage(name: '/', page: () => Home(), transition: Transition.fadeIn),
+      GetPage(name: '/*', page: () => Home(), transition: Transition.fadeIn)
     ];
 
 class MyMiddelware extends GetMiddleware {
