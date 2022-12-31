@@ -1,10 +1,9 @@
 import { ConsumeMessage } from 'amqplib';
-import Rabbitmq from '../../common/rabbitmq';
 import DB from '../../common/db';
 import { verify } from './totp';
 
 export default async (message: ConsumeMessage) => {
-	// Parse message body and assert parameters for JWT and TOTP
+	// Parse message body and assert parameters for bearer and TOTP
 	const { userId, totp } = JSON.parse(message.content.toString());
 	if (!userId) {
 		return {

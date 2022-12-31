@@ -4,15 +4,15 @@ import DB from '../../common/db';
 import { generate } from './totp';
 
 export default async (message: ConsumeMessage) => {
-	// Parse message body and assert JWT parameter
-	const { jwt } = JSON.parse(message.content.toString());
-	if (!jwt) {
-		return { success: false, response: 'Missing param "jwt' };
+	// Parse message body and assert bearer parameter
+	const { bearer } = JSON.parse(message.content.toString());
+	if (!bearer) {
+		return { success: false, response: 'Missing param bearer' };
 	}
-	// Get user object by verify JWT. Return if error
+	// Get user object by verify bearer. Return if error
 	const userResponse = await Rabbitmq.sendRPC(
 		'authentication.verify',
-		JSON.stringify(jwt)
+		JSON.stringify(bearer)
 	);
 	if (!userResponse.success) {
 		return userResponse;

@@ -37,8 +37,7 @@ export default () => {
 	 *         description: Internal Server Error
 	 */
 	router.post('/', async (req: Request, res: Response) => {
-		const jwt = req.header('Authorization')?.split(' ')[1];
-		const data = { ...req.body, jwt };
+		const data = { ...req.body };
 		const result = await Rabbitmq.sendRPC('test', JSON.stringify(data));
 		respond(res, result);
 	});
