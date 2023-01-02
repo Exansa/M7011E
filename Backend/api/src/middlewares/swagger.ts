@@ -552,6 +552,127 @@ export default () => {
 							}
 						}
 					}
+				},
+				Media: {
+					type: 'object',
+					properties: {
+						_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						name: {
+							type: 'string',
+							required: true
+						},
+						type: {
+							type: 'string',
+							required: true
+						},
+						href: {
+							type: 'string',
+							required: true
+						}
+					}
+				},
+				MediaArray: {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							_id: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}',
+								required: true
+							},
+							user_id: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}',
+								required: true
+							},
+							name: {
+								type: 'string',
+								required: true
+							},
+							type: {
+								type: 'string',
+								required: true
+							},
+							href: {
+								type: 'string',
+								required: true
+							}
+						}
+					}
+				},
+				MediaCreate: {
+					type: 'object',
+					properties: {
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						Media: {
+							type: 'object',
+							properties: {
+								user_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: true
+								},
+								name: {
+									type: 'string',
+									required: true
+								},
+								type: {
+									type: 'string',
+									required: true
+								},
+								href: {
+									type: 'string',
+									required: true
+								}
+							}
+						}
+					}
+				},
+				MediaUpdate: {
+					type: 'object',
+					properties: {
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						Media: {
+							type: 'object',
+							properties: {
+								user_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: false
+								},
+								name: {
+									type: 'string',
+									required: false
+								},
+								type: {
+									type: 'string',
+									required: false
+								},
+								href: {
+									type: 'string',
+									required: false
+								}
+							}
+						}
+					}
 				}
 			}
 		},
