@@ -212,10 +212,7 @@ function ResponsiveAppBar() {
                 </MenuItem>
               </>)
               :(
-              <MenuItem onClick={(event) => {
-                signIn({
-                  callbackUrl: `${window.location.origin}`
-                })
+              <MenuItem href="/api/auth/login" onClick={(event) => {
                 handleCloseUserMenu();
               }}>
                 Sign in

@@ -15,6 +15,10 @@ const Routes = {
 
   admin: {
     index: "/admin",
+    page: "/pageSettings",
+    post: "/postSettings",
+    users: "/userHandling",
+    super: "/superController",
   }
 };
 

@@ -3,6 +3,7 @@ import posts from "../../data/mock_db/posts";
 import GenericCard from "../../resource/components/global/card";
 import { useState } from "react";
 import AdminPage from "../../resource/layout/adminPage";
+import Page from "../../resource/layout/page";
 
 
 

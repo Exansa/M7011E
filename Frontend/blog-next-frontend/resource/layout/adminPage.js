@@ -5,8 +5,8 @@ import { forwardRef } from "react";
 // @mui
 import { Box } from "@mui/material";
 // Components
-import ResponsiveDrawer from "./sideBar";
 import Footer from "./footer";
+import ResponsiveSideBar from "./sideBar";
 
 // ----------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ const AdminPage = forwardRef(({ children, meta, title, ...other }, ref) => (
       {meta}
     </Head>
 
-    <ResponsiveDrawer />
+    <ResponsiveSideBar />
 
     <Box ref={ref} {...other}>
       {children}

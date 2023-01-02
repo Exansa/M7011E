@@ -2,24 +2,23 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from "next-auth/providers/credentials";
 import { get_KV } from '../../../data/mock_request/db_handler';
+
 //import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
-import connectDB from './lib/connectDB';
-//connectDB();
 
 const options = {
 
   //adapter: MongoDBAdapter(clientPromise),
 
   providers: [
-    GoogleProvider({
+    /*GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
-    }),
+    }),*/
 
     CredentialsProvider({
       credentials: {
         username: { label: "Username", type: "text", placeholder: "Username" },
-        password: { label: "password", type: "password" }
+        password: { label: "password", type: "password", placeholder: "passwordnpm" }
       },
       async authorize(credentials, req) {
         const user = { id: get_KV(credentials.username, "id", "users"), 
