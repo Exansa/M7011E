@@ -116,6 +116,38 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /admins/{id}:
+	 *   patch:
+	 *     tags:
+	 *       - Admins
+	 *     summary: Update one admin
+	 *     description: Update the admin of the given id with the given data
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/AdminCreate'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/AdminCreate'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Admin'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.patch('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
@@ -125,6 +157,34 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /admins/{id}:
+	 *   delete:
+	 *     tags:
+	 *       - Admins
+	 *     summary: Delete one admin
+	 *     description: Update the admin of the given id with the given data, only superAdmin can delete admins and superAdmins. There must be at least one superAdmin.
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/UserId'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/UserId'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.delete('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(

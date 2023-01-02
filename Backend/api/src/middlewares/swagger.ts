@@ -97,13 +97,14 @@ export default () => {
 					}
 				},
 				UserId: {
-					type: 'string',
-					pattern: '[0-9a-z]{24}',
-					required: true
-				},
-				Set: {
-					type: 'string',
-					required: true
+					type: 'object',
+					properties: {
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						}
+					}
 				},
 				Admin: {
 					type: 'object',
@@ -129,15 +130,18 @@ export default () => {
 						properties: {
 							_id: {
 								type: 'string',
-								pattern: '[0-9a-z]{24}'
+								pattern: '[0-9a-z]{24}',
+								required: true
 							},
 							user_id: {
 								type: 'string',
-								pattern: '[0-9a-z]{24}'
+								pattern: '[0-9a-z]{24}',
+								required: true
 							},
 							access: {
 								type: 'string',
-								enum: ['admin', 'superAdmin']
+								enum: ['admin', 'superAdmin'],
+								required: true
 							}
 						}
 					}
@@ -147,10 +151,12 @@ export default () => {
 					properties: {
 						user_id: {
 							type: 'string',
-							pattern: '[0-9a-z]{24}'
+							pattern: '[0-9a-z]{24}',
+							required: true
 						},
 						set: {
-							type: 'string'
+							type: 'string',
+							required: true
 						}
 					}
 				},
@@ -159,18 +165,21 @@ export default () => {
 					properties: {
 						user_id: {
 							type: 'string',
-							pattern: '[0-9a-z]{24}'
+							pattern: '[0-9a-z]{24}',
+							required: true
 						},
 						admin: {
 							type: 'object',
 							properties: {
 								user_id: {
 									type: 'string',
-									pattern: '[0-9a-z]{24}'
+									pattern: '[0-9a-z]{24}',
+									required: true
 								},
 								access: {
 									type: 'string',
-									enum: ['admin', 'superAdmin']
+									enum: ['admin', 'superAdmin'],
+									required: true
 								}
 							}
 						}

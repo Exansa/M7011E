@@ -235,9 +235,6 @@ export default () => {
 	Rabbitmq.listen('admins.delete', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
-		if (!data.admin) {
-			return { success: false, response: 'Missing param admin' };
-		}
 		if (!data.id) {
 			return { success: false, response: 'Missing param id' };
 		}
