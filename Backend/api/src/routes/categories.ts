@@ -73,6 +73,32 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /categories:
+	 *   post:
+	 *     tags:
+	 *       - Categories
+	 *     summary: Create a new category. Only admins can do this.
+	 *     description: Create a new category with the given data
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/CategoryCreate'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/CategoryCreate'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Category'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.post('/', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
@@ -82,6 +108,38 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /categories/{id}:
+	 *   patch:
+	 *     tags:
+	 *       - Categories
+	 *     summary: Update one category
+	 *     description: Update the category of the given id with the given data. Only admins can do this.
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/categoryUpdate'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/categoryUpdate'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Category'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.patch('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(

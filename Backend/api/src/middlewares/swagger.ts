@@ -433,6 +433,32 @@ export default () => {
 							}
 						}
 					}
+				},
+				CategoryCreate: {
+					type: 'object',
+					properties: {
+						name: {
+							type: 'string',
+							required: true
+						},
+						description: {
+							type: 'string',
+							required: true
+						}
+					}
+				},
+				CategoryUpdate: {
+					type: 'object',
+					properties: {
+						name: {
+							type: 'string',
+							required: false
+						},
+						description: {
+							type: 'string',
+							required: false
+						}
+					}
 				}
 			}
 		},
