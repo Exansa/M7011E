@@ -7,10 +7,11 @@ import posts from "../../../data/mock_db/posts";
 import Routes from "../../../resource/routes";
 import NextLink from "next/link";
 import { useSession } from "next-auth/react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 function GenericCard({ postID }) {
   const post = posts[postID - 1];
-  const { data: session } = useSession()
+  const { user, error, isLoading } = useUser();
   return (
     <>
       <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
@@ -46,7 +47,7 @@ function GenericCard({ postID }) {
             <Button size="small" color="primary">
               Share
             </Button>
-            {user.id == post.user.id
+            {user
               &&(
                 <>
                   <Button size="small" color="primary">

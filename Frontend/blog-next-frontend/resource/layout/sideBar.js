@@ -17,6 +17,7 @@ import {
 
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 import Routes from "../routes";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -55,9 +56,6 @@ function ResponsiveSideBar() {
     setAnchorElUser(null);
   };
 
-  const handleLogout = () => {
-    signOut();
-  };
 
   const { user, error, isLoading } = useUser();
   return (

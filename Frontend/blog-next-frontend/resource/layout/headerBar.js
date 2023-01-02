@@ -20,6 +20,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 
 import Routes from "../routes";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 //const pages = ["home", "about", "browse"];
 const pages = [
@@ -54,12 +55,9 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const handleLogout = () => {
-    signOut();
-  };
 
   const { user, error, isLoading } = useUser();
-  
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -184,7 +182,7 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-              {session
+              {user
               ?(
               <>
               {settings.map((setting) => (
@@ -201,21 +199,24 @@ function ResponsiveAppBar() {
                   </MenuItem>
                 </Link>
               ))}
-                <MenuItem
-                  href="/api/auth/logout"
-                  onClick={(event) => {
-                    handleCloseUserMenu();
-                  }}
-                >
-                  Logout
-                </MenuItem>
+                <a href="/api/auth/logout">
+                  <MenuItem
+                    onClick={(event) => {
+                      handleCloseUserMenu();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </a>
               </>)
               :(
-              <MenuItem href="/api/auth/login" onClick={(event) => {
-                handleCloseUserMenu();
-              }}>
-                Sign in
-              </MenuItem>
+              <a href="/api/auth/logout">
+                <MenuItem onClick={(event) => {
+                  handleCloseUserMenu();
+                }}>
+                  Sign in
+                </MenuItem>
+              </a>
               )}
               </Menu>             
           </Box>          

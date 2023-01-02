@@ -4,20 +4,20 @@ import { signIn } from 'next-auth/react'
 
 export default function AccessDenied () {
   return (
-    <>
+    <page>
     <Box sx={{ mx: 5, my: 3 }}>
       <Typography variant="h1">Access Denied</Typography>
       <Typography variant="h5">You must be signed in to view this page</Typography>
-      <Link href="/api/auth/signin">
+      <Link href="/api/auth/login">
         <Button 
            variant="contained"
            onClick={(e) => {
-           e.preventDefault()
-           href="/api/auth/login"}}>
+           e.preventDefault()}}>
             Sign in
         </Button>
       </Link>
+      <a href="/api/auth/login">Sign in 2</a>
     </Box>
-    </>
+    </page>
   )
 }

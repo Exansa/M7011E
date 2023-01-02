@@ -3,6 +3,7 @@ import Users from "../../data/mock_db/users";
 import Page from "../../resource/layout/page";
 import UserCard from "../../resource/components/users/userCard";
 import ProfileTabs from "../../resource/components/users/profileTabs";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export function Profile() {
   const { user, error, isLoading } = useUser();

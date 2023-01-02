@@ -4,6 +4,7 @@ import GenericCard from "../../resource/components/global/card";
 import { useState } from "react";
 import AdminPage from "../../resource/layout/adminPage";
 import Page from "../../resource/layout/page";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 
 
@@ -17,10 +18,9 @@ export default function AdminDashboard() {
     }
   }
 
-  
+
   return (
     <>
-    
       <AdminPage title="AdminDashboard">
         <Box sx={{ mx: 5, my: 3 }}>
           <Stack direction={"column"}>
