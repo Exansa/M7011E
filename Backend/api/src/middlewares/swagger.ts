@@ -437,26 +437,119 @@ export default () => {
 				CategoryCreate: {
 					type: 'object',
 					properties: {
-						name: {
+						user_id: {
 							type: 'string',
+							pattern: '[0-9a-z]{24}',
 							required: true
 						},
-						description: {
-							type: 'string',
-							required: true
+						category: {
+							type: 'object',
+							required: true,
+							properties: {
+								name: {
+									type: 'string',
+									required: true
+								},
+								description: {
+									type: 'string',
+									required: true
+								}
+							}
 						}
 					}
 				},
 				CategoryUpdate: {
 					type: 'object',
 					properties: {
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						category: {
+							type: 'object',
+							required: true,
+							properties: {
+								name: {
+									type: 'string',
+									required: false
+								},
+								description: {
+									type: 'string',
+									required: false
+								}
+							}
+						}
+					}
+				},
+				Tag: {
+					type: 'object',
+					properties: {
+						_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
 						name: {
 							type: 'string',
-							required: false
-						},
-						description: {
+							required: true
+						}
+					}
+				},
+				TagsArray: {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							_id: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}',
+								required: true
+							},
+							name: {
+								type: 'string',
+								required: true
+							}
+						}
+					}
+				},
+				TagCreate: {
+					type: 'object',
+					properties: {
+						user_id: {
 							type: 'string',
-							required: false
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						category: {
+							type: 'object',
+							required: true,
+							properties: {
+								name: {
+									type: 'string',
+									required: true
+								}
+							}
+						}
+					}
+				},
+				TagUpdate: {
+					type: 'object',
+					properties: {
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						category: {
+							type: 'object',
+							required: true,
+							properties: {
+								name: {
+									type: 'string',
+									required: false
+								}
+							}
 						}
 					}
 				}
