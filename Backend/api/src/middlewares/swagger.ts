@@ -673,6 +673,75 @@ export default () => {
 							}
 						}
 					}
+				},
+				SearchPosts: {
+					type: 'object',
+					properties: {
+						search: {
+							type: 'object',
+							required: true,
+							properties: {
+								title: {
+									type: 'string',
+									required: false
+								},
+								content: {
+									type: 'string',
+									required: false
+								},
+								categories_id: {
+									type: 'array',
+									items: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									required: false
+								},
+								tags_id: {
+									type: 'array',
+									items: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									required: false
+								},
+								media_id: {
+									type: 'array',
+									items: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									required: false
+								}
+							}
+						}
+					}
+				},
+				SearchUsers: {
+					type: 'object',
+					properties: {
+						search: {
+							type: 'object',
+							required: true,
+							properties: {
+								type: 'object',
+								properties: {
+									username: {
+										type: 'string',
+										required: false
+									},
+									email: {
+										type: 'string',
+										required: false
+									},
+									picture: {
+										type: 'string',
+										required: false
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		},
