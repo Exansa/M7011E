@@ -98,6 +98,7 @@ export default () => {
 				},
 				UserId: {
 					type: 'string',
+					pattern: '[0-9a-z]{24}',
 					required: true
 				},
 				Set: {
@@ -108,26 +109,31 @@ export default () => {
 					type: 'object',
 					properties: {
 						_id: {
-							type: 'ObjectID'
+							type: 'string',
+							pattern: '[0-9a-z]{24}'
 						},
 						user_id: {
-							type: 'string'
+							type: 'string',
+							pattern: '[0-9a-z]{24}'
 						},
 						access: {
-							type: 'string'
+							type: 'string',
+							enum: ['admin', 'superAdmin']
 						}
 					}
 				},
-				AdminArray: {
+				AdminsArray: {
 					type: 'array',
 					items: {
 						type: 'object',
 						properties: {
 							_id: {
-								type: 'ObjectID'
+								type: 'string',
+								pattern: '[0-9a-z]{24}'
 							},
 							user_id: {
-								type: 'string'
+								type: 'string',
+								pattern: '[0-9a-z]{24}'
 							},
 							access: {
 								type: 'string',
@@ -136,14 +142,28 @@ export default () => {
 						}
 					}
 				},
-				GetAdminsSet: {
+				useridAndSet: {
 					type: 'object',
 					properties: {
 						user_id: {
-							type: 'string'
+							type: 'string',
+							pattern: '[0-9a-z]{24}'
 						},
 						set: {
 							type: 'string'
+						}
+					}
+				},
+				useridAndId: {
+					type: 'object',
+					properties: {
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}'
+						},
+						id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}'
 						}
 					}
 				}

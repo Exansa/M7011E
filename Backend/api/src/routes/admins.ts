@@ -17,17 +17,17 @@ export default () => {
 	 *         content:
 	 *            application/x-www-form-urlencoded:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/GetAdminsSet'
+	 *                 $ref: '#/components/schemas/useridAndSet'
 	 *            application/json:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/GetAdminsSet'
+	 *                 $ref: '#/components/schemas/useridAndSet'
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/AdminArray'
+	 *               $ref: '#/components/schemas/AdminsArray'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -40,6 +40,38 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /admins/{id}:
+	 *   get:
+	 *     tags:
+	 *       - Admins
+	 *     summary: Get one admin
+	 *     description: Get the admin of the given id
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/UserId'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/UserId'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Admin'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.get('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
