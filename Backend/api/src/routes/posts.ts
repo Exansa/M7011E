@@ -73,6 +73,32 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /posts:
+	 *   post:
+	 *     tags:
+	 *       - Posts
+	 *     summary: Create a new post
+	 *     description: Create a new post with the given data
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/PostCreate'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/PostCreate'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Post'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.post('/', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
