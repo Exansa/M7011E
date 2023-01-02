@@ -12,7 +12,7 @@ export default () => {
 	 *     tags:
 	 *       - Admins
 	 *     summary: Get a set of 10 admins
-	 *     description: Get a set of 10 admins, ordered by id
+	 *     description: Get a set of 10 admins, ordered by id. Set = 1 gets the fist 10 admins, set = 2 gets the next 10, etc.
 	 *     requestBody:
 	 *         content:
 	 *            application/x-www-form-urlencoded:

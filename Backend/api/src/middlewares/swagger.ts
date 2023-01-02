@@ -106,6 +106,15 @@ export default () => {
 						}
 					}
 				},
+				Set: {
+					type: 'object',
+					properties: {
+						set: {
+							type: 'string',
+							required: true
+						}
+					}
+				},
 				Admin: {
 					type: 'object',
 					properties: {
@@ -181,6 +190,111 @@ export default () => {
 									enum: ['admin', 'superAdmin'],
 									required: true
 								}
+							}
+						}
+					}
+				},
+				Post: {
+					type: 'object',
+					properties: {
+						_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						title: {
+							type: 'string',
+							required: true
+						},
+						created_at: {
+							type: 'date',
+							required: true
+						},
+						content: {
+							type: 'string',
+							required: true
+						},
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						categories_id: {
+							type: 'array',
+							items: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}'
+							},
+							required: false
+						},
+						tags_id: {
+							type: 'array',
+							items: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}'
+							},
+							required: false
+						},
+						media_id: {
+							type: 'array',
+							items: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}'
+							},
+							required: false
+						}
+					}
+				},
+				PostsArray: {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							_id: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}',
+								required: true
+							},
+							title: {
+								type: 'string',
+								required: true
+							},
+							created_at: {
+								type: 'date',
+								required: true
+							},
+							content: {
+								type: 'string',
+								required: true
+							},
+							user_id: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}',
+								required: true
+							},
+							categories_id: {
+								type: 'array',
+								items: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}'
+								},
+								required: false
+							},
+							tags_id: {
+								type: 'array',
+								items: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}'
+								},
+								required: false
+							},
+							media_id: {
+								type: 'array',
+								items: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}'
+								},
+								required: false
 							}
 						}
 					}
