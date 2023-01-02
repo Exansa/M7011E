@@ -25,8 +25,6 @@ export default () => {
 		try {
 			const set = data.set;
 			const userId = data.user_id;
-			const admin = generateAdmin(data.admin);
-			validateAdmin(admin);
 
 			//check access
 			await checkAccess(userId, client);

@@ -95,6 +95,57 @@ export default () => {
 							type: 'string'
 						}
 					}
+				},
+				UserId: {
+					type: 'string',
+					required: true
+				},
+				Set: {
+					type: 'string',
+					required: true
+				},
+				Admin: {
+					type: 'object',
+					properties: {
+						_id: {
+							type: 'ObjectID'
+						},
+						user_id: {
+							type: 'string'
+						},
+						access: {
+							type: 'string'
+						}
+					}
+				},
+				AdminArray: {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							_id: {
+								type: 'ObjectID'
+							},
+							user_id: {
+								type: 'string'
+							},
+							access: {
+								type: 'string',
+								enum: ['admin', 'superAdmin']
+							}
+						}
+					}
+				},
+				GetAdminsSet: {
+					type: 'object',
+					properties: {
+						user_id: {
+							type: 'string'
+						},
+						set: {
+							type: 'string'
+						}
+					}
 				}
 			}
 		},
