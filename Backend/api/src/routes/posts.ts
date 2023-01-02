@@ -40,6 +40,30 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /posts/{id}:
+	 *   get:
+	 *     tags:
+	 *       - Posts
+	 *     summary: Get one post
+	 *     description: Get the post of the given id
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Post'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.get('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
