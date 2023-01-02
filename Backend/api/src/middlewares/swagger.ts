@@ -315,13 +315,57 @@ export default () => {
 									type: 'string',
 									required: true
 								},
-								created_at: {
-									type: 'date',
-									required: true
-								},
 								content: {
 									type: 'string',
 									required: true
+								},
+								categories_id: {
+									type: 'array',
+									items: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									required: false
+								},
+								tags_id: {
+									type: 'array',
+									items: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									required: false
+								},
+								media_id: {
+									type: 'array',
+									items: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									required: false
+								}
+							}
+						}
+					}
+				},
+				PostUpdate: {
+					type: 'object',
+					properties: {
+						user_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						post: {
+							type: 'object',
+							required: true,
+							properties: {
+								title: {
+									type: 'string',
+									required: false
+								},
+								content: {
+									type: 'string',
+									required: false
 								},
 								categories_id: {
 									type: 'array',

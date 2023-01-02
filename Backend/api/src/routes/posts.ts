@@ -108,6 +108,38 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /post/{id}:
+	 *   patch:
+	 *     tags:
+	 *       - Posts
+	 *     summary: Update one post
+	 *     description: Update the post of the given id with the given data
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/PostUpdate'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/PostUpdate'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Post'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.patch('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
