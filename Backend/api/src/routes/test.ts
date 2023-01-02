@@ -16,10 +16,10 @@ export default () => {
 	 *     description: Perform a test query
 	 *     requestBody:
 	 *         content:
-	 *            application/json:
+	 *            application/x-www-form-urlencoded:
 	 *              schema:
 	 *                $ref: '#/components/schemas/Test'
-	 *            application/x-www-form-urlencoded:
+	 *            application/json:
 	 *              schema:
 	 *                $ref: '#/components/schemas/Test'
 	 *     security:
