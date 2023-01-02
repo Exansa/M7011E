@@ -394,6 +394,45 @@ export default () => {
 							}
 						}
 					}
+				},
+				Category: {
+					type: 'object',
+					properties: {
+						_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}',
+							required: true
+						},
+						name: {
+							type: 'string',
+							required: true
+						},
+						description: {
+							type: 'string',
+							required: true
+						}
+					}
+				},
+				CategoriesArray: {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							_id: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}',
+								required: true
+							},
+							name: {
+								type: 'string',
+								required: true
+							},
+							description: {
+								type: 'string',
+								required: true
+							}
+						}
+					}
 				}
 			}
 		},
