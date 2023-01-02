@@ -16,10 +16,10 @@ export default () => {
 	 *     description: Perform a test query
 	 *     requestBody:
 	 *         content:
-	 *            application/json:
+	 *            application/x-www-form-urlencoded:
 	 *              schema:
 	 *                $ref: '#/components/schemas/Test'
-	 *            application/x-www-form-urlencoded:
+	 *            application/json:
 	 *              schema:
 	 *                $ref: '#/components/schemas/Test'
 	 *     security:
@@ -37,8 +37,7 @@ export default () => {
 	 *         description: Internal Server Error
 	 */
 	router.post('/', async (req: Request, res: Response) => {
-		const jwt = req.header('Authorization')?.split(' ')[1];
-		const data = { ...req.body, jwt };
+		const data = { ...req.body };
 		const result = await Rabbitmq.sendRPC('test', JSON.stringify(data));
 		respond(res, result);
 	});

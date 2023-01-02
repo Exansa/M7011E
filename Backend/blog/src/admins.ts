@@ -25,8 +25,6 @@ export default () => {
 		try {
 			const set = data.set;
 			const userId = data.user_id;
-			const admin = generateAdmin(data.admin);
-			validateAdmin(admin);
 
 			//check access
 			await checkAccess(userId, client);
@@ -237,9 +235,6 @@ export default () => {
 	Rabbitmq.listen('admins.delete', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
-		if (!data.admin) {
-			return { success: false, response: 'Missing param admin' };
-		}
 		if (!data.id) {
 			return { success: false, response: 'Missing param id' };
 		}
