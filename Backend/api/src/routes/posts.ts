@@ -149,6 +149,34 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /posts/{id}:
+	 *   delete:
+	 *     tags:
+	 *       - Posts
+	 *     summary: Delete one post
+	 *     description: Update the post of the given id with the given data. Only the owner of the post and can delete it.
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/UserId'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/UserId'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.delete('/:id', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
