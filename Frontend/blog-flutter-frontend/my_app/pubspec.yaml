@@ -38,6 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   universal_html: ^2.0.8
   google_sign_in:
+  shared_preferences: ^2.0.15
+  auth0: ^2.0.2
 
 dev_dependencies:
   flutter_test:

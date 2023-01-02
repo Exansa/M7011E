@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:my_app/pages/user/signup.dart';
+import 'package:my_app/resource/sessionProvider.dart';
 
 import '../../resource/globalVar.dart';
 
@@ -40,7 +41,7 @@ class _LoginState extends State<Login> {
     //TODO: Don't send password in plaintext
     requestParams['password'] = passwordController.text;
 
-    print(requestParams);
+    SessionProvider.login(requestParams);
   }
 
   var _obscurePassword = true;

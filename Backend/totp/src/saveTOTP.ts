@@ -6,7 +6,7 @@ import { verify } from './totp';
 const PENDING_TOTP_TIME = 300000; // 5 minutes
 
 export default async (message: ConsumeMessage) => {
-	// Parse message body and assert parameters for JWT and TOTP
+	// Parse message body and assert parameters for bearer and TOTP
 	const { bearer, totp } = JSON.parse(message.content.toString());
 	if (!bearer) {
 		return {
@@ -18,7 +18,7 @@ export default async (message: ConsumeMessage) => {
 	if (!totp) {
 		return { success: false, status: 400, response: 'Missing param totp' };
 	}
-	// Verify JWT and return if error
+	// Verify bearer and return if error
 	const userResponse = await Rabbitmq.sendRPC(
 		'authentication.verify',
 		JSON.stringify(bearer)

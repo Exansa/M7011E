@@ -17,7 +17,7 @@ export default () => {
 				bearerAuth: {
 					type: 'http',
 					scheme: 'bearer',
-					bearerFormat: 'JWT'
+					bearerFormat: 'Auth0'
 				}
 			},
 			schemas: {
@@ -70,39 +70,6 @@ export default () => {
 						username: {
 							type: 'string',
 							required: true
-						},
-						email: {
-							type: 'string',
-							required: true
-						},
-						password: {
-							type: 'string',
-							required: true
-						}
-					}
-				},
-				UserLogin: {
-					type: 'object',
-					properties: {
-						username: {
-							type: 'string',
-							required: true
-						},
-						email: {
-							type: 'string',
-							required: true
-						},
-						password: {
-							type: 'string',
-							required: true
-						},
-						lts: {
-							type: 'boolean',
-							required: false
-						},
-						totp: {
-							type: 'string',
-							required: false
 						}
 					}
 				},
@@ -112,16 +79,19 @@ export default () => {
 						_id: {
 							type: 'string'
 						},
+						auth0_id: {
+							type: 'string'
+						},
 						username: {
 							type: 'string'
 						},
 						email: {
 							type: 'string'
 						},
-						profile_picture_id: {
+						picture: {
 							type: 'string'
 						},
-						created_at: {
+						createdAt: {
 							type: 'string'
 						}
 					}
