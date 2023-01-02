@@ -142,7 +142,7 @@ export default () => {
 						}
 					}
 				},
-				useridAndSet: {
+				UseridAndSet: {
 					type: 'object',
 					properties: {
 						user_id: {
@@ -154,16 +154,25 @@ export default () => {
 						}
 					}
 				},
-				useridAndId: {
+				AdminCreate: {
 					type: 'object',
 					properties: {
 						user_id: {
 							type: 'string',
 							pattern: '[0-9a-z]{24}'
 						},
-						id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}'
+						admin: {
+							type: 'object',
+							properties: {
+								user_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}'
+								},
+								access: {
+									type: 'string',
+									enum: ['admin', 'superAdmin']
+								}
+							}
 						}
 					}
 				}

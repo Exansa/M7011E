@@ -17,10 +17,10 @@ export default () => {
 	 *         content:
 	 *            application/x-www-form-urlencoded:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/useridAndSet'
+	 *                 $ref: '#/components/schemas/UseridAndSet'
 	 *            application/json:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/useridAndSet'
+	 *                 $ref: '#/components/schemas/UseridAndSet'
 	 *     responses:
 	 *       200:
 	 *         description: Success
@@ -81,6 +81,32 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /admins:
+	 *   post:
+	 *     tags:
+	 *       - Admins
+	 *     summary: Create a new admin
+	 *     description: Create a new admin with the given data
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/AdminCreate'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/AdminCreate'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Admin'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
 	router.post('/', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
