@@ -46,7 +46,7 @@ function GenericCard({ postID }) {
             <Button size="small" color="primary">
               Share
             </Button>
-            {session
+            {user.id == post.user.id
               &&(
                 <>
                   <Button size="small" color="primary">

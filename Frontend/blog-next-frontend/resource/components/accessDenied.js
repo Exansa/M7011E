@@ -13,7 +13,7 @@ export default function AccessDenied () {
            variant="contained"
            onClick={(e) => {
            e.preventDefault()
-           signIn()}}>
+           href="/api/auth/login"}}>
             Sign in
         </Button>
       </Link>

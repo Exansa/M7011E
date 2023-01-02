@@ -5,21 +5,27 @@ import UserCard from "../../resource/components/users/userCard";
 import ProfileTabs from "../../resource/components/users/profileTabs";
 
 export function Profile() {
-  let currentUser = Users[0]; //TODO: Auth
+  const { user, error, isLoading } = useUser();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
+  if (!user){ return  <Page><AccessDenied/></Page> }
 
   return (
-    <>
-      <Page title={"Profile: " + currentUser.username}>
-        <Box sx={{ minHeight: "80vh", top: 0, my: 4, mx: 4 }}>
-          <Stack direction="column" spacing={2}>
-            <Box sx={{ top: 0 }}>
-              <UserCard user={currentUser} />
-            </Box>
-            <ProfileTabs user={currentUser} />
-          </Stack>
-        </Box>
-      </Page>
-    </>
+    user &&(
+      <>
+        <Page title={"Profile: " + currentUser.username}>
+          <Box sx={{ minHeight: "80vh", top: 0, my: 4, mx: 4 }}>
+            <Stack direction="column" spacing={2}>
+              <Box sx={{ top: 0 }}>
+                <UserCard user={currentUser} />
+              </Box>
+              <ProfileTabs user={currentUser} />
+            </Stack>
+          </Box>
+        </Page>
+      </>
+    )
   );
 }
 export default Profile;

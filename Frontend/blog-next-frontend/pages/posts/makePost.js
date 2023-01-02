@@ -66,8 +66,11 @@ export default function makePost() {
     axios.put("/api/update", formData).then(console.log).catch(console.log);
   };
 
-  const { data: session } = useSession()
-  if (!session){ return  <Page><AccessDenied/></Page> }
+  const { user, error, isLoading } = useUser();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
+  if (!user){ return  <Page><AccessDenied/></Page> }
   return (
     <>
       <Page>

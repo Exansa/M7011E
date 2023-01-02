@@ -58,7 +58,8 @@ function ResponsiveAppBar() {
     signOut();
   };
 
-  const {data: session} = useSession();
+  const { user, error, isLoading } = useUser();
+  
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -201,10 +202,8 @@ function ResponsiveAppBar() {
                 </Link>
               ))}
                 <MenuItem
+                  href="/api/auth/logout"
                   onClick={(event) => {
-                    signOut({
-                      callbackUrl: `${window.location.origin}`
-                    })
                     handleCloseUserMenu();
                   }}
                 >

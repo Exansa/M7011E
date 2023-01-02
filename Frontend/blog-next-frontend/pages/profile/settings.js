@@ -4,11 +4,19 @@ import Page from "../../resource/layout/page";
 import Users from "../../data/mock_db/users";
 
 export function Settings() {
-  let user = Users[0]; //TODO: Auth
+  const { user, error, isLoading } = useUser();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
+  if (!user){ return  <Page><AccessDenied/></Page> }
+
+
   return (
-    <Page title={"Settings: " + user.username}>
-      <Box></Box>
-    </Page>
+    user &&(
+      <Page title={"Settings: " + user.name}>
+       <Box></Box>
+      </Page>
+    )
   );
 }
 export default Settings;

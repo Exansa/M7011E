@@ -59,7 +59,7 @@ function ResponsiveSideBar() {
     signOut();
   };
 
-  const {data: session} = useSession();
+  const { user, error, isLoading } = useUser();
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -185,7 +185,7 @@ function ResponsiveSideBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-              {session
+              {user
               ?(
               <>
               {settings.map((setting) => (
@@ -203,10 +203,8 @@ function ResponsiveSideBar() {
                 </Link>
               ))}
                 <MenuItem
+                  href="/api/auth/logout"
                   onClick={(event) => {
-                    signOut({
-                      callbackUrl: `${window.location.origin}`
-                    })
                     handleCloseUserMenu();
                   }}
                 >
@@ -214,10 +212,7 @@ function ResponsiveSideBar() {
                 </MenuItem>
               </>)
               :(
-              <MenuItem onClick={(event) => {
-                signIn({
-                  callbackUrl: `${window.location.origin}`
-                })
+              <MenuItem href="/api/auth/login" onClick={(event) => {
                 handleCloseUserMenu();
               }}>
                 Sign in
