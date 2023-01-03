@@ -56,7 +56,8 @@ function ResponsiveAppBar() {
   };
 
 
-  const { user, error, isLoading } = useUser();
+  //const { user, error, isLoading } = useUser();
+  const { data: session } = useSession();
 
   return (
     <AppBar position="static">
@@ -182,7 +183,7 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-              {user
+              {session
               ?(
               <>
               {settings.map((setting) => (
@@ -199,24 +200,22 @@ function ResponsiveAppBar() {
                   </MenuItem>
                 </Link>
               ))}
-                <a href="/api/auth/logout">
-                  <MenuItem
-                    onClick={(event) => {
-                      handleCloseUserMenu();
-                    }}
-                  >
+                <MenuItem
+                  onClick={(event) => {
+                    handleCloseUserMenu();
+                    signOut();
+                  }}
+                >
                     Logout
                   </MenuItem>
-                </a>
               </>)
               :(
-              <a href="/api/auth/logout">
                 <MenuItem onClick={(event) => {
                   handleCloseUserMenu();
+                  signIn();
                 }}>
                   Sign in
                 </MenuItem>
-              </a>
               )}
               </Menu>             
           </Box>          

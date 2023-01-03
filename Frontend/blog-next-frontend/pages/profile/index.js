@@ -6,14 +6,10 @@ import ProfileTabs from "../../resource/components/users/profileTabs";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 export function Profile() {
-  const { user, error, isLoading } = useUser();
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error.message}</div>;
-  if (!user){ return  <Page><AccessDenied/></Page> }
+  const { data: session } = useSession();
 
   return (
-    user &&(
+    session &&(
       <>
         <Page title={"Profile: " + currentUser.username}>
           <Box sx={{ minHeight: "80vh", top: 0, my: 4, mx: 4 }}>

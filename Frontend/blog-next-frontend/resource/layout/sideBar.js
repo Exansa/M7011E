@@ -57,7 +57,9 @@ function ResponsiveSideBar() {
   };
 
 
-  const { user, error, isLoading } = useUser();
+  //const { user, error, isLoading } = useUser();
+  const { data: session } = useSession();
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -183,7 +185,7 @@ function ResponsiveSideBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-              {user
+              {session
               ?(
               <>
               {settings.map((setting) => (
@@ -201,17 +203,19 @@ function ResponsiveSideBar() {
                 </Link>
               ))}
                 <MenuItem
-                  href="/api/auth/logout"
+                  href="/api/auth/signout"
                   onClick={(event) => {
                     handleCloseUserMenu();
+                    signOut();
                   }}
                 >
                   Logout
                 </MenuItem>
               </>)
               :(
-              <MenuItem href="/api/auth/login" onClick={(event) => {
+              <MenuItem href="/api/auth/signin" onClick={(event) => {
                 handleCloseUserMenu();
+                signIn();
               }}>
                 Sign in
               </MenuItem>

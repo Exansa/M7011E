@@ -11,7 +11,9 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 
 function GenericCard({ postID }) {
   const post = posts[postID - 1];
-  const { user, error, isLoading } = useUser();
+  const { data: session } = useSession();
+
+
   return (
     <>
       <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
@@ -47,7 +49,7 @@ function GenericCard({ postID }) {
             <Button size="small" color="primary">
               Share
             </Button>
-            {user
+            {session
               &&(
                 <>
                   <Button size="small" color="primary">

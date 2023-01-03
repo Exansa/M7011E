@@ -55,7 +55,9 @@ const Post = () => {
   console.log(postID);
   const post = posts[postID - 1];
 
-  const { user, error, isLoading } = useUser();
+  //const { user, error, isLoading } = useUser();
+  const { data: session } = useSession();
+
   return (
     <>
       <Page title={post.title}>
