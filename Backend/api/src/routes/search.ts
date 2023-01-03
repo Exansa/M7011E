@@ -28,7 +28,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/PostArray'
+	 *               $ref: '#/components/schemas/PostsWithDataArray'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -64,7 +64,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/UsersArray'
+	 *               $ref: '#/components/schemas/UsersWithDataArray'
 	 *       500:
 	 *         description: Internal Server Error
 	 */

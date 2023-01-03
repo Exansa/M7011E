@@ -184,7 +184,7 @@ export default () => {
 						}
 					}
 				},
-				Admin: {
+				AdminWithUserData: {
 					type: 'object',
 					properties: {
 						_id: {
@@ -198,10 +198,30 @@ export default () => {
 						access: {
 							type: 'string',
 							enum: ['admin', 'superAdmin']
+						},
+						user: {
+							type: 'object',
+							properties: {
+								_id: {
+									type: 'string'
+								},
+								username: {
+									type: 'string'
+								},
+								email: {
+									type: 'string'
+								},
+								profilePicture_id: {
+									type: 'string'
+								},
+								createdAt: {
+									type: 'string'
+								}
+							}
 						}
 					}
 				},
-				AdminsArray: {
+				AdminsWithUserDataArray: {
 					type: 'array',
 					items: {
 						type: 'object',
@@ -220,6 +240,26 @@ export default () => {
 								type: 'string',
 								enum: ['admin', 'superAdmin'],
 								required: true
+							},
+							user: {
+								type: 'object',
+								properties: {
+									_id: {
+										type: 'string'
+									},
+									username: {
+										type: 'string'
+									},
+									email: {
+										type: 'string'
+									},
+									profilePicture_id: {
+										type: 'string'
+									},
+									createdAt: {
+										type: 'string'
+									}
+								}
 							}
 						}
 					}
