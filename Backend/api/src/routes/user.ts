@@ -76,7 +76,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/PostsArray'
+	 *               $ref: '#/components/schemas/PostsWithDataArray'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -98,7 +98,7 @@ export default () => {
 	 * /user:
 	 *   get:
 	 *     tags:
-	 *       - Admins
+	 *       - User
 	 *     summary: Get a set of 10 users
 	 *     description: Get a set of 10 users, ordered by id. Set = 1 gets the fist 10 users, set = 2 gets the next 10, etc.
 	 *     requestBody:
@@ -115,7 +115,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/UsersArray'
+	 *               $ref: '#/components/schemas/UsersWithDataArray'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -179,10 +179,12 @@ export default () => {
 	 *         content:
 	 *            application/x-www-form-urlencoded:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/UserCreate'
+	 *                 $ref: '#/components/schemas/UserUpdate'
 	 *            application/json:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/UserCreate'
+	 *                 $ref: '#/components/schemas/UserUpdate'
+	 *     security:
+	 *          - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
