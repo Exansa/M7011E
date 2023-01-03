@@ -47,14 +47,51 @@ export default () => {
 		respond(res, result);
 	});
 
-	router.get('/posts', async (req: Request, res: Response) => {
-		const data = req.body;
-		const result = await Rabbitmq.sendRPC(
-			'posts.user_get_all',
-			JSON.stringify(data)
-		);
-		respond(res, result);
-	});
+	/**
+	 * @swagger
+	 * /user/{id}/posts:
+	 *   get:
+	 *     tags:
+	 *       - User
+	 *       - Posts
+	 *     summary: Get a set of 10 users
+	 *     description: Get a set of 10 users, ordered by id. Set = 1 gets the fist 10 users, set = 2 gets the next 10, etc.
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/UseridAndSet'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/UseridAndSet'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/AdminsArray'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
+	router.get(
+		'/:id/posts',
+		unpackParams,
+		async (req: Request, res: Response) => {
+			const data = req.body;
+			const result = await Rabbitmq.sendRPC(
+				'posts.user_get_all',
+				JSON.stringify(data)
+			);
+			respond(res, result);
+		}
+	);
 
 	router.get('/', async (req: Request, res: Response) => {
 		const data = req.body;

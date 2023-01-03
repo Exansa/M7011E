@@ -100,10 +100,6 @@ export default () => {
 	 *     responses:
 	 *       200:
 	 *         description: Success
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/Admin'
 	 *       500:
 	 *         description: Internal Server Error
 	 */

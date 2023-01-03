@@ -207,7 +207,7 @@ export default () => {
 							required: true
 						},
 						created_at: {
-							type: 'date',
+							type: 'string',
 							required: true
 						},
 						content: {
@@ -260,7 +260,7 @@ export default () => {
 								required: true
 							},
 							created_at: {
-								type: 'date',
+								type: 'string',
 								required: true
 							},
 							content: {
