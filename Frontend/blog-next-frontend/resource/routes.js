@@ -12,6 +12,14 @@ const Routes = {
     settings: "/profile/settings",
     specific: (username) => `/profile/${username}`,
   },
+
+  admin: {
+    index: "/admin",
+    page: "/pageSettings",
+    post: "/postSettings",
+    users: "/userHandling",
+    super: "/superController",
+  }
 };
 
 export default Routes;

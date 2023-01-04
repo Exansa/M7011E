@@ -17,17 +17,18 @@ import {
 
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 import Routes from "../routes";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useUser } from "@auth0/nextjs-auth0/client";
 
 //const pages = ["home", "about", "browse"];
 const pages = [
   { link: "/", name: "Home" },
-  { link: Routes.posts.index, name: "Browse" },
-  { link: "/about", name: "About" },
-  { link: Routes.posts.make, name: "Make Post" },
+  { link: Routes.admin.page, name: "Web settings" },
+  { link: Routes.admin.users, name: "User settings" },
+  { link: Routes.admin.post, name: "Posts" },
+  { link: Routes.admin.post, name: "Super" },
 ];
 const settings = [
   { link: Routes.users.index, name: "Profile" },
@@ -36,7 +37,7 @@ const settings = [
   { link: Routes.admin.index, name: "Admin" },
 ];
 
-function ResponsiveAppBar() {
+function ResponsiveSideBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -127,6 +128,7 @@ function ResponsiveAppBar() {
                   </MenuItem>
                 </Link>
               ))}
+              
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -201,21 +203,22 @@ function ResponsiveAppBar() {
                 </Link>
               ))}
                 <MenuItem
+                  href="/api/auth/signout"
                   onClick={(event) => {
                     handleCloseUserMenu();
                     signOut();
                   }}
                 >
-                    Logout
-                  </MenuItem>
+                  Logout
+                </MenuItem>
               </>)
               :(
-                <MenuItem onClick={(event) => {
-                  handleCloseUserMenu();
-                  signIn();
-                }}>
-                  Sign in
-                </MenuItem>
+              <MenuItem href="/api/auth/signin" onClick={(event) => {
+                handleCloseUserMenu();
+                signIn();
+              }}>
+                Sign in
+              </MenuItem>
               )}
               </Menu>             
           </Box>          
@@ -224,4 +227,4 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+export default ResponsiveSideBar;

@@ -20,6 +20,7 @@ import {
 import * as React from "react";
 import Tags from "../../data/mock_db/tags";
 import Categories from "../../data/mock_db/categories";
+import { useUser } from "@auth0/nextjs-auth0/client";
 //import { Category } from "@mui/icons-material";
 
 //import { getCategories } from "../../data/mock_request/db_handler";
@@ -66,7 +67,7 @@ export default function makePost() {
     axios.put("/api/update", formData).then(console.log).catch(console.log);
   };
 
-  const { data: session } = useSession()
+  const { data: session } = useSession();
   if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     <>

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Page from "../../resource/layout/page";
 import { Image } from "mui-image"; //https://github.com/benmneb/mui-image
 import ResponsiveAppBar from "../../resource/layout/headerBar";
-import posts from "../../data/mock_db/posts";
+//import posts from "../../data/mock_db/posts";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
@@ -18,12 +18,12 @@ import { useSession } from "next-auth/react";
 
 export const getStaticPaths = async () => {
   //TODO: Swap posts in this  and get static props out for a call to the database
-  // const res = await fetch("https://jsonplaceholder.typicode.com/posts"); <-- DB call
-  // const data = await res.json();
+  const res = await fetch("https://localhost:5001/blog/posts"); //<-- DB call
+  const posts = await res.json();
 
   const paths = posts.map((post) => {
     return {
-      params: { postID: post.id.toString() },
+      params: { postID: post.id },
     };
   });
 
@@ -34,8 +34,8 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async () => {
-  // const res = await fetch("https://jsonplaceholder.typicode.com/posts"); <-- DB call
-  // const data = await res.json();
+  const res = await fetch("https://localhost:5001/blog/posts");
+  const posts = await res.json();
 
   return {
     props: { posts },
@@ -55,7 +55,9 @@ const Post = () => {
   console.log(postID);
   const post = posts[postID - 1];
 
-  const { data: session } = useSession()
+  //const { user, error, isLoading } = useUser();
+  const { data: session } = useSession();
+
   return (
     <>
       <Page title={post.title}>
@@ -75,7 +77,7 @@ const Post = () => {
               {post.content}
             </Typography>
           </Stack>
-          {/*{session
+          {/*{(user.id==post.id)
           &&(
           <Button>
             Edit

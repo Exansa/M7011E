@@ -1,15 +1,22 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from "next-auth/providers/credentials";
+import Auth0Provider from "next-auth/providers/auth0";
 import { get_KV } from '../../../data/mock_request/db_handler';
 
 const options = {
   providers: [
-    GoogleProvider({
+    /*GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
-    }),
+    }),*/
 
+    Auth0Provider({
+        clientId: process.env.AUTH0_CLIENT_ID,
+        clientSecret: process.env.AUTH0_CLIENT_SECRET,
+        issuer: process.env.AUTH0_ISSUER_BASE_URL
+      }),
+/*
     CredentialsProvider({
       credentials: {
         username: { label: "Username", type: "text", placeholder: "Username" },
@@ -26,8 +33,14 @@ const options = {
           return null
         }
       }
-    })
+    })*/
   ],
+  callbacks: {
+    async jwt(token, user, account, profile, isNewUser){
+      console.log('jwt', {token, user});
+      return token
+    }
+  },
   debug: false
 }
 

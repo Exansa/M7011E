@@ -7,10 +7,13 @@ import posts from "../../../data/mock_db/posts";
 import Routes from "../../../resource/routes";
 import NextLink from "next/link";
 import { useSession } from "next-auth/react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 function GenericCard({ postID }) {
   const post = posts[postID - 1];
-  const { data: session } = useSession()
+  const { data: session } = useSession();
+
+
   return (
     <>
       <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
