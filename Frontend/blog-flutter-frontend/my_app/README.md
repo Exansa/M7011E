@@ -1,13 +1,13 @@
 # Flutter frontend for M7011E project
 
-It is **very important** to run the project on `port 1234` for the google authentication to work properly.
+It is **very important** to run the project on `port 3000` for the authentication to work properly.
 
 If you are using VSCode, there is a launch configuration for this project. You can find it in the `.vscode` folder.
 
 If not, you can run the project with the following command:
 
 ```bash
-flutter run -d chrome --web-port=1234
+flutter run -d chrome --web-port=3000
 ```
 
 ## Getting Started
