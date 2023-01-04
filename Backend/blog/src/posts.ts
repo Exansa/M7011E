@@ -6,6 +6,7 @@ import DB from '../../common/db';
 export default () => {
 	Rabbitmq.listen('posts.get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
+		console.log(data);
 
 		if (!data.set) {
 			return { success: false, response: 'Missing param set' };

@@ -44,10 +44,10 @@ export default () => {
 	/**
 	 * @swagger
 	 * /search/users:
-	 *   get:
+	 *   post:
 	 *     tags:
 	 *       - Search
-	 *       - Users
+	 *       - User
 	 *     summary: Get a set of 10 posts based on the search query
 	 *     description: Get a set of 10 posts based on the search query, ordered by newest created. Set = 1 gets the fist 10 posts, set = 2 gets the next 10, etc.
 	 *     requestBody:
@@ -68,7 +68,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get('/users', async (req: Request, res: Response) => {
+	router.post('/users', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'users.search',

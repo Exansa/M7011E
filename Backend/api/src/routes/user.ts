@@ -49,8 +49,8 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /user/{id}/posts:
-	 *   post:
+	 * /user/{id}/posts?set={set}:
+	 *   get:
 	 *     tags:
 	 *       - User
 	 *       - Posts
@@ -62,14 +62,11 @@ export default () => {
 	 *         schema:
 	 *           type: string
 	 *           required: true
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
 	 *     responses:
 	 *       200:
 	 *         description: Success
@@ -80,7 +77,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post(
+	router.get(
 		'/:id/posts',
 		unpackParams,
 		async (req: Request, res: Response) => {
@@ -95,20 +92,18 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /user/get:
-	 *   post:
+	 * /user?set={set}:
+	 *   get:
 	 *     tags:
 	 *       - User
 	 *     summary: Get a set of 10 users
 	 *     description: Get a set of 10 users, ordered by id. Set = 1 gets the fist 10 users, set = 2 gets the next 10, etc.
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
 	 *     responses:
 	 *       200:
 	 *         description: Success
@@ -119,7 +114,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/get', async (req: Request, res: Response) => {
+	router.get('/', unpackParams, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'users.get_all',

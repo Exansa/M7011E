@@ -1,26 +1,25 @@
 import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
+import { unpackParams } from '../middlewares/unpack';
 
 const router = Router();
 
 export default () => {
 	/**
 	 * @swagger
-	 * /categories/get:
-	 *   post:
+	 * /categories?set={set}:
+	 *   get:
 	 *     tags:
 	 *       - Categories
 	 *     summary: Get a set of 10 categories
 	 *     description: Get a set of 10 categories, ordered by newest created. Set = 1 gets the fist 10 categories, set = 2 gets the next 10, etc.
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
 	 *     responses:
 	 *       200:
 	 *         description: Success
@@ -31,7 +30,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/get', async (req: Request, res: Response) => {
+	router.get('/', unpackParams, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'categories.get_all',
