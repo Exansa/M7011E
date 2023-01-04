@@ -92,6 +92,36 @@ export default () => {
 
 	/**
 	 * @swagger
+	 * /user/me:
+	 *   get:
+	 *     tags:
+	 *       - User
+	 *     summary: Current user
+	 *     description: Get the current user from Authentication Token
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/User'
+	 *       401:
+	 *         description: Unauthorized
+	 *       404:
+	 *         description: Not Found
+	 *       500:
+	 *         description: Internal Server Error
+	 */
+	router.get('/me', authenticate, async (req: Request, res: Response) => {
+		const data = req.body;
+		const result = await Rabbitmq.sendRPC('user.me', JSON.stringify(data));
+		respond(res, result);
+	});
+
+	/**
+	 * @swagger
 	 * /user?set={set}:
 	 *   get:
 	 *     tags:
