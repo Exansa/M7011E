@@ -12,6 +12,7 @@ export default () => {
 		}
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			const user_id = data.user_id;
 
@@ -194,4 +195,13 @@ async function checkAccess(id: any, userId: any, client: MongoClient) {
 	const query = { _id: new ObjectId(id), user_id: userId };
 	const result = await collection.findOne(query);
 	if (!result) throw new Error('Access denied');
+}
+function validateSet(inSet: any) {
+	const set = parseInt(inSet);
+	if (Number.isNaN(set)) {
+		throw new Error('Invalid set, must be integer');
+	}
+	if (set < 1) {
+		throw new Error('Invalid set, must be greater than 0');
+	}
 }

@@ -20,6 +20,7 @@ export default () => {
 		});
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			let result = await DB.performQuery(
 				'blog',
@@ -74,6 +75,7 @@ export default () => {
 		});
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			let result = await DB.performQuery(
 				'blog',
@@ -130,6 +132,7 @@ export default () => {
 		});
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			const search = generateSearch(data.search);
 
@@ -451,4 +454,13 @@ function generateSearch(search: any) {
 		search.categories_id = { $in: search.categories_id };
 	if (search.media_id) search.media_id = { $in: search.media_id };
 	return search;
+}
+function validateSet(inSet: any) {
+	const set = parseInt(inSet);
+	if (Number.isNaN(set)) {
+		throw new Error('Invalid set, must be integer');
+	}
+	if (set < 1) {
+		throw new Error('Invalid set, must be greater than 0');
+	}
 }
