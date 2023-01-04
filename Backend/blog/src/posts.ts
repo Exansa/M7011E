@@ -20,6 +20,7 @@ export default () => {
 		});
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			let result = await DB.performQuery(
 				'blog',
@@ -61,8 +62,8 @@ export default () => {
 		if (!data.set) {
 			return { success: false, response: 'Missing param set' };
 		}
-		if (!data.user_id) {
-			return { success: false, response: 'Missing param user_id' };
+		if (!data.id) {
+			return { success: false, response: 'Missing param id' };
 		}
 
 		const uri =
@@ -74,12 +75,14 @@ export default () => {
 		});
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			let result = await DB.performQuery(
 				'blog',
 				'posts',
 				async (collection) => {
-					const query = { user_id: data.user_id };
+					const query = { user_id: data.id };
+					console.log(data.id);
 					const result = await collection
 						.find(query)
 						.sort({ created_at: -1 })
@@ -129,6 +132,7 @@ export default () => {
 		});
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			const search = generateSearch(data.search);
 
@@ -450,4 +454,13 @@ function generateSearch(search: any) {
 		search.categories_id = { $in: search.categories_id };
 	if (search.media_id) search.media_id = { $in: search.media_id };
 	return search;
+}
+function validateSet(inSet: any) {
+	const set = parseInt(inSet);
+	if (Number.isNaN(set)) {
+		throw new Error('Invalid set, must be integer');
+	}
+	if (set < 1) {
+		throw new Error('Invalid set, must be greater than 0');
+	}
 }

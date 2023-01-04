@@ -10,6 +10,10 @@ export default async (message: ConsumeMessage) => {
 	if (!data.id) {
 		return { success: false, response: 'Missing param id' };
 	}
+	if (!data.bearer) {
+		return { success: false, response: 'Missing param bearer' };
+	}
+
 	const uri =
 		'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
 	const client = new MongoClient(uri, {
