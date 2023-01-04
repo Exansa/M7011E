@@ -16,7 +16,8 @@ export async function getServerSideProps(){
     }
 }
 
-export default function Browse() {
+export default function Browse({data}) {
+
   const sliceIncrement = 4;
   const [maxSlice, setMaxSlice] = useState(sliceIncrement);
 
@@ -26,6 +27,7 @@ export default function Browse() {
     }
   };
 
+  const {results = []} = data;
   
 
   return (
@@ -40,7 +42,16 @@ export default function Browse() {
             <Typography variant="h2" component="h3">
               Featured
             </Typography>
+            <Grid container spacing={3} sx={{ mb: 2 }}>
+              {results.map(result => {
+                const { _id, title, content } = results;
 
+                return(
+                  <Grid item flexwrap="wrap">
+                  <GenericCard postID={_id} />
+                </Grid>
+              )})}
+            </Grid>
             <Grid container spacing={3} sx={{ mb: 2 }}>
               {posts.slice(0, maxSlice).map((post) => (
                 <Grid item flexwrap="wrap">

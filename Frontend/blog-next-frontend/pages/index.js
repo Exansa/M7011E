@@ -9,13 +9,14 @@ import Page from "../resource/layout/page";
 
 export default function Home() {
   //const { user, error, isLoading } = useUser();
-  const { data: session } = useSession();
+  const {data: session } = useSession();
+  console.log(session)
 
   return (
     <>
       <Page title="Index">
         <Box mx={"10%"} my="10%">
-          <Typography variant="h1"> {session ?  `${session.name}, ` : ''}Welcome to the blog! </Typography>
+          <Typography variant="h1"> {session ?  `${session.user.email}, ` : ''}Welcome to the blog! </Typography>
           <Stack
             direction="row"
             flexWrap="wrap"
