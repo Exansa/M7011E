@@ -1,4 +1,15 @@
-export const getStaticProps = async () => {
+export async function getServerSideProps() {
+    const res = await fetch('https:localhost:5001/posts');
+    const data = await res.json();
+    return{
+        props: {
+            data
+        } 
+    }
+}
+
+
+/*export const getStaticProps = async () => {
 
     const res = await fetch('https:localhost:5001/posts');
     const data = await res.json();
@@ -24,4 +35,4 @@ const Posts = ({ posts }) => {
     )
 }
 
-export default Posts
+export default Posts;*/

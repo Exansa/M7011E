@@ -5,6 +5,17 @@ import posts from "../../data/mock_db/posts";
 import GenericCard from "../../resource/components/global/card";
 import { useState } from "react";
 
+
+export async function getServerSideProps(){
+  const res = await fetch('https:localhost:5001/posts');
+    const data = await res.json();
+    return{
+        props: {
+            data
+        } 
+    }
+}
+
 export default function Browse() {
   const sliceIncrement = 4;
   const [maxSlice, setMaxSlice] = useState(sliceIncrement);
@@ -14,6 +25,8 @@ export default function Browse() {
       setMaxSlice(maxSlice + sliceIncrement);
     }
   };
+
+  
 
   return (
     <>
