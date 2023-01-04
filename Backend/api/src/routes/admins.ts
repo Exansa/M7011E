@@ -7,8 +7,8 @@ const router = Router();
 export default () => {
 	/**
 	 * @swagger
-	 * /admins:
-	 *   get:
+	 * /admins/get:
+	 *   post:
 	 *     tags:
 	 *       - Admins
 	 *     summary: Get a set of 10 admins
@@ -31,7 +31,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get('/', async (req: Request, res: Response) => {
+	router.post('/get', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'admins.get_all',
@@ -42,8 +42,8 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /admins/{id}:
-	 *   get:
+	 * /admins/{id}/get:
+	 *   post:
 	 *     tags:
 	 *       - Admins
 	 *     summary: Get one admin
@@ -72,7 +72,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get('/:id', async (req: Request, res: Response) => {
+	router.post('/:id/get', async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
 			'admins.get_one',

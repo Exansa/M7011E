@@ -50,7 +50,7 @@ export default () => {
 	/**
 	 * @swagger
 	 * /user/{id}/posts:
-	 *   get:
+	 *   post:
 	 *     tags:
 	 *       - User
 	 *       - Posts
@@ -80,7 +80,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get(
+	router.post(
 		'/:id/posts',
 		unpackParams,
 		async (req: Request, res: Response) => {
@@ -95,8 +95,8 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /user:
-	 *   get:
+	 * /user/get:
+	 *   post:
 	 *     tags:
 	 *       - User
 	 *     summary: Get a set of 10 users
@@ -119,7 +119,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get('/', async (req: Request, res: Response) => {
+	router.post('/get', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'users.get_all',

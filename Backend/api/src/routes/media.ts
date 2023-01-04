@@ -7,7 +7,7 @@ const router = Router();
 export default () => {
 	/**
 	 * @swagger
-	 * /media:
+	 * /media/get:
 	 *   get:
 	 *     tags:
 	 *       - Media
@@ -31,7 +31,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get('/', async (req: Request, res: Response) => {
+	router.post('/get', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'media.get_all',

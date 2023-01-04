@@ -8,7 +8,7 @@ export default () => {
 	/**
 	 * @swagger
 	 * /search/posts:
-	 *   get:
+	 *   post:
 	 *     tags:
 	 *       - Search
 	 *       - Posts
@@ -32,7 +32,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get('/posts', async (req: Request, res: Response) => {
+	router.post('/posts', async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'posts.search',
