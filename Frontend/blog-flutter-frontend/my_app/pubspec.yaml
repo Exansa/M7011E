@@ -39,7 +39,7 @@ dependencies:
   universal_html: ^2.0.8
   google_sign_in:
   shared_preferences: ^2.0.15
-  auth0: ^2.0.2
+  auth0_flutter2: ^0.0.8
 
 dev_dependencies:
   flutter_test:
