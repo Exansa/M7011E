@@ -92,10 +92,6 @@ export default () => {
 	 *     responses:
 	 *       200:
 	 *         description: Success
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/Tag'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -133,10 +129,6 @@ export default () => {
 	 *     responses:
 	 *       200:
 	 *         description: Success
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/tag'
 	 *       500:
 	 *         description: Internal Server Error
 	 */

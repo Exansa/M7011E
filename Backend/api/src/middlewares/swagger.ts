@@ -96,6 +96,75 @@ export default () => {
 						}
 					}
 				},
+				UserWithData: {
+					type: 'object',
+					properties: {
+						_id: {
+							type: 'string'
+						},
+						username: {
+							type: 'string'
+						},
+						email: {
+							type: 'string'
+						},
+						profilePicture_id: {
+							type: 'string'
+						},
+						createdAt: {
+							type: 'string'
+						},
+						profile_picture: {
+							type: 'string'
+						}
+					}
+				},
+				UsersWithDataArray: {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							_id: {
+								type: 'string'
+							},
+							auth0_id: {
+								type: 'string'
+							},
+							username: {
+								type: 'string'
+							},
+							email: {
+								type: 'string'
+							},
+							picture: {
+								type: 'string'
+							},
+							createdAt: {
+								type: 'string'
+							},
+							profile_picture: {
+								type: 'string'
+							}
+						}
+					}
+				},
+				UserUpdate: {
+					type: 'object',
+					properties: {
+						_id: {
+							type: 'string'
+						},
+						username: {
+							type: 'string'
+						},
+						email: {
+							type: 'string'
+						},
+						profilePicture_id: {
+							type: 'string'
+						}
+					}
+				},
 				UserId: {
 					type: 'object',
 					properties: {
@@ -115,7 +184,7 @@ export default () => {
 						}
 					}
 				},
-				Admin: {
+				AdminWithUserData: {
 					type: 'object',
 					properties: {
 						_id: {
@@ -129,10 +198,30 @@ export default () => {
 						access: {
 							type: 'string',
 							enum: ['admin', 'superAdmin']
+						},
+						user: {
+							type: 'object',
+							properties: {
+								_id: {
+									type: 'string'
+								},
+								username: {
+									type: 'string'
+								},
+								email: {
+									type: 'string'
+								},
+								profilePicture_id: {
+									type: 'string'
+								},
+								createdAt: {
+									type: 'string'
+								}
+							}
 						}
 					}
 				},
-				AdminsArray: {
+				AdminsWithUserDataArray: {
 					type: 'array',
 					items: {
 						type: 'object',
@@ -151,6 +240,26 @@ export default () => {
 								type: 'string',
 								enum: ['admin', 'superAdmin'],
 								required: true
+							},
+							user: {
+								type: 'object',
+								properties: {
+									_id: {
+										type: 'string'
+									},
+									username: {
+										type: 'string'
+									},
+									email: {
+										type: 'string'
+									},
+									profilePicture_id: {
+										type: 'string'
+									},
+									createdAt: {
+										type: 'string'
+									}
+								}
 							}
 						}
 					}
@@ -194,7 +303,7 @@ export default () => {
 						}
 					}
 				},
-				Post: {
+				PostWithData: {
 					type: 'object',
 					properties: {
 						_id: {
@@ -207,7 +316,7 @@ export default () => {
 							required: true
 						},
 						created_at: {
-							type: 'date',
+							type: 'string',
 							required: true
 						},
 						content: {
@@ -242,10 +351,67 @@ export default () => {
 								pattern: '[0-9a-z]{24}'
 							},
 							required: false
+						},
+						user: {
+							type: 'object',
+							properties: {
+								_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									name: {
+										type: 'string'
+									}
+								}
+							}
+						},
+						categories: {
+							type: 'array',
+							items: {
+								type: 'object',
+								properties: {
+									_id: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									name: {
+										type: 'string'
+									}
+								}
+							}
+						},
+						tags: {
+							type: 'array',
+							items: {
+								type: 'object',
+								properties: {
+									_id: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									name: {
+										type: 'string'
+									}
+								}
+							}
+						},
+						media: {
+							type: 'array',
+							items: {
+								type: 'object',
+								properties: {
+									_id: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									href: {
+										type: 'string'
+									}
+								}
+							}
 						}
 					}
 				},
-				PostsArray: {
+				PostsWithDataArray: {
 					type: 'array',
 					items: {
 						type: 'object',
@@ -260,7 +426,7 @@ export default () => {
 								required: true
 							},
 							created_at: {
-								type: 'date',
+								type: 'string',
 								required: true
 							},
 							content: {
@@ -295,6 +461,63 @@ export default () => {
 									pattern: '[0-9a-z]{24}'
 								},
 								required: false
+							},
+							user: {
+								type: 'object',
+								properties: {
+									_id: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}',
+										name: {
+											type: 'string'
+										}
+									}
+								}
+							},
+							categories: {
+								type: 'array',
+								items: {
+									type: 'object',
+									properties: {
+										_id: {
+											type: 'string',
+											pattern: '[0-9a-z]{24}'
+										},
+										name: {
+											type: 'string'
+										}
+									}
+								}
+							},
+							tags: {
+								type: 'array',
+								items: {
+									type: 'object',
+									properties: {
+										_id: {
+											type: 'string',
+											pattern: '[0-9a-z]{24}'
+										},
+										name: {
+											type: 'string'
+										}
+									}
+								}
+							},
+							media: {
+								type: 'array',
+								items: {
+									type: 'object',
+									properties: {
+										_id: {
+											type: 'string',
+											pattern: '[0-9a-z]{24}'
+										},
+										href: {
+											type: 'string'
+										}
+									}
+								}
 							}
 						}
 					}

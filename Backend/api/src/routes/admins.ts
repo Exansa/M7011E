@@ -27,7 +27,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/AdminsArray'
+	 *               $ref: '#/components/schemas/AdminsWithUserDataArray'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -68,7 +68,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/Admin'
+	 *               $ref: '#/components/schemas/AdminWithUserData'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -100,10 +100,6 @@ export default () => {
 	 *     responses:
 	 *       200:
 	 *         description: Success
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/Admin'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -141,10 +137,6 @@ export default () => {
 	 *     responses:
 	 *       200:
 	 *         description: Success
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/Admin'
 	 *       500:
 	 *         description: Internal Server Error
 	 */

@@ -61,8 +61,8 @@ export default () => {
 		if (!data.set) {
 			return { success: false, response: 'Missing param set' };
 		}
-		if (!data.user_id) {
-			return { success: false, response: 'Missing param user_id' };
+		if (!data.id) {
+			return { success: false, response: 'Missing param id' };
 		}
 
 		const uri =
@@ -79,7 +79,8 @@ export default () => {
 				'blog',
 				'posts',
 				async (collection) => {
-					const query = { user_id: data.user_id };
+					const query = { user_id: data.id };
+					console.log(data.id);
 					const result = await collection
 						.find(query)
 						.sort({ created_at: -1 })
