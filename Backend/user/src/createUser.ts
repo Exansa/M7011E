@@ -3,7 +3,6 @@ import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 import DB from '../../common/db';
 
 export default async (message: ConsumeMessage): Promise<RPCResponse> => {
-	console.log(message.content.toString());
 	const { username, bearer } = JSON.parse(message.content.toString());
 	if (!username) {
 		return {

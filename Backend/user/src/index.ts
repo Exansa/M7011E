@@ -8,12 +8,14 @@ import getUser from './getUser';
 import searchUsers from './searchUsers';
 import patchUser from './patchUser';
 import deleteUser from './deleteUser';
+import me from './me';
 
 const app: express.Application = express();
 
 const PORT = process.env.PORT ?? 8085;
 
 Rabbitmq.listen('user.create', createUser);
+Rabbitmq.listen('user.me', me);
 Rabbitmq.listen('users.get_all', getAllUsers);
 Rabbitmq.listen('users.get_one', getUser);
 Rabbitmq.listen('users.search', searchUsers);
