@@ -16,14 +16,14 @@ import { useSession } from "next-auth/react";
 //   featured: PropTypes.array,
 // };
 
-export const getStaticPaths = async () => {
+export async function getStaticPaths() {
   //TODO: Swap posts in this  and get static props out for a call to the database
-  const res = await fetch("https://localhost:5001/blog/posts"); //<-- DB call
+  const res = await fetch("http://localhost:5001/posts?set=1"); //<-- DB call
   const posts = await res.json();
 
   const paths = posts.map((post) => {
     return {
-      params: { postID: post.id },
+      params: { postID: post._id },
     };
   });
 
@@ -31,44 +31,37 @@ export const getStaticPaths = async () => {
     paths,
     fallback: false,
   };
-};
+}
 
-export const getStaticProps = async () => {
-  const res = await fetch("https://localhost:5001/blog/posts");
-  const posts = await res.json();
+export async function getStaticProps({ params }) {
+  const destination = "http://localhost:5001/posts/" + params.postID;
+  const res = await fetch(destination);
+  const post = await res.json();
 
   return {
-    props: { posts },
+    props: { post, destination },
   };
-};
+}
 
-const Post = () => {
-  // const Post = () => {
-  //   const router = useRouter();
-  //   const { pid } = router.query;
-
-  //   return <p>Post: {pid}</p>;
-  // };
-  let router = useRouter();
-  const { postID } = router.query;
-
-  console.log(postID);
-  const post = posts[postID - 1];
+const Post = (context) => {
+  console.log(context);
 
   //const { user, error, isLoading } = useUser();
   const { data: session } = useSession();
+  const post = context.post;
 
   return (
     <>
       <Page title={post.title}>
         <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
           <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
-            <Image src={post.image.href} duration={1000} />
+            <Image src={post.media[0].href} duration={1000} />
             <Typography variant="h1" component="h2">
               {post.title}
             </Typography>
             <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-              <Avatar src={post.user.image.href} alt={post.user.username} />
+              {/*TODO: Add user profile picture*/}
+              <Avatar src="" alt={post.user.username} />
               <Typography variant="h4" component="h3">
                 {post.user.username}
               </Typography>
@@ -78,11 +71,11 @@ const Post = () => {
             </Typography>
           </Stack>
           {/*{(user.id==post.id)
-          &&(
-          <Button>
-            Edit
-          </Button>
-          )}*/}
+        &&(
+        <Button>
+          Edit
+        </Button>
+        )}*/}
         </Box>
       </Page>
     </>

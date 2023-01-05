@@ -10,6 +10,7 @@ export default () => {
 		if (!data.set) {
 			return { success: false, response: 'Missing param set' };
 		}
+		console.log(parseInt(data.set));
 		if (!data.admin) {
 			return { success: false, response: 'Missing param admin' };
 		}
@@ -23,6 +24,7 @@ export default () => {
 		});
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			const userId = data.user_id;
 
@@ -344,4 +346,13 @@ async function lastSuperAdmin(id: any, client: MongoClient) {
 	const result = await collection.find(query).toArray();
 	if (result.length == 1 && result[0]._id == id)
 		throw new Error('Cant delete last super admin');
+}
+function validateSet(inSet: any) {
+	const set = parseInt(inSet);
+	if (Number.isNaN(set)) {
+		throw new Error('Invalid set, must be integer');
+	}
+	if (set < 1) {
+		throw new Error('Invalid set, must be greater than 0');
+	}
 }

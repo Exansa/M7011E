@@ -23,6 +23,7 @@ export default async (message: ConsumeMessage) => {
 	});
 
 	try {
+		validateSet(data.set);
 		const set = data.set;
 		const search = data.search;
 
@@ -84,4 +85,13 @@ async function getDataFromUser(user: any, client: MongoClient) {
 	});
 	user.profile_picture = result;
 	return user;
+}
+function validateSet(inSet: any) {
+	const set = parseInt(inSet);
+	if (Number.isNaN(set)) {
+		throw new Error('Invalid set, must be integer');
+	}
+	if (set < 1) {
+		throw new Error('Invalid set, must be greater than 0');
+	}
 }

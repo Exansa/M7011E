@@ -9,18 +9,16 @@ import NextLink from "next/link";
 import { useSession } from "next-auth/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-function GenericCard({ postID }) {
-  const post = posts[postID - 1];
+function GenericCard({ post }) {
   const { data: session } = useSession();
-
 
   return (
     <>
       <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
         <NextLink
           passHref
-          href={Routes.posts.post(post.id)}
-          key={post.id}
+          href={Routes.posts.post(post._id)}
+          key={post._id}
           // as={Routes.posts.post(post.id)}
           // href={{
           //   pathname: Routes.posts.post("[postID]"),
@@ -31,7 +29,7 @@ function GenericCard({ postID }) {
             <CardMedia
               component="img"
               height="140"
-              src={post.image.href}
+              src={post.media[0].href}
               alt="image not found"
             />
             <CardContent>
@@ -49,15 +47,13 @@ function GenericCard({ postID }) {
             <Button size="small" color="primary">
               Share
             </Button>
-            {session
-              &&(
-                <>
-                  <Button size="small" color="primary">
-                    Edit
-                  </Button>
-                </>
-              )}
-          
+            {session && (
+              <>
+                <Button size="small" color="primary">
+                  Edit
+                </Button>
+              </>
+            )}
           </CardActions>
         </NextLink>
       </Card>

@@ -7,6 +7,7 @@ export const unpackParams = async (
 ) => {
 	req.body = {
 		...req.body,
+		...req.query,
 		...req.params
 	};
 	next();

@@ -7,29 +7,38 @@ import GenericCard from "../resource/components/global/card";
 import React from "react";
 import Page from "../resource/layout/page";
 
-export default function Home() {
+export async function getStaticProps() {
+  const res = await fetch("http:localhost:5001/posts?set=1");
+  const data = await res.json();
+  return {
+    props: {
+      data,
+    },
+  };
+}
+
+export default function Home(context) {
   //const { user, error, isLoading } = useUser();
-  const {data: session } = useSession();
-  //console.log(session)
+  const { data: session } = useSession();
+  console.log(session);
 
   return (
     <>
       <Page title="Index">
         <Box mx={"10%"} my="10%">
-          <Typography variant="h1"> {session ?  `${session.user.email}, ` : ''}Welcome to the blog! </Typography>
+          <Typography variant="h1">
+            {" "}
+            {session ? `${session.user.email}, ` : ""}Welcome to the blog!{" "}
+          </Typography>
           <Stack
             direction="row"
             flexWrap="wrap"
             justifyContent="space-between"
             alignContent={"center"}
           >
-            <GenericCard postID={1} />
-
-            <GenericCard postID={2} />
-
-            <GenericCard postID={3} />
-
-            <GenericCard postID={4} />
+            {context.data.slice(0, 3).map((post) => (
+              <GenericCard post={post} />
+            ))}
           </Stack>
         </Box>
       </Page>

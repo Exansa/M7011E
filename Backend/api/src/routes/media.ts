@@ -7,20 +7,18 @@ const router = Router();
 export default () => {
 	/**
 	 * @swagger
-	 * /media:
+	 * /media?set={set}:
 	 *   get:
 	 *     tags:
 	 *       - Media
 	 *     summary: Get a set of 10 media
 	 *     description: Get a set of 10 media, ordered by newest created. Set = 1 gets the fist 10 media, set = 2 gets the next 10, etc.
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
 	 *     responses:
 	 *       200:
 	 *         description: Success

@@ -12,6 +12,7 @@ export default () => {
 		}
 
 		try {
+			validateSet(data.set);
 			const set = data.set;
 			const result = await DB.performQuery(
 				'blog',
@@ -206,4 +207,13 @@ async function checkUniuqeTag(tag: any, tagId: string, client: MongoClient) {
 	};
 	const alreadyExists = await collection.findOne(query1);
 	if (alreadyExists) throw new Error('Tag with that name already exists');
+}
+function validateSet(inSet: any) {
+	const set = parseInt(inSet);
+	if (Number.isNaN(set)) {
+		throw new Error('Invalid set, must be integer');
+	}
+	if (set < 1) {
+		throw new Error('Invalid set, must be greater than 0');
+	}
 }

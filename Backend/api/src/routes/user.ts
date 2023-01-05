@@ -49,7 +49,7 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /user/{id}/posts:
+	 * /user/{id}/posts?set={set}:
 	 *   get:
 	 *     tags:
 	 *       - User
@@ -62,14 +62,11 @@ export default () => {
 	 *         schema:
 	 *           type: string
 	 *           required: true
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
 	 *     responses:
 	 *       200:
 	 *         description: Success
@@ -95,20 +92,48 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /user:
+	 * /user/me:
+	 *   get:
+	 *     tags:
+	 *       - User
+	 *     summary: Current user
+	 *     description: Get the current user from Authentication Token
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/User'
+	 *       401:
+	 *         description: Unauthorized
+	 *       404:
+	 *         description: Not Found
+	 *       500:
+	 *         description: Internal Server Error
+	 */
+	router.get('/me', authenticate, async (req: Request, res: Response) => {
+		const data = req.body;
+		const result = await Rabbitmq.sendRPC('user.me', JSON.stringify(data));
+		respond(res, result);
+	});
+
+	/**
+	 * @swagger
+	 * /user?set={set}:
 	 *   get:
 	 *     tags:
 	 *       - User
 	 *     summary: Get a set of 10 users
 	 *     description: Get a set of 10 users, ordered by id. Set = 1 gets the fist 10 users, set = 2 gets the next 10, etc.
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/Set'
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
 	 *     responses:
 	 *       200:
 	 *         description: Success
@@ -119,7 +144,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get('/', async (req: Request, res: Response) => {
+	router.get('/', unpackParams, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'users.get_all',
