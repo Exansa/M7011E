@@ -7,7 +7,7 @@ import { Typography, Stack } from "@mui/material";
 
 export function About() {
   return (
-    <Page>
+    <Page title="About us">
       <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
         <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
           <video autoPlay muted loop>
@@ -22,7 +22,7 @@ export function About() {
           <Typography variant="body1" component="p">
             The project for M7011E 2022 by the group gamla och bittra; with
             Elliot Huber, Magnus Stenfelt, Peter Panduro and Tovah Parnes. Our
-            porject is a blog style website where we will make it using the
+            project is a blog style website where we will make it using the
             frameworks NextJS and Dart and then compare the performance of the
             two different systems. They will have a shared backend and database
             so we can see the difference in them without other factors.
