@@ -37,7 +37,13 @@ const options = {
   ],
   callbacks: {
     async jwt(token, user, account, profile, isNewUser){
-      console.log('jwt', {token, user});
+      
+      if (token.account){
+        
+        //console.log('account', token.account.access_token);
+      }
+      
+      
       return token
     }
   },

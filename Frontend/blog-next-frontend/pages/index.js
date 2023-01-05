@@ -10,7 +10,7 @@ import Page from "../resource/layout/page";
 export default function Home() {
   //const { user, error, isLoading } = useUser();
   const {data: session } = useSession();
-  console.log(session)
+  //console.log(session)
 
   return (
     <>
