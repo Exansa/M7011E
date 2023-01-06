@@ -912,6 +912,11 @@ export default () => {
 									type: 'string',
 									required: false
 								},
+								user_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: false
+								},
 								categories_id: {
 									type: 'array',
 									items: {
@@ -947,20 +952,18 @@ export default () => {
 							type: 'object',
 							required: true,
 							properties: {
-								type: 'object',
-								properties: {
-									username: {
-										type: 'string',
-										required: false
-									},
-									email: {
-										type: 'string',
-										required: false
-									},
-									picture: {
-										type: 'string',
-										required: false
-									}
+								username: {
+									type: 'string',
+									required: false
+								},
+								email: {
+									type: 'string',
+									required: false
+								},
+								profilePicture_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: false
 								}
 							}
 						}
@@ -977,7 +980,12 @@ export default () => {
 				url: 'http://localhost:8080',
 				description: 'Local server'
 			}
-		]
+		].sort((a) => {
+			if (process.env.NODE_ENV === 'production') {
+				return a.url.includes('8080') ? 1 : -1;
+			}
+			return a.url.includes('5001') ? 1 : -1;
+		})
 	};
 	const options = {
 		swaggerDefinition,

@@ -17,8 +17,7 @@ import { useSession } from "next-auth/react";
 // };
 
 export async function getStaticPaths() {
-  //TODO: Swap posts in this  and get static props out for a call to the database
-  const res = await fetch("http://localhost:5001/posts?set=1"); //<-- DB call
+  const res = await fetch("http://localhost:5001/posts?set=1");
   const posts = await res.json();
 
   const paths = posts.map((post) => {
@@ -34,12 +33,11 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const destination = "http://localhost:5001/posts/" + params.postID;
-  const res = await fetch(destination);
+  const res = await fetch("http://localhost:5001/posts/" + params.postID);
   const post = await res.json();
 
   return {
-    props: { post, destination },
+    props: { post },
   };
 }
 

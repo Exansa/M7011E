@@ -25,7 +25,7 @@ export default async (message: ConsumeMessage) => {
 	try {
 		validateSet(data.set);
 		const set = data.set;
-		const search = data.search;
+		const search = generateSearch(data.search);
 
 		let result = await DB.performQuery(
 			'blog',
@@ -72,7 +72,7 @@ async function getDataFromUsersArray(
 }
 
 async function getDataFromUser(user: any, client: MongoClient) {
-	let collection = await client.db('blog').collection('media');
+	const collection = await client.db('blog').collection('media');
 	if (!user.profilePicture_id) {
 		user.profile_picture = null;
 		return user;
@@ -94,4 +94,15 @@ function validateSet(inSet: any) {
 	if (set < 1) {
 		throw new Error('Invalid set, must be greater than 0');
 	}
+}
+
+function generateSearch(search: any) {
+	const out: any = {};
+	if (search.username && search.username !== '')
+		out.username = { $regex: search.username };
+	if (search.email && search.email !== '')
+		out.email = { $regex: search.email };
+	if (search.profilePicture_id && search.profilePicture_id !== '')
+		out.profilePicture_id = search.profilePicture_id;
+	return out;
 }

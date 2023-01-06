@@ -14,17 +14,11 @@ function GenericCard({ post }) {
 
   return (
     <>
-      <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
-        <NextLink
-          passHref
-          href={Routes.posts.post(post._id)}
-          key={post._id}
-          // as={Routes.posts.post(post.id)}
-          // href={{
-          //   pathname: Routes.posts.post("[postID]"),
-          //   query: { postID: post.id },
-          // }}
-        >
+      <Card
+        raised
+        sx={{ minWidth: 345, maxWidth: 345, minHeight: 320, maxHeight: 320 }}
+      >
+        <NextLink passHref href={Routes.posts.post(post._id)} key={post._id}>
           <CardActionArea>
             <CardMedia
               component="img"
@@ -32,9 +26,11 @@ function GenericCard({ post }) {
               src={post.media[0].href}
               alt="image not found"
             />
-            <CardContent>
+            <CardContent sx={{ maxHeight: 140, minHeight: 140 }}>
               <Typography gutterBottom variant="h5" component="div">
-                {post.title}
+                {post.title.length > 25
+                  ? post.title.substring(0, 25) + "..."
+                  : post.title}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {post.content.length > 150
