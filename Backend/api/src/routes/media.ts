@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
+import { unpackParams } from '../middlewares/unpack';
 
 const router = Router();
 
@@ -29,7 +30,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.get('/', async (req: Request, res: Response) => {
+	router.get('/', unpackParams, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'media.get_all',

@@ -384,7 +384,6 @@ async function getDataFromPostsArray(
 	array: WithId<Document>[],
 	client: MongoClient
 ) {
-	console.log(array);
 	for (let i = 0; i < array.length; i++) {
 		array[i] = await getDataFromPost(array[i], client);
 	}
@@ -399,8 +398,7 @@ async function getDataFromPost(post: any, client: MongoClient) {
 	const result = await collection.findOne(query, {
 		projection: { username: 1, profilePicture_id: 1 }
 	});
-	console.log(result);
-	const userWithData = getDataFromUser(result, client);
+	const userWithData = await getDataFromUser(result, client);
 	post.user = userWithData;
 
 	collection = await client.db('blog').collection('categories');
@@ -446,12 +444,8 @@ async function getDataFromPost(post: any, client: MongoClient) {
 
 async function getDataFromUser(user: any, client: MongoClient) {
 	const collection = await client.db('blog').collection('media');
-	if (
-		user.profilePicture_id === null ||
-		!user.profilePicture_id ||
-		user.profilePicture_id === ''
-	) {
-		user.profile_picture = null;
+
+	if (!user || !user.profilePicture_id) {
 		return user;
 	}
 	const query = {
