@@ -1,26 +1,28 @@
 import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
+import { unpackParams } from '../middlewares/unpack';
+import authenticate from '../middlewares/authenticate';
 
 const router = Router();
 
 export default () => {
 	/**
 	 * @swagger
-	 * /admins/get:
-	 *   post:
+	 * /admins?set={set}:
+	 *   get:
 	 *     tags:
 	 *       - Admins
 	 *     summary: Get a set of 10 admins
 	 *     description: Get a set of 10 admins, ordered by id. Set = 1 gets the fist 10 admins, set = 2 gets the next 10, etc.
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UseridAndSet'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UseridAndSet'
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
@@ -31,14 +33,20 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/get', async (req: Request, res: Response) => {
-		const data = req.body;
-		const result = await Rabbitmq.sendRPC(
-			'admins.get_all',
-			JSON.stringify(data)
-		);
-		respond(res, result);
-	});
+	router.get(
+		'/',
+		unpackParams,
+		authenticate,
+		async (req: Request, res: Response) => {
+			const data = req.body;
+			console.log('api');
+			const result = await Rabbitmq.sendRPC(
+				'admins.get_all',
+				JSON.stringify(data)
+			);
+			respond(res, result);
+		}
+	);
 
 	/**
 	 * @swagger
