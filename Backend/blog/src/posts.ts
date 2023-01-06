@@ -384,6 +384,7 @@ async function getDataFromPostsArray(
 	array: WithId<Document>[],
 	client: MongoClient
 ) {
+	console.log(array);
 	for (let i = 0; i < array.length; i++) {
 		array[i] = await getDataFromPost(array[i], client);
 	}
@@ -396,9 +397,11 @@ async function getDataFromPost(post: any, client: MongoClient) {
 		_id: new ObjectId(post.user_id)
 	};
 	const result = await collection.findOne(query, {
-		projection: { username: 1 }
+		projection: { username: 1, profilePicture_id: 1 }
 	});
-	post.user = result;
+	console.log(result);
+	const userWithData = getDataFromUser(result, client);
+	post.user = userWithData;
 
 	collection = await client.db('blog').collection('categories');
 	const categoryLength = post.categories_id?.length ?? 0;
@@ -439,6 +442,26 @@ async function getDataFromPost(post: any, client: MongoClient) {
 		post.media[j] = result ?? null;
 	}
 	return post;
+}
+
+async function getDataFromUser(user: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('media');
+	if (
+		user.profilePicture_id === null ||
+		!user.profilePicture_id ||
+		user.profilePicture_id === ''
+	) {
+		user.profile_picture = null;
+		return user;
+	}
+	const query = {
+		_id: new ObjectId(user.profilePicture_id)
+	};
+	const result = await collection.findOne(query, {
+		projection: { href: 1 }
+	});
+	user.profile_picture = result;
+	return user;
 }
 
 async function checkAccess(id: any, userId: any, client: MongoClient) {
