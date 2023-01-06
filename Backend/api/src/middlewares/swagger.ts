@@ -912,6 +912,11 @@ export default () => {
 									type: 'string',
 									required: false
 								},
+								user_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: false
+								},
 								categories_id: {
 									type: 'array',
 									items: {

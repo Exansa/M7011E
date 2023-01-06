@@ -82,7 +82,6 @@ export default () => {
 				'posts',
 				async (collection) => {
 					const query = { user_id: data.id };
-					console.log(data.id);
 					const result = await collection
 						.find(query)
 						.sort({ created_at: -1 })
@@ -449,12 +448,19 @@ async function checkAccess(id: any, userId: any, client: MongoClient) {
 	if (!result) throw new Error('Access denied');
 }
 function generateSearch(search: any) {
-	//if (search.title) search.title = { $regex: search.title };
-	if (search.tags_id) search.tags_id = { $in: search.tags_id };
-	if (search.categories_id)
-		search.categories_id = { $in: search.categories_id };
-	if (search.media_id) search.media_id = { $in: search.media_id };
-	return search;
+	const out: any = {};
+	if (search.title && search.title !== '')
+		out.title = { $regex: search.title };
+	if (search.content && search.constent !== '')
+		out.content = { $regex: search.content };
+	if (search.user_id && search.user_id !== '') out.user_id = search.user_id;
+	if (search.tags_id && search.tags_id.length !== 0)
+		out.tags_id = { $in: search.tags_id };
+	if (search.categories_id && search.categories_id.length !== 0)
+		out.categories_id = { $in: search.categories_id };
+	if (search.media_id && search.media_id.length !== 0)
+		out.media_id = { $in: search.media_id };
+	return out;
 }
 function validateSet(inSet: any) {
 	const set = parseInt(inSet);
