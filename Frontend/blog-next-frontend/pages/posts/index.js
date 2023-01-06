@@ -54,11 +54,8 @@ export default function Browse(context) {
 
         const data = await hit.json();
 
-        if (data.length > 0) {
+        if (data) {
           setPosts(data);
-          console.log(data);
-        } else {
-          setPosts(context.data);
         }
       }, 300),
     []
@@ -89,6 +86,10 @@ export default function Browse(context) {
     fetchPosts(request);
   }
 
+  function handleReset() {
+    setPosts(context.data);
+  }
+
   console.log(context.data);
 
   return (
@@ -99,9 +100,13 @@ export default function Browse(context) {
             <Typography variant="h1" component="h2">
               Browse Posts
             </Typography>
-            <Typography variant="h4" component="h4">
-              Search
-            </Typography>
+            <Stack direction={"row"} spacing={2}>
+              <Typography variant="h4" component="h4">
+                Search
+              </Typography>
+              <Button onClick={handleReset}>Reset</Button>
+            </Stack>
+
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Paper
@@ -143,11 +148,17 @@ export default function Browse(context) {
               Featured
             </Typography>
             <Grid container spacing={3} sx={{ mb: 2 }}>
-              {posts.map((result) => (
-                <Grid item flexwrap="wrap">
-                  <GenericCard post={result} />
-                </Grid>
-              ))}
+              {posts.length > 0 ? (
+                posts.map((result) => (
+                  <Grid item flexwrap="wrap">
+                    <GenericCard post={result} />
+                  </Grid>
+                ))
+              ) : (
+                <Typography variant="h4" component="h4">
+                  No results found
+                </Typography>
+              )}
             </Grid>
             {/*TODO: Load more slices when this is pressed*/}
             <Button onClick={handleSliceChange}>Load More</Button>
