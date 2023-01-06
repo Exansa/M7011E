@@ -22,14 +22,14 @@ export default function Home(context) {
   const {data: session } = useSession();
   //console.log(session)
 
-  //{session ? `${session.user.email}, ` : ""}Welcome to the blog!{" "}
+  
   return (
     <>
       <Page title="Index">
         <Box mx={"10%"} my="10%">
           <Typography variant="h1">
             {" "}
-            Welcome to the blog!
+            {session ? `${session.user.email}, ` : ""}Welcome to the blog!{" "}
           </Typography>
           <Stack
             direction="row"

@@ -67,15 +67,27 @@ const options = {
     
     async session({ session, token }) {
       // Send properties to the client, like an access_token and user id from a provider.
-      console.log('session token', token)
-      console.log('session' , session)
+      //console.log('session token', token)
+      //console.log('session' , session)
       //console.log('token accoutn', token.token.account)
       if (token.token.account){
-        console.log('token accoutn', token.token.account)
+        //console.log('token accoutn', token.token.account)
         session.accessToken = token.token.account.access_token
-        console.log(session)
+        console.log(session);
         //console.log('session token',token)
-        console.log('accessToken', session.accessToken)
+        //console.log('accessToken', session.accessToken)
+        const res = await fetch("http://localhost:5001/user/me", {
+          method: 'GET',
+          headers: new Headers({
+            authorization: 'Bearer ' + session.accessToken
+          })
+        });
+        const result = await res.json();
+
+        session.user = result
+
+        console.log(session);
+
         return session
       }
       //return session
