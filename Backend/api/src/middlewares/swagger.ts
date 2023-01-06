@@ -952,20 +952,18 @@ export default () => {
 							type: 'object',
 							required: true,
 							properties: {
-								type: 'object',
-								properties: {
-									username: {
-										type: 'string',
-										required: false
-									},
-									email: {
-										type: 'string',
-										required: false
-									},
-									picture: {
-										type: 'string',
-										required: false
-									}
+								username: {
+									type: 'string',
+									required: false
+								},
+								email: {
+									type: 'string',
+									required: false
+								},
+								profilePicture_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: false
 								}
 							}
 						}

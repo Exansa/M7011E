@@ -50,13 +50,19 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /search/users:
+	 * /search/users?set={set}:
 	 *   post:
 	 *     tags:
 	 *       - Search
 	 *       - User
-	 *     summary: Get a set of 10 posts based on the search query
-	 *     description: Get a set of 10 posts based on the search query, ordered by newest created. Set = 1 gets the fist 10 posts, set = 2 gets the next 10, etc.
+	 *     summary: Get a set of 10 users based on the search query
+	 *     description: Get a set of 10 users based on the search query, ordered by newest created. Set = 1 gets the fist 10 users, set = 2 gets the next 10, etc. An empty string will exclude that parameter. There is AND between the different parameters, meaning every parameter must be true for the user to be returned.
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
 	 *     requestBody:
 	 *         content:
 	 *            application/x-www-form-urlencoded:
@@ -75,7 +81,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/users', async (req: Request, res: Response) => {
+	router.post('/users', unpackParams, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'users.search',
