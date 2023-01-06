@@ -6,7 +6,6 @@ import DB from '../../common/db';
 export default () => {
 	Rabbitmq.listen('posts.get_all', async (message) => {
 		const data = JSON.parse(message.content.toString());
-		console.log(data);
 
 		if (!data.set) {
 			return { success: false, response: 'Missing param set' };
@@ -450,6 +449,7 @@ async function checkAccess(id: any, userId: any, client: MongoClient) {
 	if (!result) throw new Error('Access denied');
 }
 function generateSearch(search: any) {
+	//if (search.title) search.title = { $regex: search.title };
 	if (search.tags_id) search.tags_id = { $in: search.tags_id };
 	if (search.categories_id)
 		search.categories_id = { $in: search.categories_id };

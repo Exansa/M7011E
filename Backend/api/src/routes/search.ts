@@ -1,19 +1,26 @@
 import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
+import { unpackParams } from '../middlewares/unpack';
 
 const router = Router();
 
 export default () => {
 	/**
 	 * @swagger
-	 * /search/posts:
+	 * /search/posts?set={set}:
 	 *   post:
 	 *     tags:
 	 *       - Search
 	 *       - Posts
 	 *     summary: Get a set of 10 posts based on the search query
 	 *     description: Get a set of 10 posts based on the search query, ordered by newest created. Set = 1 gets the fist 10 posts, set = 2 gets the next 10, etc.
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
 	 *     requestBody:
 	 *         content:
 	 *            application/x-www-form-urlencoded:
@@ -32,7 +39,7 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/posts', async (req: Request, res: Response) => {
+	router.post('/posts', unpackParams, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'posts.search',
