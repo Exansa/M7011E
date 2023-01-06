@@ -14,8 +14,14 @@ export function Settings() {
   const { data: session } = useSession();
 
   async function handleOnButtonClick(e){
-    const results = await fetch('./api/GetAccessToken')
-    console.log(results)
+    const res = await fetch("http://localhost:5001/user/me", {
+          method: 'GET',
+          headers: new Headers({
+            authorization: 'Bearer ' + session.accessToken
+          })
+        });
+        const result = await res.json();
+        console.log(result);
   }
 
   return (
