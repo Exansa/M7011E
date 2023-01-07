@@ -51,6 +51,7 @@ export default function Browse(context) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
+  // Passively fetch data from the server, used to update input suggestions
   const passiveFetch = useMemo(
     () =>
       debounce(async ({ request, destination, updateState }) => {
@@ -72,12 +73,14 @@ export default function Browse(context) {
     []
   );
 
+  // TODO: Pagnation / infinite scroll
   function handleSliceChange() {
     if (maxSlice + sliceIncrement <= 10) {
       setMaxSlice(maxSlice + sliceIncrement);
     }
   }
 
+  //Performs the search query
   async function handleSearch() {
     if (title.length < 1 && content.length < 1 && targetUserID.length < 1) {
       setPosts(context.posts);
@@ -95,6 +98,7 @@ export default function Browse(context) {
       },
     };
 
+    // Since tags are an array of objects, we need to convert them to an array of IDs
     if (targetTags.length > 0) {
       const tagIDs = [];
       targetTags.forEach((tag) => {
@@ -124,6 +128,7 @@ export default function Browse(context) {
     });
   }
 
+  // Passively fetches data from the server to update input suggestions
   function handleUserRequest(event, newInputValue) {
     const request = {
       search: {
@@ -140,6 +145,7 @@ export default function Browse(context) {
     });
   }
 
+  // Passively fetches data from the server to update input suggestions
   function handleTagRequest(event, newInputValue) {
     const request = {
       search: {
@@ -154,6 +160,7 @@ export default function Browse(context) {
     });
   }
 
+  // Passively fetches data from the server to update input suggestions
   function handleCategoryRequest(event, newInputValue) {
     const request = {
       search: {
@@ -168,6 +175,7 @@ export default function Browse(context) {
     });
   }
 
+  // Resets the search query
   function handleReset() {
     setPosts(context.posts);
     setTargetUserID("");
@@ -381,7 +389,7 @@ export default function Browse(context) {
                 </Button>
               </Grid>
             </Grid>
-
+            {/* ------------------ Results ------------------ */}
             <Typography variant="h4" component="h4">
               Featured
             </Typography>
