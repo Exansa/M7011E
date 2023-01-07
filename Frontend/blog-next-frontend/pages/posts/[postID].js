@@ -68,7 +68,7 @@ const Post = (context) => {
               {post.content}
             </Typography>
           </Stack>
-          {/*{(user.id==post.id)
+          {/*{(session.user._id==post.user_id)
         &&(
         <Button>
           Edit

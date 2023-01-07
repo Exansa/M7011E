@@ -75,7 +75,7 @@ const options = {
         session.accessToken = token.token.account.access_token
         console.log(session);
         //console.log('session token',token)
-        //console.log('accessToken', session.accessToken)
+        console.log('accessToken', session.accessToken)
         const res = await fetch("http://localhost:5001/user/me", {
           method: 'GET',
           headers: new Headers({
