@@ -81,6 +81,51 @@ export default () => {
 		}
 	});
 
+	Rabbitmq.listen('media.search', async (message) => {
+		const data = JSON.parse(message.content.toString());
+
+		if (!data.set) {
+			return { success: false, response: 'Missing param set' };
+		}
+
+		if (!data.search) {
+			return { success: false, response: 'Missing param search' };
+		}
+
+		try {
+			validateSet(data.set);
+			const set = data.set;
+			const search = generateSearch(data.search);
+
+			const result = await DB.performQuery(
+				'blog',
+				'media',
+				async (collection) => {
+					const result = await collection
+						.find(search)
+						.sort({ _id: 1 })
+						.skip((set - 1) * 10)
+						.limit(10)
+						.toArray();
+					return result;
+				}
+			);
+
+			const response: RPCResponse = {
+				success: true,
+				status: 200,
+				response: result
+			};
+			return response;
+		} catch (error: any) {
+			const response = {
+				success: false,
+				response: error?.message.toString()
+			};
+			return response;
+		}
+	});
+
 	Rabbitmq.listen('media.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
@@ -204,4 +249,16 @@ function validateSet(inSet: any) {
 	if (set < 1) {
 		throw new Error('Invalid set, must be greater than 0');
 	}
+}
+
+function generateSearch(search: any) {
+	const out: any = {};
+	if (search.user_id && search.user_id !== '') out.user_id = search.user_id;
+	if (search.name && search.name !== '')
+		out.name = { $regex: search.name, $options: 'i' };
+	if (search.type && search.type !== '')
+		out.type = { $regex: search.type, $options: 'i' };
+	if (search.href && search.href !== '')
+		out.href = { $regex: search.href, $options: 'i' };
+	return out;
 }

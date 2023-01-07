@@ -178,5 +178,47 @@ export default () => {
 		}
 	);
 
+	/**
+	 * @swagger
+	 * /search/media?set={set}:
+	 *   post:
+	 *     tags:
+	 *       - Search
+	 *       - Media
+	 *     summary: Get a set of 10 media based on the search query
+	 *     description: Get a set of 10 media based on the search query, ordered by newest created. Set = 1 gets the fist 10 media, set = 2 gets the next 10, etc. An empty string will ignore that parameter. There is AND between the different parameters, meaning every parameter must be true for the post to be returned.
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/SearchMedia'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/SearchMedia'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/MediaArray'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
+	router.post('/media', unpackParams, async (req: Request, res: Response) => {
+		const data = req.body;
+		const result = await Rabbitmq.sendRPC(
+			'media.search',
+			JSON.stringify(data)
+		);
+		respond(res, result);
+	});
+
 	return router;
 };

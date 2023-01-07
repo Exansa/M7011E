@@ -865,6 +865,33 @@ export default () => {
 						}
 					}
 				},
+				SearchMedia: {
+					type: 'object',
+					properties: {
+						search: {
+							type: 'object',
+							properties: {
+								user_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: true
+								},
+								name: {
+									type: 'string',
+									required: false
+								},
+								type: {
+									type: 'string',
+									required: false
+								},
+								href: {
+									type: 'string',
+									required: false
+								}
+							}
+						}
+					}
+				},
 				MediaCreate: {
 					type: 'object',
 					properties: {
