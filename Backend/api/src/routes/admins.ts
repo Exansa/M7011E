@@ -35,11 +35,10 @@ export default () => {
 	 */
 	router.get(
 		'/',
-		unpackParams,
 		authenticate,
+		unpackParams,
 		async (req: Request, res: Response) => {
 			const data = req.body;
-			console.log('api');
 			const result = await Rabbitmq.sendRPC(
 				'admins.get_all',
 				JSON.stringify(data)

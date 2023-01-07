@@ -20,17 +20,15 @@ export default () => {
 		});
 
 		try {
-			console.log('before');
 			const userResponse = await Rabbitmq.sendRPC(
 				'authentication.verify',
 				JSON.stringify(data.bearer)
 			);
-			console.log('after');
-			if (!userResponse.success) {
-				return userResponse;
-			}
 
+			if (!userResponse.success) return userResponse;
 			const user = JSON.parse(userResponse.response);
+			console.log(user);
+
 			validateSet(data.set);
 			const set = data.set;
 			const userId = user._id;
