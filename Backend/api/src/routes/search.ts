@@ -132,5 +132,51 @@ export default () => {
 		respond(res, result);
 	});
 
+	/**
+	 * @swagger
+	 * /search/categories?set={set}:
+	 *   post:
+	 *     tags:
+	 *       - Search
+	 *       - Categories
+	 *     summary: Get a set of 10 categories based on the search query
+	 *     description: Get a set of 10 categories based on the search query, ordered by newest created. Set = 1 gets the fist 10 categories, set = 2 gets the next 10, etc. An empty string will ignore that parameter. There is AND between the different parameters, meaning every parameter must be true for the post to be returned.
+	 *     parameters:
+	 *       - in: path
+	 *         name: set
+	 *         schema:
+	 *           type: string
+	 *           required: true
+	 *     requestBody:
+	 *         content:
+	 *            application/x-www-form-urlencoded:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/SearchCategories'
+	 *            application/json:
+	 *              schema:
+	 *                 $ref: '#/components/schemas/SearchCategories'
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/CategoriesArray'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
+	router.post(
+		'/categories',
+		unpackParams,
+		async (req: Request, res: Response) => {
+			const data = req.body;
+			const result = await Rabbitmq.sendRPC(
+				'categories.search',
+				JSON.stringify(data)
+			);
+			respond(res, result);
+		}
+	);
+
 	return router;
 };

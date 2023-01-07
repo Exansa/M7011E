@@ -36,13 +36,11 @@ export default () => {
 			result
 				? res.status(200).send(`Admin created successfully`)
 				: res.status(304).send(`Admin not created`);
-			console.log(result);
 		} catch (err) {
 			if (err instanceof Error) {
 				console.error(err.message);
 				res.status(400).send(err.message);
 			} else {
-				console.log('Unexpected error', err);
 				res.status(400).send('Unexpected error');
 			}
 		}
@@ -85,13 +83,11 @@ export default () => {
 			result
 				? res.status(200).send(result)
 				: res.status(304).send('Could not retrieve admins');
-			console.log(result);
 		} catch (err) {
 			if (err instanceof Error) {
 				console.error(err.message);
 				res.status(400).send(err.message);
 			} else {
-				console.log('Unexpected error', err);
 				res.status(400).send('Unexpected error');
 			}
 		}
@@ -141,7 +137,6 @@ export default () => {
 				console.error(err.message);
 				res.status(400).send(err.message);
 			} else {
-				console.log('Unexpected error', err);
 				res.status(400).send('Unexpected error');
 			}
 		}
@@ -185,7 +180,6 @@ export default () => {
 				console.error(err.message);
 				res.status(400).send(err.message);
 			} else {
-				console.log('Unexpected error', err);
 				res.status(400).send('Unexpected error');
 			}
 		}
@@ -237,7 +231,6 @@ async function getUserFromAdmins(
 		};
 		const result = await collection.findOne(query);
 		array[i].user = result;
-		console.log(array);
 	}
 	return array;
 }

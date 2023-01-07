@@ -657,6 +657,24 @@ export default () => {
 						}
 					}
 				},
+				SearchCategories: {
+					type: 'object',
+					properties: {
+						search: {
+							type: 'object',
+							properties: {
+								name: {
+									type: 'string',
+									required: false
+								},
+								description: {
+									type: 'string',
+									required: false
+								}
+							}
+						}
+					}
+				},
 				CategoryCreate: {
 					type: 'object',
 					properties: {
@@ -744,7 +762,7 @@ export default () => {
 							properties: {
 								name: {
 									type: 'string',
-									required: true
+									required: false
 								}
 							}
 						}
