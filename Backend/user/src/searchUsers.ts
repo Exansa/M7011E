@@ -99,9 +99,9 @@ function validateSet(inSet: any) {
 function generateSearch(search: any) {
 	const out: any = {};
 	if (search.username && search.username !== '')
-		out.username = { $regex: search.username };
+		out.username = { $regex: search.username, $options: 'i' };
 	if (search.email && search.email !== '')
-		out.email = { $regex: search.email };
+		out.email = { $regex: search.email, $options: 'i' };
 	if (search.profilePicture_id && search.profilePicture_id !== '')
 		out.profilePicture_id = search.profilePicture_id;
 	return out;

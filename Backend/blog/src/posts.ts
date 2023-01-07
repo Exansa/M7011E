@@ -467,9 +467,9 @@ async function checkAccess(id: any, userId: any, client: MongoClient) {
 function generateSearch(search: any) {
 	const out: any = {};
 	if (search.title && search.title !== '')
-		out.title = { $regex: search.title };
+		out.title = { $regex: search.title, $options: 'i' };
 	if (search.content && search.constent !== '')
-		out.content = { $regex: search.content };
+		out.content = { $regex: search.content, $options: 'i' };
 	if (search.user_id && search.user_id !== '') out.user_id = search.user_id;
 	if (search.tags_id && search.tags_id.length !== 0)
 		out.tags_id = { $in: search.tags_id };
