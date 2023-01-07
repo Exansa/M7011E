@@ -10,10 +10,6 @@ export default () => {
 		if (!data.set) {
 			return { success: false, response: 'Missing param set' };
 		}
-		console.log(parseInt(data.set));
-		if (!data.admin) {
-			return { success: false, response: 'Missing param admin' };
-		}
 
 		const uri =
 			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
@@ -24,9 +20,18 @@ export default () => {
 		});
 
 		try {
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verify',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			console.log(user);
+
 			validateSet(data.set);
 			const set = data.set;
-			const userId = data.user_id;
+			const userId = user._id;
 
 			//check access
 			await checkAccess(userId, client);
