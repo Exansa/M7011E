@@ -43,13 +43,14 @@ function GenericCard({ post }) {
             <Button size="small" color="primary">
               Share
             </Button>
-            {session && (
-              <>
-                <Button size="small" color="primary">
-                  Edit
-                </Button>
-              </>
-            )}
+            
+            {/*{(session.user._id==post.user_id)
+            &&(
+            <Button size="small" color="primary">
+              Edit
+            </Button>
+            )}*/}
+  
           </CardActions>
         </NextLink>
       </Card>

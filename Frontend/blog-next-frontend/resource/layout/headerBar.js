@@ -216,6 +216,13 @@ function ResponsiveAppBar() {
                 }}>
                   Sign in
                 </MenuItem>
+                /*{isAdmin() && 
+                  <MenuItem onClick={(event) => {
+                  handleCloseUserMenu();
+                  signIn();
+                  }}>
+                  Sign in
+                </MenuItem>}*/
               )}
               </Menu>             
           </Box>          
