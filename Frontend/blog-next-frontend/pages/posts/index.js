@@ -176,14 +176,9 @@ export default function Browse(context) {
     });
   }
 
-  // Resets the search query
+  // Resets the results to the default
   function handleReset() {
     setPosts(context.posts);
-    setTargetUserID("");
-    setTargetTags([]);
-    setTargetCategoryID("");
-    setTitle("");
-    setContent("");
   }
 
   return (
@@ -198,7 +193,6 @@ export default function Browse(context) {
               <Typography variant="h4" component="h4">
                 Search
               </Typography>
-              <Button onClick={handleReset}>Reset</Button>
             </Stack>
 
             <Grid
@@ -385,9 +379,13 @@ export default function Browse(context) {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button variant="contained" onClick={handleSearch}>
-                  Search
-                </Button>
+                {/* ------------------ Buttons ------------------ */}
+                <Stack direction={"row"} spacing={2}>
+                  <Button variant="contained" onClick={handleSearch}>
+                    Search
+                  </Button>
+                  <Button onClick={handleReset}>Reset</Button>
+                </Stack>
               </Grid>
             </Grid>
             {/* ------------------ Results ------------------ */}
