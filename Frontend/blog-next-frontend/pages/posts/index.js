@@ -23,37 +23,31 @@ export async function getStaticProps() {
   const postData = await postRes.json();
   const userRes = await fetch("http:localhost:5001/user?set=1");
   const userData = await userRes.json();
+  const tagRes = await fetch("http:localhost:5001/tags?set=1");
+  const tagData = await tagRes.json();
+  const categoryRes = await fetch("http:localhost:5001/categories?set=1");
+  const categoryData = await categoryRes.json();
 
   return {
     props: {
       posts: postData,
       users: userData,
+      tags: tagData,
+      categories: categoryData,
     },
   };
 }
-
-// async function fetchPosts(request) {
-//   const hit = await fetch("http://localhost:5001/search/posts?set=1", {
-//     method: "POST",
-//     headers: {
-//       accept: "application/json",
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(request),
-//   });
-
-//   const data = await hit.json();
-
-//   return data;
-// }
 
 export default function Browse(context) {
   const sliceIncrement = 4;
   const [maxSlice, setMaxSlice] = useState(sliceIncrement);
   const [posts, setPosts] = useState(context.posts);
   const [users, setUsers] = useState(context.users);
-  const [targetUserName, setTargetUserName] = useState("");
+  const [tags, setTags] = useState(context.tags);
+  const [categories, setCategories] = useState(context.categories);
   const [targetUserID, setTargetUserID] = useState("");
+  const [targetTags, setTargetTags] = useState([]);
+  const [targetCategoryID, setTargetCategoryID] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -95,11 +89,19 @@ export default function Browse(context) {
         title: title,
         content: content,
         user_id: targetUserID,
-        categories_id: [],
+        categories_id: [targetCategoryID],
         tags_id: [],
         media_id: [],
       },
     };
+
+    if (targetTags.length > 0) {
+      const tagIDs = [];
+      targetTags.forEach((tag) => {
+        tagIDs.push(tag._id);
+      });
+      request.search.tags_id = tagIDs;
+    }
 
     console.log("Searching...");
     console.log(request);
@@ -138,15 +140,41 @@ export default function Browse(context) {
     });
   }
 
-  function handleUserLabel(event, newSelection) {
-    if (newSelection) {
-      setTargetUserID(newSelection._id);
-      console.log("User ID: " + targetUserID);
-    }
+  function handleTagRequest(event, newInputValue) {
+    const request = {
+      search: {
+        name: newInputValue,
+      },
+    };
+
+    passiveFetch({
+      request: request,
+      destination: "http://localhost:5001/search/tags?set=1",
+      updateState: setTags,
+    });
+  }
+
+  function handleCategoryRequest(event, newInputValue) {
+    const request = {
+      search: {
+        name: newInputValue,
+      },
+    };
+
+    passiveFetch({
+      request: request,
+      destination: "http://localhost:5001/search/categories?set=1",
+      updateState: setCategories,
+    });
   }
 
   function handleReset() {
     setPosts(context.posts);
+    setTargetUserID("");
+    setTargetTags([]);
+    setTargetCategoryID("");
+    setTitle("");
+    setContent("");
   }
 
   return (
@@ -197,7 +225,10 @@ export default function Browse(context) {
                     option.username === value.username
                   }
                   onChange={(event, newSelection) => {
-                    handleUserLabel(event, newSelection);
+                    if (newSelection) {
+                      setTargetUserID(newSelection._id);
+                      console.log("User ID: " + targetUserID);
+                    }
                   }}
                   onInputChange={(event, newInputValue) => {
                     handleUserRequest(event, newInputValue);
@@ -233,6 +264,7 @@ export default function Browse(context) {
                   }}
                 />
               </Grid>
+              {/* ------------------ Content ------------------ */}
               <Grid
                 container
                 item
@@ -252,10 +284,104 @@ export default function Browse(context) {
                   />
                 </Grid>
               </Grid>
-              <Grid item xs={3}>
-                <Button onClick={handleSearch}>Search</Button>
+              <Grid item xs={12} md={3}>
+                {/* ------------------ Tags ------------------ */}
+                <Autocomplete
+                  multiple
+                  id="tag search"
+                  filterOptions={(x) => x}
+                  options={tags}
+                  getOptionLabel={(option) => (option.name ? option.name : "")}
+                  noOptionsText="No tags found"
+                  isOptionEqualToValue={(option, value) =>
+                    option.name === value.name
+                  }
+                  onChange={(event, newSelection) => {
+                    if (newSelection) {
+                      setTargetTags(newSelection);
+                      console.log("Tags: " + targetTags);
+                    }
+                  }}
+                  onInputChange={(event, newInputValue) => {
+                    handleTagRequest(event, newInputValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Tag"
+                      placeholder="Tag"
+                      fullWidth
+                    />
+                  )}
+                  renderOption={(props, option) => {
+                    return (
+                      <li {...props}>
+                        <Stack direction={"column"}>
+                          <Typography variant="body1" color="text.primary">
+                            {option.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            ID: {option._id}
+                          </Typography>
+                        </Stack>
+                      </li>
+                    );
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} md={3}>
+                {/* ------------------ Category ------------------ */}
+                <Autocomplete
+                  id="category-search"
+                  filterOptions={(x) => x}
+                  options={categories}
+                  getOptionLabel={(option) => (option.name ? option.name : "")}
+                  noOptionsText="No categories found"
+                  isOptionEqualToValue={(option, value) =>
+                    option.name === value.name
+                  }
+                  onChange={(event, newSelection) => {
+                    if (newSelection) {
+                      setTargetCategoryID(newSelection._id);
+                      console.log("Category: " + targetCategoryID);
+                    }
+                  }}
+                  onInputChange={(event, newInputValue) => {
+                    handleCategoryRequest(event, newInputValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Category"
+                      placeholder="Category"
+                      fullWidth
+                    />
+                  )}
+                  renderOption={(props, option) => {
+                    return (
+                      <li {...props}>
+                        <Stack direction={"column"}>
+                          <Typography variant="body1" color="text.primary">
+                            {option.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            ID: {option._id}
+                          </Typography>
+                        </Stack>
+                      </li>
+                    );
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" onClick={handleSearch}>
+                  Search
+                </Button>
               </Grid>
             </Grid>
+
             <Typography variant="h4" component="h4">
               Featured
             </Typography>
