@@ -736,6 +736,20 @@ export default () => {
 						}
 					}
 				},
+				SearchTags: {
+					type: 'object',
+					properties: {
+						search: {
+							type: 'object',
+							properties: {
+								name: {
+									type: 'string',
+									required: true
+								}
+							}
+						}
+					}
+				},
 				TagCreate: {
 					type: 'object',
 					properties: {
