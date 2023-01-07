@@ -54,6 +54,7 @@ export default function Browse(context) {
   // Passively fetch data from the server, used to update input suggestions
   const passiveFetch = useMemo(
     () =>
+      //Since this function is called on every keystroke, it needs to be debounced to prevent spamming the server
       debounce(async ({ request, destination, updateState }) => {
         const hit = await fetch(destination, {
           method: "POST",
@@ -128,7 +129,7 @@ export default function Browse(context) {
     });
   }
 
-  // Passively fetches data from the server to update input suggestions
+  // Prepare the fetch request and perform passive query
   function handleUserRequest(event, newInputValue) {
     const request = {
       search: {
@@ -145,7 +146,7 @@ export default function Browse(context) {
     });
   }
 
-  // Passively fetches data from the server to update input suggestions
+  // Prepare the fetch request and perform passive query
   function handleTagRequest(event, newInputValue) {
     const request = {
       search: {
@@ -160,7 +161,7 @@ export default function Browse(context) {
     });
   }
 
-  // Passively fetches data from the server to update input suggestions
+  // Prepare the fetch request and perform passive query
   function handleCategoryRequest(event, newInputValue) {
     const request = {
       search: {
