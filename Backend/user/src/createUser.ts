@@ -26,30 +26,63 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 	if (!userResponse.success) return userResponse;
 	const { sub: auth0_id, email, picture } = JSON.parse(userResponse.response);
 
-	return await DB.performQuery('users', 'users', async (collection) => {
-		const existingUser = await collection.findOne({
-			$or: [{ username }, { email }, { auth0_id }]
-		});
-		if (existingUser) {
-			return {
-				success: false,
-				status: 400,
-				response: 'User already exists'
-			};
+	const createdUser = await DB.performQuery(
+		'users',
+		'users',
+		async (collection) => {
+			const existingUser = await collection.findOne({
+				$or: [{ username }, { email }, { auth0_id }]
+			});
+			if (existingUser) {
+				return {
+					success: false,
+					status: 400,
+					response: 'User already exists'
+				};
+			}
+			const createdUser = await collection.insertOne({
+				auth0_id,
+				username,
+				email,
+				picture,
+				createdAt: new Date()
+			});
+			return createdUser;
 		}
-		const createdUser = await collection.insertOne({
-			auth0_id,
-			username,
-			email,
-			picture,
-			createdAt: new Date()
-		});
-		if (!createdUser) {
-			return {
-				success: false,
-				response: 'User could not be created for unknown reason'
-			};
+	);
+	if (!createdUser) {
+		return {
+			success: false,
+			response: 'User could not be created for unknown reason'
+		};
+	}
+	if (createdUser.success === false) return createdUser;
+	console.log(createdUser);
+
+	const createdMedia = await DB.performQuery(
+		'blog',
+		'media',
+		async (collection) => {
+			const existingUser = await collection.findOne({
+				$or: [{ username }, { email }, { auth0_id }]
+			});
+			if (existingUser) {
+				return {
+					success: false,
+					status: 400,
+					response: 'User already exists'
+				};
+			}
+			const createdUser = await collection.insertOne({
+				auth0_id,
+				username,
+				email,
+				picture,
+				createdAt: new Date()
+			});
+			return createdUser;
 		}
-		return { success: true, status: 201, response: 'User created' };
-	});
+	);
+
+	return { success: true, status: 201, response: 'User created' };
 };

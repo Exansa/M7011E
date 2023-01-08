@@ -841,7 +841,7 @@ export default () => {
 							pattern: '[0-9a-z]{24}',
 							required: true
 						},
-						Media: {
+						media: {
 							type: 'object',
 							properties: {
 								user_id: {
