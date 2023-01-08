@@ -74,7 +74,6 @@ function generateSearch(search: any) {
 		out.username = { $regex: search.username, $options: 'i' };
 	if (search.email && search.email !== '')
 		out.email = { $regex: search.email, $options: 'i' };
-	if (search.profilePicture_id && search.profilePicture_id !== '')
-		out.profilePicture_id = search.profilePicture_id;
+	if (search.picture && search.picture !== '') out.picture = search.picture;
 	return out;
 }
