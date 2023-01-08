@@ -368,7 +368,8 @@ function generatePost(inPost: any, userId: string) {
 		content: inPost.content,
 		user_id: userId,
 		categories_id: inPost.categories_id,
-		tags_id: inPost.tags_id
+		tags_id: inPost.tags_id,
+		media: inPost.media
 	};
 
 	return post;
@@ -444,6 +445,9 @@ function generateSearch(search: any) {
 		out.tags_id = { $in: search.tags_id };
 	if (search.categories_id && search.categories_id.length !== 0)
 		out.categories_id = { $in: search.categories_id };
+	if (search.media && search.media !== '') {
+		out.media = { $regex: search.media, $options: 'i' };
+	}
 	return out;
 }
 function validateSet(inSet: any) {
