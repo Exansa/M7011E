@@ -77,7 +77,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/UsersWithDataArray'
+	 *               $ref: '#/components/schemas/UsersArray'
 	 *       500:
 	 *         description: Internal Server Error
 	 */

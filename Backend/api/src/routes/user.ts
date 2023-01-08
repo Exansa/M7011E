@@ -140,7 +140,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/UsersWithDataArray'
+	 *               $ref: '#/components/schemas/UsersArray'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
@@ -173,7 +173,7 @@ export default () => {
 	 *         content:
 	 *           application/json:
 	 *             schema:
-	 *               $ref: '#/components/schemas/UserWithData'
+	 *               $ref: '#/components/schemas/User'
 	 *       500:
 	 *         description: Internal Server Error
 	 */
