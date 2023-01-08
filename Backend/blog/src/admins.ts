@@ -21,7 +21,7 @@ export default () => {
 
 		try {
 			const userResponse = await Rabbitmq.sendRPC(
-				'authentication.verify',
+				'authentication.verifyGetUser',
 				JSON.stringify(data.bearer)
 			);
 

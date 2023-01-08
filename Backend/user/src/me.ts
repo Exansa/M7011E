@@ -11,7 +11,7 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 	if (!auth0User.success) return auth0User;
 	const { sub: auth0_id } = JSON.parse(auth0User.response);
 	const user = await DB.performQuery(
-		'users',
+		'blog',
 		'users',
 		async (collection) => await collection.findOne({ auth0_id })
 	);
