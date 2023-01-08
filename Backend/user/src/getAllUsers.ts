@@ -28,7 +28,7 @@ export default async (message: ConsumeMessage) => {
 			'users',
 			async (collection) => {
 				const result = await collection
-					.find({}, { projection: { pw: 0 } })
+					.find({})
 					.sort({ created_at: -1 })
 					.skip((set - 1) * 10)
 					.limit(10)

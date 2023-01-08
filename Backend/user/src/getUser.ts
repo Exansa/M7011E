@@ -24,9 +24,7 @@ export default async (message: ConsumeMessage) => {
 			'users',
 			async (collection) => {
 				const query = { _id: new ObjectId(data.id) };
-				const result = await collection.findOne(query, {
-					projection: { pw: 0 }
-				});
+				const result = await collection.findOne(query);
 				return result;
 			}
 		);
