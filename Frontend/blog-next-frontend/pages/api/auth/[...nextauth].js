@@ -75,7 +75,7 @@ const options = {
 
         if (result) {
           session.user = result;
-        }*/
+        }
         console.log(session);
 
         return session;

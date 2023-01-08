@@ -1,7 +1,6 @@
 import Page from "../../resource/layout/page";
 import { useSession } from "next-auth/react";
 import AccessDenied from "../../resource/components/accessDenied";
-import axios from "axios";
 import {
   Container,
   TextField,
@@ -20,7 +19,8 @@ import {
 import * as React from "react";
 import Tags from "../../data/mock_db/tags";
 import Categories from "../../data/mock_db/categories";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 //import { Category } from "@mui/icons-material";
 
 //import { getCategories } from "../../data/mock_request/db_handler";
@@ -43,8 +43,7 @@ export default function makePost() {
 
   const [setCategory] = React.useState("");
   const [tagName, setTagName] = React.useState([]);
-
-
+  const [image, setImage] = useState(null);
 
   const handleChange = (event) => {
     const {
@@ -56,16 +55,34 @@ export default function makePost() {
     );
   };
 
-  const submitForm = (event) => {
-    create_new_post();
-  };
 
   const handlePicture = (e) => {
-    let formData = new FormData();
-    formData.append("data", JSON.stringify(content));
+    const i = e.target.files[0];
+    setImage(i)
+    /*let formData = new FormData();
+    formData.append("data", JSON.stringify(i));
     formData.append("profile_picture", e.target.files[0]);
-    axios.put("/api/update", formData).then(console.log).catch(console.log);
+    axios.put("/api/update", formData).then(console.log).catch(console.log);*/
   };
+
+  const handleSubmit = async (event)=> {
+    event.preventDefault()
+
+    const data = {
+      user_id: session.user._id,
+      title: event.target.title.value,
+      content: event.target.content.value,
+      categories_id: event.target.categories.value,
+      tags_id: event.target.tags.value,
+      image: event.target.image.value,
+    }
+
+    const JSONdata = JSON.stringify(data)
+
+    console.log(JSONdata)
+
+  }
+
 
   const { data: session } = useSession();
   if (!session){ return  <Page><AccessDenied/></Page> }
@@ -73,24 +90,33 @@ export default function makePost() {
     <>
       <Page>
         <Container maxWidth="md">
-          <TextField required fullWidth label="Title" margin="normal" />
+          <form onSubmit={handleSubmit}>
+            <TextField  required fullWidth label="Title" 
+                        margin="normal" 
+                        id='title'
+                        name="title"
+                        />
 
-          <TextField
-            required
-            fullWidth
-            multiline
-            label="Blog post text"
-            margin="normal"
-          />
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <TextField
+              required
+              fullWidth
+              multiline
+              label="Blog post text"
+              margin="normal"
+              id='content'
+              name="content"
+            />
             <InputLabel id="demo-simple-select-helper-label">
               Category
             </InputLabel>
+          <FormControl sx={{ m: 1, minWidth: 120 }}>
             <Select
               labelId="demo-simple-select-helper-label"
-              id="demo-simple-select-helper"
               value={Categories.name}
               label="Category"
+              id='categories'
+              name="categories"
+              
               //onChange={handleChange}
             >
               {Categories.map((Categories) => (
@@ -102,12 +128,14 @@ export default function makePost() {
             <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
             <Select
               labelId="demo-multiple-checkbox-label"
-              id="demo-multiple-checkbox"
+              id='tags'
               multiple
               value={tagName}
               onChange={handleChange}
               input={<OutlinedInput label="Tags" />}
               renderValue={(selected) => selected.join(", ")}
+              name="tags"
+              
               //MenuProps={MenuProps}
             >
               {Tags.map((Tags) => (
@@ -119,16 +147,17 @@ export default function makePost() {
             </Select>
           </FormControl>
 
-          <input accept="*" type="file" onChange={handlePicture} />
+          <input accept="*" 
+            type="file" onChange={handlePicture} name="image" id='image' />
 
           <Button
             sx={{ m: 1, minWidth: 120 }}
-            //disabled={!myForm.isValid}
-            //onClick={myForm.submitForm}
+            type="submit"
             variant="contained"
           >
             Submit
           </Button>
+        </form>
         </Container>
       </Page>
     </>
