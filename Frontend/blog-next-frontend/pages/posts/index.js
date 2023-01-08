@@ -7,15 +7,11 @@ import {
   TextField,
   Autocomplete,
   Avatar,
+  CircularProgress,
 } from "@mui/material";
 import Page from "../../resource/layout/page";
 import GenericCard from "../../resource/components/global/card";
 import { useState, useMemo } from "react";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import Container from "@mui/material/Container";
 import { debounce } from "@mui/material/utils";
 
 export async function getStaticProps() {
@@ -43,19 +39,24 @@ export default function Browse(context) {
   const [maxSlice, setMaxSlice] = useState(sliceIncrement);
   const [posts, setPosts] = useState(context.posts);
   const [users, setUsers] = useState(context.users);
+  const [usersLoading, setUsersLoading] = useState(false);
   const [tags, setTags] = useState(context.tags);
+  const [tagsLoading, setTagsLoading] = useState(false);
   const [categories, setCategories] = useState(context.categories);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [targetUserID, setTargetUserID] = useState("");
   const [targetTags, setTargetTags] = useState([]);
   const [targetCategoryID, setTargetCategoryID] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [searching, setSearching] = useState(false);
 
   // Passively fetch data from the server, used to update input suggestions
   const passiveFetch = useMemo(
     () =>
       //Since this function is called on every keystroke, it needs to be debounced to prevent spamming the server
-      debounce(async ({ request, destination, updateState }) => {
+      debounce(async ({ request, destination, updateState, loading }) => {
+        loading(true);
         const hit = await fetch(destination, {
           method: "POST",
           headers: {
@@ -69,8 +70,9 @@ export default function Browse(context) {
           if (data) {
             updateState(data);
           }
+          loading(false);
         });
-      }, 600),
+      }, 300),
     []
   );
 
@@ -83,21 +85,34 @@ export default function Browse(context) {
 
   //Performs the search query
   async function handleSearch() {
-    if (title.length < 1 && content.length < 1 && targetUserID.length < 1) {
+    if (
+      title.length < 1 &&
+      content.length < 1 &&
+      targetUserID.length < 1 &&
+      targetTags.length < 1 &&
+      targetCategoryID.length < 1
+    ) {
       setPosts(context.posts);
       return;
     }
+
+    setSearching(true);
 
     const request = {
       search: {
         title: title,
         content: content,
         user_id: targetUserID,
-        categories_id: [targetCategoryID],
+        categories_id: [],
         tags_id: [],
         media_id: [],
       },
     };
+
+    // Since categories are an array, we push the id only if we have one
+    if (targetCategoryID != "") {
+      request.search.categories_id.push(targetCategoryID);
+    }
 
     // Since tags are an array of objects, we need to convert them to an array of IDs
     if (targetTags.length > 0) {
@@ -127,6 +142,8 @@ export default function Browse(context) {
         console.log(results);
       }
     });
+
+    setSearching(false);
   }
 
   // Prepare the fetch request and perform passive query
@@ -143,6 +160,7 @@ export default function Browse(context) {
       request: request,
       destination: "http://localhost:5001/search/users?set=1",
       updateState: setUsers,
+      loading: setUsersLoading,
     });
   }
 
@@ -158,6 +176,7 @@ export default function Browse(context) {
       request: request,
       destination: "http://localhost:5001/search/tags?set=1",
       updateState: setTags,
+      loading: setTagsLoading,
     });
   }
 
@@ -169,10 +188,13 @@ export default function Browse(context) {
       },
     };
 
+    setCategories([]);
+
     passiveFetch({
       request: request,
       destination: "http://localhost:5001/search/categories?set=1",
       updateState: setCategories,
+      loading: setCategoriesLoading,
     });
   }
 
@@ -233,6 +255,8 @@ export default function Browse(context) {
                       console.log("User ID: " + targetUserID);
                     }
                   }}
+                  loading={usersLoading}
+                  loadingText="Searching..."
                   onInputChange={(event, newInputValue) => {
                     handleUserRequest(event, newInputValue);
                   }}
@@ -305,6 +329,7 @@ export default function Browse(context) {
                       console.log("Tags: " + targetTags);
                     }
                   }}
+                  loading={tagsLoading}
                   onInputChange={(event, newInputValue) => {
                     handleTagRequest(event, newInputValue);
                   }}
@@ -350,6 +375,7 @@ export default function Browse(context) {
                       console.log("Category: " + targetCategoryID);
                     }
                   }}
+                  loading={categoriesLoading}
                   onInputChange={(event, newInputValue) => {
                     handleCategoryRequest(event, newInputValue);
                   }}
@@ -393,7 +419,23 @@ export default function Browse(context) {
               Featured
             </Typography>
             <Grid container spacing={3} sx={{ mb: 2 }}>
-              {posts.length > 0 ? (
+              {searching ? (
+                <Stack
+                  direction={"row"}
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <CircularProgress />
+                  <Typography
+                    variant="h6"
+                    component="body2"
+                    color="text.secondary"
+                  >
+                    Loading...
+                  </Typography>
+                </Stack>
+              ) : posts.length > 0 ? (
                 posts.map((result) => (
                   <Grid item flexwrap="wrap">
                     <GenericCard post={result} />
