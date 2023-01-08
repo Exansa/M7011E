@@ -37,9 +37,6 @@ export default async (message: ConsumeMessage) => {
 			}
 		);
 
-		if (result) {
-			result = (await getDataFromUsersArray(result, client)) as any;
-		}
 		client.close();
 
 		const response: RPCResponse = {
@@ -57,31 +54,6 @@ export default async (message: ConsumeMessage) => {
 	}
 };
 
-async function getDataFromUsersArray(
-	array: WithId<Document>[],
-	client: MongoClient
-) {
-	for (let i = 0; i < array.length; i++) {
-		array[i] = await getDataFromUser(array[i], client);
-	}
-	return array;
-}
-
-async function getDataFromUser(user: any, client: MongoClient) {
-	let collection = await client.db('blog').collection('media');
-	if (!user.profilePicture_id) {
-		user.profile_picture = null;
-		return user;
-	}
-	const query = {
-		_id: new ObjectId(user.profilePicture_id)
-	};
-	const result = await collection.findOne(query, {
-		projection: { href: 1 }
-	});
-	user.profile_picture = result;
-	return user;
-}
 function validateSet(inSet: any) {
 	const set = parseInt(inSet);
 	if (Number.isNaN(set)) {

@@ -96,30 +96,7 @@ export default () => {
 						}
 					}
 				},
-				UserWithData: {
-					type: 'object',
-					properties: {
-						_id: {
-							type: 'string'
-						},
-						username: {
-							type: 'string'
-						},
-						email: {
-							type: 'string'
-						},
-						profilePicture_id: {
-							type: 'string'
-						},
-						createdAt: {
-							type: 'string'
-						},
-						profile_picture: {
-							type: 'string'
-						}
-					}
-				},
-				UsersWithDataArray: {
+				UsersArray: {
 					type: 'array',
 					items: {
 						type: 'object',
@@ -141,9 +118,6 @@ export default () => {
 							},
 							createdAt: {
 								type: 'string'
-							},
-							profile_picture: {
-								type: 'string'
 							}
 						}
 					}
@@ -160,7 +134,7 @@ export default () => {
 						email: {
 							type: 'string'
 						},
-						profilePicture_id: {
+						picture: {
 							type: 'string'
 						}
 					}
@@ -199,10 +173,13 @@ export default () => {
 							type: 'string',
 							enum: ['admin', 'superAdmin']
 						},
-						user: {
+						User: {
 							type: 'object',
 							properties: {
 								_id: {
+									type: 'string'
+								},
+								auth0_id: {
 									type: 'string'
 								},
 								username: {
@@ -211,7 +188,7 @@ export default () => {
 								email: {
 									type: 'string'
 								},
-								profilePicture_id: {
+								picture: {
 									type: 'string'
 								},
 								createdAt: {
@@ -241,10 +218,13 @@ export default () => {
 								enum: ['admin', 'superAdmin'],
 								required: true
 							},
-							user: {
+							User: {
 								type: 'object',
 								properties: {
 									_id: {
+										type: 'string'
+									},
+									auth0_id: {
 										type: 'string'
 									},
 									username: {
@@ -253,7 +233,7 @@ export default () => {
 									email: {
 										type: 'string'
 									},
-									profilePicture_id: {
+									picture: {
 										type: 'string'
 									},
 									createdAt: {
@@ -344,23 +324,21 @@ export default () => {
 							},
 							required: false
 						},
-						media_id: {
-							type: 'array',
-							items: {
-								type: 'string',
-								pattern: '[0-9a-z]{24}'
-							},
+						media: {
+							type: 'string',
 							required: false
 						},
-						user: {
+						User: {
 							type: 'object',
 							properties: {
 								_id: {
-									type: 'string',
-									pattern: '[0-9a-z]{24}',
-									name: {
-										type: 'string'
-									}
+									type: 'string'
+								},
+								username: {
+									type: 'string'
+								},
+								picture: {
+									type: 'string'
 								}
 							}
 						},
@@ -389,21 +367,6 @@ export default () => {
 										pattern: '[0-9a-z]{24}'
 									},
 									name: {
-										type: 'string'
-									}
-								}
-							}
-						},
-						media: {
-							type: 'array',
-							items: {
-								type: 'object',
-								properties: {
-									_id: {
-										type: 'string',
-										pattern: '[0-9a-z]{24}'
-									},
-									href: {
 										type: 'string'
 									}
 								}
@@ -454,23 +417,21 @@ export default () => {
 								},
 								required: false
 							},
-							media_id: {
-								type: 'array',
-								items: {
-									type: 'string',
-									pattern: '[0-9a-z]{24}'
-								},
+							media: {
+								type: 'string',
 								required: false
 							},
-							user: {
+							User: {
 								type: 'object',
 								properties: {
 									_id: {
-										type: 'string',
-										pattern: '[0-9a-z]{24}',
-										name: {
-											type: 'string'
-										}
+										type: 'string'
+									},
+									username: {
+										type: 'string'
+									},
+									picture: {
+										type: 'string'
 									}
 								}
 							},
@@ -499,21 +460,6 @@ export default () => {
 											pattern: '[0-9a-z]{24}'
 										},
 										name: {
-											type: 'string'
-										}
-									}
-								}
-							},
-							media: {
-								type: 'array',
-								items: {
-									type: 'object',
-									properties: {
-										_id: {
-											type: 'string',
-											pattern: '[0-9a-z]{24}'
-										},
-										href: {
 											type: 'string'
 										}
 									}
@@ -558,12 +504,8 @@ export default () => {
 									},
 									required: false
 								},
-								media_id: {
-									type: 'array',
-									items: {
-										type: 'string',
-										pattern: '[0-9a-z]{24}'
-									},
+								media: {
+									type: 'string',
 									required: false
 								}
 							}
@@ -606,12 +548,8 @@ export default () => {
 									},
 									required: false
 								},
-								media_id: {
-									type: 'array',
-									items: {
-										type: 'string',
-										pattern: '[0-9a-z]{24}'
-									},
+								media: {
+									type: 'string',
 									required: false
 								}
 							}
@@ -808,154 +746,6 @@ export default () => {
 						}
 					}
 				},
-				Media: {
-					type: 'object',
-					properties: {
-						_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
-						name: {
-							type: 'string',
-							required: true
-						},
-						type: {
-							type: 'string',
-							required: true
-						},
-						href: {
-							type: 'string',
-							required: true
-						}
-					}
-				},
-				MediaArray: {
-					type: 'array',
-					items: {
-						type: 'object',
-						properties: {
-							_id: {
-								type: 'string',
-								pattern: '[0-9a-z]{24}',
-								required: true
-							},
-							user_id: {
-								type: 'string',
-								pattern: '[0-9a-z]{24}',
-								required: true
-							},
-							name: {
-								type: 'string',
-								required: true
-							},
-							type: {
-								type: 'string',
-								required: true
-							},
-							href: {
-								type: 'string',
-								required: true
-							}
-						}
-					}
-				},
-				SearchMedia: {
-					type: 'object',
-					properties: {
-						search: {
-							type: 'object',
-							properties: {
-								user_id: {
-									type: 'string',
-									pattern: '[0-9a-z]{24}',
-									required: true
-								},
-								name: {
-									type: 'string',
-									required: false
-								},
-								type: {
-									type: 'string',
-									required: false
-								},
-								href: {
-									type: 'string',
-									required: false
-								}
-							}
-						}
-					}
-				},
-				MediaCreate: {
-					type: 'object',
-					properties: {
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
-						media: {
-							type: 'object',
-							properties: {
-								user_id: {
-									type: 'string',
-									pattern: '[0-9a-z]{24}',
-									required: true
-								},
-								name: {
-									type: 'string',
-									required: true
-								},
-								type: {
-									type: 'string',
-									required: true
-								},
-								href: {
-									type: 'string',
-									required: true
-								}
-							}
-						}
-					}
-				},
-				MediaUpdate: {
-					type: 'object',
-					properties: {
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
-						Media: {
-							type: 'object',
-							properties: {
-								user_id: {
-									type: 'string',
-									pattern: '[0-9a-z]{24}',
-									required: false
-								},
-								name: {
-									type: 'string',
-									required: false
-								},
-								type: {
-									type: 'string',
-									required: false
-								},
-								href: {
-									type: 'string',
-									required: false
-								}
-							}
-						}
-					}
-				},
 				SearchPosts: {
 					type: 'object',
 					properties: {
@@ -992,12 +782,8 @@ export default () => {
 									},
 									required: false
 								},
-								media_id: {
-									type: 'array',
-									items: {
-										type: 'string',
-										pattern: '[0-9a-z]{24}'
-									},
+								media: {
+									type: 'string',
 									required: false
 								}
 							}
@@ -1019,9 +805,8 @@ export default () => {
 									type: 'string',
 									required: false
 								},
-								profilePicture_id: {
+								picture: {
 									type: 'string',
-									pattern: '[0-9a-z]{24}',
 									required: false
 								}
 							}

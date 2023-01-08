@@ -368,8 +368,7 @@ function generatePost(inPost: any, userId: string) {
 		content: inPost.content,
 		user_id: userId,
 		categories_id: inPost.categories_id,
-		tags_id: inPost.tags_id,
-		media_id: inPost.media_id
+		tags_id: inPost.tags_id
 	};
 
 	return post;
@@ -398,8 +397,7 @@ async function getDataFromPost(post: any, client: MongoClient) {
 	const result = await collection.findOne(query, {
 		projection: { username: 1, profilePicture_id: 1 }
 	});
-	const userWithData = await getDataFromUser(result, client);
-	post.user = userWithData;
+	post.user = result;
 
 	collection = await client.db('blog').collection('categories');
 	const categoryLength = post.categories_id?.length ?? 0;
@@ -426,36 +424,7 @@ async function getDataFromPost(post: any, client: MongoClient) {
 		});
 		post.tags[j] = result ?? null;
 	}
-
-	collection = await client.db('blog').collection('media');
-	const mediaLength = post.media_id?.length ?? 0;
-	post.media = [];
-	for (let j = 0; j < mediaLength; j++) {
-		const query = {
-			_id: new ObjectId(post.media_id[j])
-		};
-		const result = await collection.findOne(query, {
-			projection: { href: 1 }
-		});
-		post.media[j] = result ?? null;
-	}
 	return post;
-}
-
-async function getDataFromUser(user: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('media');
-
-	if (!user || !user.profilePicture_id) {
-		return user;
-	}
-	const query = {
-		_id: new ObjectId(user.profilePicture_id)
-	};
-	const result = await collection.findOne(query, {
-		projection: { href: 1 }
-	});
-	user.profile_picture = result;
-	return user;
 }
 
 async function checkAccess(id: any, userId: any, client: MongoClient) {
@@ -475,8 +444,6 @@ function generateSearch(search: any) {
 		out.tags_id = { $in: search.tags_id };
 	if (search.categories_id && search.categories_id.length !== 0)
 		out.categories_id = { $in: search.categories_id };
-	if (search.media_id && search.media_id.length !== 0)
-		out.media_id = { $in: search.media_id };
 	return out;
 }
 function validateSet(inSet: any) {
