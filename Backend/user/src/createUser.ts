@@ -26,7 +26,7 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 	if (!userResponse.success) return userResponse;
 	const { sub: auth0_id, email, picture } = JSON.parse(userResponse.response);
 
-	return await DB.performQuery('users', 'users', async (collection) => {
+	return await DB.performQuery('blog', 'users', async (collection) => {
 		const existingUser = await collection.findOne({
 			$or: [{ username }, { email }, { auth0_id }]
 		});

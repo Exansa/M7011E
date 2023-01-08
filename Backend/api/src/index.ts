@@ -21,7 +21,6 @@ import TOTP from './routes/totp';
 import Tags from './routes/tags';
 import Categories from './routes/categories';
 import Admins from './routes/admins';
-import Media from './routes/media';
 import Posts from './routes/posts';
 import Search from './routes/search';
 import { jsonParse } from './middlewares/jsonParse';
@@ -60,7 +59,6 @@ app.use('/totp', authenticate, TOTP());
 app.use('/tags', Tags());
 app.use('/categories', Categories());
 app.use('/admins', Admins());
-app.use('/media', Media());
 app.use('/posts', Posts());
 app.use('/search', Search());
 

@@ -49,8 +49,8 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /admins/{id}/get:
-	 *   post:
+	 * /admins/{id}:
+	 *   get:
 	 *     tags:
 	 *       - Admins
 	 *     summary: Get one admin
@@ -61,14 +61,8 @@ export default () => {
 	 *         schema:
 	 *           type: string
 	 *           required: true
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UserId'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UserId'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
@@ -79,14 +73,19 @@ export default () => {
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/:id/get', async (req: Request, res: Response) => {
-		const data = { ...req.body, ...req?.params };
-		const result = await Rabbitmq.sendRPC(
-			'admins.get_one',
-			JSON.stringify(data)
-		);
-		respond(res, result);
-	});
+	router.get(
+		'/:id',
+		authenticate,
+		unpackParams,
+		async (req: Request, res: Response) => {
+			const data = { ...req.body, ...req?.params };
+			const result = await Rabbitmq.sendRPC(
+				'admins.get_one',
+				JSON.stringify(data)
+			);
+			respond(res, result);
+		}
+	);
 
 	/**
 	 * @swagger

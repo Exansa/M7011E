@@ -24,15 +24,13 @@ export default async (message: ConsumeMessage) => {
 			'users',
 			async (collection) => {
 				const query = { _id: new ObjectId(data.id) };
-				const result = await collection.findOne(query, {
-					projection: { pw: 0 }
-				});
+				const result = await collection.findOne(query);
 				return result;
 			}
 		);
 
 		if (result) {
-			result = (await getDataFromUser(result, client)) as any;
+			throw new Error('User not found');
 		}
 		client.close();
 
@@ -50,19 +48,3 @@ export default async (message: ConsumeMessage) => {
 		return response;
 	}
 };
-
-async function getDataFromUser(user: any, client: MongoClient) {
-	let collection = await client.db('blog').collection('media');
-	if (!user.profilePicture_id) {
-		user.profile_picture = null;
-		return user;
-	}
-	const query = {
-		_id: new ObjectId(user.profilePicture_id)
-	};
-	const result = await collection.findOne(query, {
-		projection: { href: 1 }
-	});
-	user.profile_picture = result;
-	return user;
-}

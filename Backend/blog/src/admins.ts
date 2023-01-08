@@ -21,17 +21,16 @@ export default () => {
 
 		try {
 			const userResponse = await Rabbitmq.sendRPC(
-				'authentication.verify',
+				'authentication.verifyGetUser',
 				JSON.stringify(data.bearer)
 			);
 
 			if (!userResponse.success) return userResponse;
 			const user = JSON.parse(userResponse.response);
-			console.log(user);
+			const userId = user._id;
 
 			validateSet(data.set);
 			const set = data.set;
-			const userId = user._id;
 
 			//check access
 			await checkAccess(userId, client);
@@ -86,27 +85,36 @@ export default () => {
 		});
 
 		try {
-			const userId = data.user_id;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
 
 			//check access
 			await checkAccess(userId, client);
+
+			console.log(data.id);
 
 			let result = await DB.performQuery(
 				'blog',
 				'admins',
 				async (collection) => {
 					const query = {
-						_id: new ObjectId(data.id),
-						user_id: data.admin.user_id
+						_id: new ObjectId(data.id)
 					};
 					const result = await collection.findOne(query);
 					return result;
 				}
 			);
 
-			if (result) {
-				result = (await getUserFromAdmin(result, client)) as any;
+			if (!result) {
+				throw new Error('Admin not found');
 			}
+			result = (await getUserFromAdmin(result, client)) as any;
 			client.close();
 
 			const response: RPCResponse = {
@@ -336,9 +344,7 @@ async function getUserFromAdmin(admin: any, client: MongoClient) {
 	const query = {
 		_id: new ObjectId(admin.user_id)
 	};
-	const result = await collection.findOne(query, {
-		projection: { pw: 0 }
-	});
+	const result = await collection.findOne(query);
 	if (!result) throw new Error('User does not exist');
 
 	admin.user = result;
