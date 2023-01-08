@@ -396,9 +396,10 @@ async function getDataFromPost(post: any, client: MongoClient) {
 		_id: new ObjectId(post.user_id)
 	};
 	const result = await collection.findOne(query, {
-		projection: { username: 1 }
+		projection: { username: 1, profilePicture_id: 1 }
 	});
-	post.user = result;
+	const userWithData = await getDataFromUser(result, client);
+	post.user = userWithData;
 
 	collection = await client.db('blog').collection('categories');
 	const categoryLength = post.categories_id?.length ?? 0;
@@ -441,6 +442,22 @@ async function getDataFromPost(post: any, client: MongoClient) {
 	return post;
 }
 
+async function getDataFromUser(user: any, client: MongoClient) {
+	const collection = await client.db('blog').collection('media');
+
+	if (!user || !user.profilePicture_id) {
+		return user;
+	}
+	const query = {
+		_id: new ObjectId(user.profilePicture_id)
+	};
+	const result = await collection.findOne(query, {
+		projection: { href: 1 }
+	});
+	user.profile_picture = result;
+	return user;
+}
+
 async function checkAccess(id: any, userId: any, client: MongoClient) {
 	const collection = await client.db('blog').collection('posts');
 	const query = { _id: new ObjectId(id), user_id: userId };
@@ -450,9 +467,9 @@ async function checkAccess(id: any, userId: any, client: MongoClient) {
 function generateSearch(search: any) {
 	const out: any = {};
 	if (search.title && search.title !== '')
-		out.title = { $regex: search.title };
+		out.title = { $regex: search.title, $options: 'i' };
 	if (search.content && search.constent !== '')
-		out.content = { $regex: search.content };
+		out.content = { $regex: search.content, $options: 'i' };
 	if (search.user_id && search.user_id !== '') out.user_id = search.user_id;
 	if (search.tags_id && search.tags_id.length !== 0)
 		out.tags_id = { $in: search.tags_id };

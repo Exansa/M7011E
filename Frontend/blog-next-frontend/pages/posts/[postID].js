@@ -1,4 +1,12 @@
-import { Stack, Typography, Button, Avatar, Box } from "@mui/material";
+import {
+  Stack,
+  Typography,
+  Button,
+  Avatar,
+  Box,
+  Breadcrumbs,
+  Chip,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import Page from "../../resource/layout/page";
 import { Image } from "mui-image"; //https://github.com/benmneb/mui-image
@@ -54,21 +62,33 @@ const Post = (context) => {
         <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
           <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
             <Image src={post.media[0].href} duration={1000} />
-            <Typography variant="h1" component="h2">
-              {post.title}
-            </Typography>
+            <Stack direction={"row"} alignItems="center" spacing={0}>
+              <Typography variant="title" component="h2">
+                {post.title}
+              </Typography>
+              <Typography variant="subtitle" color="text.secondary">
+                - {post.categories[0] && post.categories[0].name}
+              </Typography>
+            </Stack>
+            <Breadcrumbs separator="" sx={{ my: 3 }}>
+              {post.tags[0] &&
+                post.tags.map((tag) => <Chip label={tag.name} size="small" />)}
+            </Breadcrumbs>
             <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
               {/*TODO: Add user profile picture*/}
-              <Avatar src="" alt={post.user.username} />
-              <Typography variant="h4" component="h3">
+              <Avatar
+                src={post.user.profile_picture.href}
+                alt={post.user.username}
+              />
+              <Typography variant="h5" component="h5">
                 {post.user.username}
               </Typography>
             </Stack>
-            <Typography variant="body1" component="p">
+            <Typography variant="body2" component="p" color="text.secondary">
               {post.content}
             </Typography>
           </Stack>
-          {/*{(user.id==post.id)
+          {/*{(session.user._id==post.user_id)
         &&(
         <Button>
           Edit

@@ -24,7 +24,7 @@ export default async (message: ConsumeMessage) => {
 
 	try {
 		const userResponse = await Rabbitmq.sendRPC(
-			'authenticate.verify',
+			'authentication.verify',
 			data.bearer
 		);
 		if (!userResponse.success) {

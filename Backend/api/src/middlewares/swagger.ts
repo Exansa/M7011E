@@ -657,6 +657,24 @@ export default () => {
 						}
 					}
 				},
+				SearchCategories: {
+					type: 'object',
+					properties: {
+						search: {
+							type: 'object',
+							properties: {
+								name: {
+									type: 'string',
+									required: false
+								},
+								description: {
+									type: 'string',
+									required: false
+								}
+							}
+						}
+					}
+				},
 				CategoryCreate: {
 					type: 'object',
 					properties: {
@@ -732,6 +750,20 @@ export default () => {
 							name: {
 								type: 'string',
 								required: true
+							}
+						}
+					}
+				},
+				SearchTags: {
+					type: 'object',
+					properties: {
+						search: {
+							type: 'object',
+							properties: {
+								name: {
+									type: 'string',
+									required: false
+								}
 							}
 						}
 					}
@@ -829,6 +861,33 @@ export default () => {
 							href: {
 								type: 'string',
 								required: true
+							}
+						}
+					}
+				},
+				SearchMedia: {
+					type: 'object',
+					properties: {
+						search: {
+							type: 'object',
+							properties: {
+								user_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: true
+								},
+								name: {
+									type: 'string',
+									required: false
+								},
+								type: {
+									type: 'string',
+									required: false
+								},
+								href: {
+									type: 'string',
+									required: false
+								}
 							}
 						}
 					}

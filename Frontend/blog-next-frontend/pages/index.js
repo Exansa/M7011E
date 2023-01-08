@@ -19,9 +19,10 @@ export async function getStaticProps() {
 
 export default function Home(context) {
   //const { user, error, isLoading } = useUser();
-  const { data: session } = useSession();
-  console.log(session);
+  const {data: session } = useSession();
+  //console.log(session)
 
+  
   return (
     <>
       <Page title="Index">
