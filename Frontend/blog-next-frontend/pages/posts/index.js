@@ -459,7 +459,11 @@ export default function Browse(context) {
                   </Grid>
                 ))
               ) : (
-                <Typography variant="h4" component="h4">
+                <Typography
+                  variant="h6"
+                  component="body2"
+                  color="text.secondary"
+                >
                   No results found
                 </Typography>
               )}
