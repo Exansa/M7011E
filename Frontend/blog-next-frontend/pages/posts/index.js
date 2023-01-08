@@ -252,7 +252,8 @@ export default function Browse(context) {
                   onChange={(event, newSelection) => {
                     if (newSelection) {
                       setTargetUserID(newSelection._id);
-                      console.log("User ID: " + targetUserID);
+                    } else {
+                      setTargetUserID("");
                     }
                   }}
                   loading={usersLoading}
@@ -326,7 +327,8 @@ export default function Browse(context) {
                   onChange={(event, newSelection) => {
                     if (newSelection) {
                       setTargetTags(newSelection);
-                      console.log("Tags: " + targetTags);
+                    } else {
+                      setTargetTags([]);
                     }
                   }}
                   loading={tagsLoading}
@@ -372,7 +374,8 @@ export default function Browse(context) {
                   onChange={(event, newSelection) => {
                     if (newSelection) {
                       setTargetCategoryID(newSelection._id);
-                      console.log("Category: " + targetCategoryID);
+                    } else {
+                      setTargetCategoryID("");
                     }
                   }}
                   loading={categoriesLoading}
@@ -415,6 +418,20 @@ export default function Browse(context) {
               </Grid>
             </Grid>
             {/* ------------------ Results ------------------ */}
+            <Typography variant="h4" component="h4">
+              Search Parameters:
+            </Typography>
+            <Typography variant="body1" component="body1">
+              Title: {title} <br />
+              User ID: {targetUserID} <br />
+              Content: {content} <br />
+              Tags: {targetTags.map(
+                (tag) => tag.name + " (" + tag._id + "),"
+              )}{" "}
+              <br />
+              Category ID: {targetCategoryID}
+            </Typography>
+
             <Typography variant="h4" component="h4">
               Featured
             </Typography>
