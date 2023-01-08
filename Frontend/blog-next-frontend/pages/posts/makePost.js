@@ -36,7 +36,22 @@ const MenuProps = {
   },
 };
 
-export default function makePost() {  
+export async function getStaticProps() {
+  const resTags = await fetch("http://localhost:5001/tags?set=1");
+  const tags = await resTags.json();
+  const resCat = await fetch("http://localhost:5001/categories?set=1");
+  const categories  = await resCat.json();
+  //console.log(tags);
+  //console.log(categories);
+  return {
+    props: {
+      tags,
+      categories
+    },
+  };
+}
+
+export default function makePost(context) {  
 
   // If no session exists, display access denied message
   //if (!session) { return  <Page><AccessDenied/></Page> }
@@ -68,12 +83,21 @@ export default function makePost() {
   const handleSubmit = async (event)=> {
     event.preventDefault()
 
+    {/*const new_image = await fetch('http://localhost:5001/media',{
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });*/}
+
     const data = {
       user_id: session.user._id,
       title: event.target.title.value,
       content: event.target.content.value,
-      categories_id: event.target.categories.value,
-      tags_id: event.target.tags.value,
+      categories_id: [event.target.categories.value],
+      tags_id: [event.target.tags.value],
       image: event.target.image.value,
     }
 
@@ -112,25 +136,40 @@ export default function makePost() {
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <Select
               labelId="demo-simple-select-helper-label"
-              value={Categories.name}
+              value={context.categories._id}
               label="Category"
               id='categories'
-              name="categories"
+              name='categories'
               
               //onChange={handleChange}
             >
-              {Categories.map((Categories) => (
-                <MenuItem value={Categories.name}>{Categories.name}</MenuItem>
+              {context.categories.map((categories) => (
+                <MenuItem value={categories._id}>{categories.name}</MenuItem>
               ))}
             </Select>
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <Select
+              labelId="demo-simple-select-helper-label"
+              value={context.tags._id}
+              label="Tags"
+              id='tags'
+              name='tags'
+              
+              //onChange={handleChange}
+            >
+              {context.tags.map((tags) => (
+                <MenuItem value={tags._id}>{tags.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {/*<FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
             <Select
               labelId="demo-multiple-checkbox-label"
               id='tags'
               multiple
-              value={tagName}
+              value={context.tags}
               onChange={handleChange}
               input={<OutlinedInput label="Tags" />}
               renderValue={(selected) => selected.join(", ")}
@@ -138,18 +177,22 @@ export default function makePost() {
               
               //MenuProps={MenuProps}
             >
-              {Tags.map((Tags) => (
-                <MenuItem key={Tags.id} value={Tags.name}>
-                  <Checkbox checked={tagName.indexOf(Tags.name) > -1} />
-                  <ListItemText primary={Tags.name} />
+              {context.tags.map((tags) => (
+                <MenuItem key={tags._id} value={tags.name}>
+                  <Checkbox checked={tags.name.indexOf(tags.name) > -1} />
+                  <ListItemText primary={tags.name} />
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
+          </FormControl>*/}
 
-          <input accept="*" 
-            type="file" onChange={handlePicture} name="image" id='image' />
-
+          {/*<input accept="*" 
+            type="file" onChange={handlePicture} name="image" id='image' />*/}
+          <TextField  required fullWidth label="image" 
+                        margin="normal" 
+                        id='image'
+                        name="image"
+                        />
           <Button
             sx={{ m: 1, minWidth: 120 }}
             type="submit"

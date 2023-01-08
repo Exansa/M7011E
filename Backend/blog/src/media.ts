@@ -128,7 +128,7 @@ export default () => {
 
 	Rabbitmq.listen('media.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
-
+		console.log(data)
 		if (!data.media) {
 			return { success: false, response: 'Missing param media' };
 		}
