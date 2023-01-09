@@ -5,7 +5,6 @@ import express, { Request, Response } from 'express';
 import Tags from './tags';
 import Categories from './categories';
 import Admins from './admins';
-import Media from './media';
 import posts from './posts';
 
 // Initialize the express engine
@@ -17,7 +16,6 @@ const PORT = process.env.PORT ?? 8090;
 Tags();
 Categories();
 Admins();
-Media();
 posts();
 
 app.get('/healthcheck', (_: Request, res: Response) => {
