@@ -15,7 +15,21 @@ export async function getStaticProps() {
       accept: "application/json",
     }
   });
-  const postData = await postRes.json();
+  const result = await postRes.json();
+  const postData = result;
+  const set = 2;
+  /*while(result){
+    postData = postData + result;
+    const postRef = "http://localhost:5001/user/" + session.user._id + "/" + "?set=" + set;
+    const postRes = await fetch(postRef, {
+      method: "GET",
+      header: {
+        accept: "application/json",
+      }
+    });
+    const result = await postRes.json();
+    set = set + 1;
+  }*/
   
   return {
     props: {
@@ -66,7 +80,8 @@ export default function BasicTabs({ user }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  const { data: session } = useSession();
+  if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
