@@ -6,7 +6,6 @@ import { ConsumeMessage } from 'amqplib';
 
 export default async (message: ConsumeMessage) => {
 	const data = JSON.parse(message.content.toString());
-
 	if (!data.id) {
 		return { success: false, response: 'Missing param id' };
 	}
@@ -29,7 +28,7 @@ export default async (message: ConsumeMessage) => {
 			}
 		);
 
-		if (result) {
+		if (result==null) {
 			throw new Error('User not found');
 		}
 		client.close();

@@ -63,7 +63,7 @@ export default function BasicTabs({ user }) {
         <Grid container spacing={2}>
           {Posts.map((post) => {
             //TODO: Implement new solution when DB is implemented
-            if (post.user.id == user.id) {
+            if (post.user.id == user._id) {
               return (
                 <Grid item>
                   <GenericCard postID={post.id} />

@@ -25,7 +25,7 @@ export default function UserCard({ user }) {
         >
           <Avatar
             alt="Error loading avatar"
-            src={user.image.href}
+            src={user.picture}
             sx={{ width: 250, height: 250 }}
           />
           <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
@@ -34,9 +34,6 @@ export default function UserCard({ user }) {
             </Typography>
             <Typography variant="body" component="h3">
               {user.email}
-            </Typography>
-            <Typography variant="body" component="h3">
-              {user.phone}
             </Typography>
             <Stack direction="row" spacing={2}>
               <Button variant="outlined" href={Routes.users.settings}>
