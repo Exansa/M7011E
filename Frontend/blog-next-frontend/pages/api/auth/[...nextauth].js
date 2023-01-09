@@ -48,12 +48,24 @@ const options = {
         });
         const result = await res.json();
 
-        if (result) {
+        if (result != "User does not exist") {
           console.log("existing user");
           //session.accessToken = result;
         } else {
-          console.log("new user");
-          //redirect to creation page with result
+          console.log("new user! adding user!");
+          const access = ("Bearer " + token.account.access_token);
+          const data = {
+            username: token.token.name,
+          }
+          const res = await fetch('http://localhost:5001/user', {
+            method: "POST",
+            headers: new Headers({
+            accept: "application/json",
+            authorization: access,
+            "Content-Type": "application/json",
+            }),
+            body: JSON.stringify(data),
+          })
         }
         return token;
       }
