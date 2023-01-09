@@ -96,14 +96,14 @@ export default function makePost(context) {
     }
 
     const JSONdata = JSON.stringify(data)
-
+    console.log(JSONdata)
     const res = await fetch('http://localhost:5001/posts', {
         method: "POST",
         headers: {
-          "accept": "*/*;charset=utf8",
-          "Content-Type": "application/json;charset=utf8",
+          accept: "*/*",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(JSONdata),
+        body: JSONdata,
     }); 
 
     console.log(JSONdata)
