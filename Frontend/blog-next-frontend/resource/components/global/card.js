@@ -26,78 +26,68 @@ function GenericCard({ post }) {
 
   if (!post.user) {
     return (
-      <>
-        <Card sx={{ minWidth: 345, maxWidth: 345 }}>
-          <CardContent>
-            <Typography variant="body">
-              Error loading card. <br />
-              No user found for post {post._id}
-            </Typography>
-          </CardContent>
-        </Card>
-      </>
+      <Card sx={{ minWidth: 345, maxWidth: 345 }}>
+        <CardContent>
+          <Typography variant="body">
+            Error loading card. <br />
+            No user found for post {post._id}
+          </Typography>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <>
-      <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
-        <NextLink passHref href={Routes.posts.post(post._id)} key={post._id}>
-          <CardActionArea>
-            <CardHeader
-              avatar={
-                <Avatar
-                  src={post.user.profile_picture}
-                  alt={post.user.username}
-                />
-              }
-              title={post.user.username}
-            />
-            <CardMedia
-              component="img"
-              height="140"
-              src={post.media}
-              alt="image not found"
-            />
-            <CardContent sx={{ maxHeight: 140, minHeight: 140 }}>
-              <Typography>
-                {post.title.length > 40
-                  ? post.title.substring(0, 40) + "..."
-                  : post.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                {post.categories[0] && post.categories[0].name}
-              </Typography>
-              <Breadcrumbs maxItems={3} separator="" sx={{ my: 1 }}>
-                {post.tags[0] &&
-                  post.tags.map((tag) => (
-                    <Chip label={tag.name} size="small" />
-                  ))}
-              </Breadcrumbs>
-              <Typography
-                variant="body2"
-                component="div"
-                color="text.secondary"
-              >
-                {post.content.length > 90
-                  ? post.content.substring(0, 90) + "..."
-                  : post.content}
-              </Typography>
-            </CardContent>
-            <CardActions>
+    <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
+      <NextLink passHref href={Routes.posts.post(post._id)} key={post._id}>
+        <CardActionArea>
+          <CardHeader
+            avatar={
+              <Avatar
+                src={post.user.profile_picture}
+                alt={post.user.username}
+              />
+            }
+            title={post.user.username}
+          />
+          <CardMedia
+            component="img"
+            height="140"
+            src={post.media}
+            alt="image not found"
+          />
+          <CardContent sx={{ maxHeight: 140, minHeight: 140 }}>
+            <Typography>
+              {post.title.length > 40
+                ? post.title.substring(0, 40) + "..."
+                : post.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              {post.categories[0] && post.categories[0].name}
+            </Typography>
+            <Breadcrumbs maxItems={3} separator="" sx={{ my: 1 }}>
+              {post.tags[0] &&
+                post.tags.map((tag) => <Chip label={tag.name} size="small" />)}
+            </Breadcrumbs>
+            <Typography variant="body2" component="div" color="text.secondary">
+              {post.content.length > 90
+                ? post.content.substring(0, 90) + "..."
+                : post.content}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small" color="primary">
+              Share
+            </Button>
+            {session && session.user._id == post.user_id && (
               <Button size="small" color="primary">
-                Share
+                Edit
               </Button>
-              {session && session.user._id == post.user_id && (
-                <Button size="small" color="primary">
-                  Edit
-                </Button>
-              )}
-            </CardActions>
-          </CardActionArea>
-        </NextLink>
-      </Card>
-    </>
+            )}
+          </CardActions>
+        </CardActionArea>
+      </NextLink>
+    </Card>
   );
 }
 
