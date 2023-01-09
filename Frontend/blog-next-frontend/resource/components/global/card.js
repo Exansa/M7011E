@@ -28,6 +28,8 @@ function GenericCard({ post }) {
     return <></>;
   }
 
+  console.log(post);
+
   return (
     <>
       <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
@@ -36,7 +38,7 @@ function GenericCard({ post }) {
             <CardHeader
               avatar={
                 <Avatar
-                  src={post.user.profile_picture.href}
+                  src={post.user.profile_picture}
                   alt={post.user.username}
                 />
               }
@@ -45,7 +47,7 @@ function GenericCard({ post }) {
             <CardMedia
               component="img"
               height="140"
-              src={post.media[0].href}
+              src={post.media}
               alt="image not found"
             />
             <CardContent sx={{ maxHeight: 140, minHeight: 140 }}>

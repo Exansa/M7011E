@@ -61,7 +61,7 @@ const Post = (context) => {
       <Page title={post.title}>
         <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
           <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
-            <Image src={post.media[0].href} duration={1000} />
+            <Image src={post.media} duration={1000} />
             <Stack direction={"row"} alignItems="center" spacing={0}>
               <Typography variant="title" component="h2">
                 {post.title}
@@ -77,7 +77,7 @@ const Post = (context) => {
             <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
               {/*TODO: Add user profile picture*/}
               <Avatar
-                src={post.user.profile_picture.href}
+                src={post.user.profile_picture}
                 alt={post.user.username}
               />
               <Typography variant="h5" component="h5">
