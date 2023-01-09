@@ -91,18 +91,29 @@ export default function makePost(context) {
       },
       body: JSON.stringify(request),
     });*/}
-
-    const data = {
-      user_id: session.user._id,
+    const predata = {
       title: event.target.title.value,
       content: event.target.content.value,
       categories_id: [event.target.categories.value],
       tags_id: [event.target.tags.value],
-      image: event.target.image.value,
+      media: event.target.image.value,
+    }
+    const data = {
+      user_id: session.user._id,
+      post: predata,
     }
 
     const JSONdata = JSON.stringify(data)
 
+    const new_post =await fetch('http://localhost:5001/posts', {
+      method: "POST",
+					headers: {
+						"accept": "*/*",
+						"Content-Type": "application/json",
+					},
+      body: JSON.stringify(JSONdata),
+
+    })
     console.log(JSONdata)
 
   }
