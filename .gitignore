@@ -226,3 +226,4 @@
 **/.ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/node,flutter,visualstudiocode
+Frontend/blog-next-frontend/yarn.lock
