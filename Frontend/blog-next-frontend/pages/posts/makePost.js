@@ -83,14 +83,6 @@ export default function makePost(context) {
   const handleSubmit = async (event)=> {
     event.preventDefault()
 
-    {/*const new_image = await fetch('http://localhost:5001/media',{
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(request),
-    });*/}
     const predata = {
       title: event.target.title.value,
       content: event.target.content.value,
@@ -105,15 +97,15 @@ export default function makePost(context) {
 
     const JSONdata = JSON.stringify(data)
 
-    const new_post =await fetch('http://localhost:5001/posts', {
-      method: "POST",
-					headers: {
-						"accept": "*/*",
-						"Content-Type": "application/json",
-					},
-      body: JSON.stringify(JSONdata),
+    const res = await fetch('http://localhost:5001/posts', {
+        method: "POST",
+        headers: {
+          "accept": "*/*;charset=utf8",
+          "Content-Type": "application/json;charset=utf8",
+        },
+        body: JSON.stringify(JSONdata),
+    }); 
 
-    })
     console.log(JSONdata)
 
   }
