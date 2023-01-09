@@ -51,7 +51,7 @@ export async function getStaticProps() {
   };
 }
 
-export default function editPost(context) {  
+export default function makePost( {post} ) {  
 
   // If no session exists, display access denied message
   //if (!session) { return  <Page><AccessDenied/></Page> }
@@ -83,25 +83,29 @@ export default function editPost(context) {
   const handleSubmit = async (event)=> {
     event.preventDefault()
 
-    {/*const new_image = await fetch('http://localhost:5001/media',{
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(request),
-    });*/}
-
-    const data = {
-      user_id: session.user._id,
+    const predata = {
       title: event.target.title.value,
       content: event.target.content.value,
       categories_id: [event.target.categories.value],
       tags_id: [event.target.tags.value],
-      image: event.target.image.value,
+      media: event.target.image.value,
+    }
+    const data = {
+      user_id: session.user._id,
+      post: predata,
     }
 
     const JSONdata = JSON.stringify(data)
+    console.log(JSONdata)
+    const postRef = "http://localhost:5001/post/" + post._id;
+    const res = await fetch(postRef, {
+        method: "POST",
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+        },
+        body: JSONdata,
+    }); 
 
     console.log(JSONdata)
 
@@ -110,6 +114,9 @@ export default function editPost(context) {
 
   const { data: session } = useSession();
   if (!session){ return  <Page><AccessDenied/></Page> }
+  else if(session.user._id != post.user_id){
+    return <Page><h1>Error: incorrect user</h1></Page>
+  }
   return (
     <>
       <Page>
