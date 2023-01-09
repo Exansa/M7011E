@@ -435,39 +435,41 @@ export default function Browse(context) {
             <Typography variant="h4" component="h4">
               Featured
             </Typography>
-            <Grid container spacing={3} sx={{ mb: 2 }}>
-              {searching ? (
-                <Stack
-                  direction={"row"}
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <CircularProgress />
-                  <Typography
-                    variant="h6"
-                    component="body2"
-                    color="text.secondary"
-                  >
-                    Loading...
-                  </Typography>
-                </Stack>
-              ) : posts.length > 0 ? (
-                posts.map((result) => (
-                  <Grid item flexwrap="wrap">
-                    <GenericCard post={result} />
-                  </Grid>
-                ))
-              ) : (
+            {searching ? (
+              <Stack
+                direction={"row"}
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+              >
+                <CircularProgress />
                 <Typography
                   variant="h6"
                   component="body2"
                   color="text.secondary"
                 >
-                  No results found
+                  Loading...
                 </Typography>
-              )}
-            </Grid>
+              </Stack>
+            ) : posts.length > 0 ? (
+              <Grid
+                container
+                direction={"row"}
+                flexDirection={"row"}
+                spacing={3}
+                sx={{ mb: 2 }}
+              >
+                {posts.map((result) => (
+                  <Grid item>
+                    <GenericCard post={result} />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Typography variant="h6" component="body2" color="text.secondary">
+                No results found
+              </Typography>
+            )}
             {/*TODO: Load more slices when this is pressed*/}
             <Button onClick={handleSliceChange}>Load More</Button>
           </Stack>

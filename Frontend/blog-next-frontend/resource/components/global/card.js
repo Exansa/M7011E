@@ -25,10 +25,19 @@ function GenericCard({ post }) {
   const { data: session } = useSession();
 
   if (!post.user) {
-    return <></>;
+    return (
+      <>
+        <Card sx={{ minWidth: 345, maxWidth: 345 }}>
+          <CardContent>
+            <Typography variant="body">
+              Error loading card. <br />
+              No user found for post {post._id}
+            </Typography>
+          </CardContent>
+        </Card>
+      </>
+    );
   }
-
-  console.log(post);
 
   return (
     <>
@@ -75,19 +84,19 @@ function GenericCard({ post }) {
                   : post.content}
               </Typography>
             </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
+            <CardActions>
+              <Button size="small" color="primary">
+                Share
+              </Button>
 
-            {/*{(session.user._id==post.user_id)
+              {/*{(session.user._id==post.user_id)
             &&(
             <Button size="small" color="primary">
               Edit
             </Button>
             )}*/}
-          </CardActions>
+            </CardActions>
+          </CardActionArea>
         </NextLink>
       </Card>
     </>
