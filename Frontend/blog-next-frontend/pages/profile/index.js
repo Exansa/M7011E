@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 
 export function Profile() {
   const { data: session } = useSession();
-
+  if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     session &&(
       <>

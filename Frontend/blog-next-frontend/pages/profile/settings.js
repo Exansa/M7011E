@@ -14,16 +14,18 @@ export function Settings() {
   const { data: session } = useSession();
 
   async function handleOnButtonClick(e){
-    const res = await fetch("http://localhost:5001/user/me", {
-          method: 'GET',
-          headers: new Headers({
-            authorization: 'Bearer ' + session.accessToken
-          })
-        });
-        const result = await res.json();
-        console.log(result);
+    /*const res = await fetch("http://localhost:5001/user/me", {
+      method: 'GET',
+      headers: new Headers({
+        authorization: 'Bearer ' + session.accessToken
+      })
+    });
+    const result = await res.json();
+    console.log(result);*/
+    console.log(session)
   }
 
+  if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     session &&(
       <Page title={"Settings: " + session.name}>

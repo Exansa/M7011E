@@ -29,7 +29,7 @@ export default function Home(context) {
         <Box mx={"10%"} my="10%">
           <Typography variant="h1">
             {" "}
-            {session ? `${session.user.email}, ` : ""}Welcome to the blog!{" "}
+            {session ? `${session.user.username}, ` : ""}Welcome to the blog!{" "}
           </Typography>
           <Stack
             direction="row"
