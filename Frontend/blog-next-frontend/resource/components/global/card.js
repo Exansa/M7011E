@@ -25,10 +25,17 @@ function GenericCard({ post }) {
   const { data: session } = useSession();
 
   if (!post.user) {
-    return <></>;
+    return (
+      <Card sx={{ minWidth: 345, maxWidth: 345 }}>
+        <CardContent>
+          <Typography variant="body">
+            Error loading card. <br />
+            No user found for post {post._id}
+          </Typography>
+        </CardContent>
+      </Card>
+    );
   }
-
-  console.log(post);
 
   return (
     <Card raised sx={{ minWidth: 345, maxWidth: 345 }}>
@@ -88,10 +95,11 @@ function GenericCard({ post }) {
                     </Button>
                   </NextLink>
                 </>
-              )}
+              )} 
           </CardActions>
-      </Card>
-    </>
+        </CardActionArea>
+      </NextLink>
+    </Card>
   );
 }
 
