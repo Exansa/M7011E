@@ -4,7 +4,7 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { Tabs, Tab, Box, Grid, Typography } from "@mui/material";
 import Posts from "../../../data/mock_db/posts";
-import GenericCard from "../global/card";
+import dynamic from "next/dynamic";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,6 +46,11 @@ export default function BasicTabs({ user }) {
     setValue(newValue);
   };
 
+  const GenericCard = dynamic(
+    () => import("../../resource/components/global/card"),
+    { ssr: false }
+  );
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -65,8 +70,8 @@ export default function BasicTabs({ user }) {
             //TODO: Implement new solution when DB is implemented
             if (post.user.id == user._id) {
               return (
-                <Grid item>
-                  <GenericCard postID={post.id} />
+                <Grid key={post._id + "-grid-item"} item>
+                  <GenericCard key={post._id + "-post-item"} postID={post.id} />
                 </Grid>
               );
             }
