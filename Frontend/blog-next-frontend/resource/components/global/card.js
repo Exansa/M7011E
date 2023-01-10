@@ -76,6 +76,7 @@ function GenericCard({ post }) {
               </Typography>
             </CardContent>
           </CardActionArea>
+          </NextLink>
           <CardActions>
             <Button size="small" color="primary">
               Share
@@ -83,12 +84,15 @@ function GenericCard({ post }) {
             {session &&
               (session.user._id==post.user_id)
               &&(
-                <Button size="small" color="primary" href={Routes.posts.post(post)} key={post}>
-                  Edit
-                </Button>
+                <>
+                  <NextLink passHref href={Routes.posts.edit(post._id)} key={post._id}>
+                    <Button size="small" color="primary" >
+                      Edit
+                    </Button>
+                  </NextLink>
+                </>
               )}
           </CardActions>
-        </NextLink>
       </Card>
     </>
   );

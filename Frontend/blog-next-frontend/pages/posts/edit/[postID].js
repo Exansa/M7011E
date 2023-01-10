@@ -1,6 +1,6 @@
-import Page from "../../resource/layout/page";
+import Page from "../../../resource/layout/page";
 import { useSession } from "next-auth/react";
-import AccessDenied from "../../resource/components/accessDenied";
+import AccessDenied from "../../../resource/components/accessDenied";
 import {
   Container,
   TextField,
@@ -17,41 +17,55 @@ import {
   ListItemText,
 } from "@mui/material";
 import * as React from "react";
-import Tags from "../../data/mock_db/tags";
-import Categories from "../../data/mock_db/categories";
+import Tags from "../../../data/mock_db/tags";
+import Categories from "../../../data/mock_db/categories";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 //import { Category } from "@mui/icons-material";
 
 //import { getCategories } from "../../data/mock_request/db_handler";
+//console.log("0");
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
-export async function getStaticProps() {
+export async function getStaticPaths() {
+  const res = await fetch("http://localhost:5001/posts?set=1");
+  const posts = await res.json();
+
+  //console.log('POSTS',posts)
+  const paths = posts.map((post) => {
+    return {
+      params: { postID: post._id },
+    };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+
+export async function getStaticProps({params}) {
   const resTags = await fetch("http://localhost:5001/tags?set=1");
   const tags = await resTags.json();
   const resCat = await fetch("http://localhost:5001/categories?set=1");
   const categories  = await resCat.json();
+  //console.log('2')
+  //console.log('params',params.postID);
   //console.log(tags);
   //console.log(categories);
+  //console.log("3");
   return {
     props: {
       tags,
-      categories
+      categories,
+      postID: params.postID
     },
   };
 }
 
-export default function makePost( {post} ) {  
+
+const editPost = ( context ) => {  
 
   // If no session exists, display access denied message
   //if (!session) { return  <Page><AccessDenied/></Page> }
@@ -97,9 +111,9 @@ export default function makePost( {post} ) {
 
     const JSONdata = JSON.stringify(data)
     console.log(JSONdata)
-    const postRef = "http://localhost:5001/post/" + post._id;
+    const postRef = "http://localhost:5001/post/" + context.postID;
     const res = await fetch(postRef, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           accept: "*/*",
           "Content-Type": "application/json",
@@ -114,9 +128,6 @@ export default function makePost( {post} ) {
 
   const { data: session } = useSession();
   if (!session){ return  <Page><AccessDenied/></Page> }
-  else if(session.user._id != post.user_id){
-    return <Page><h1>Error: incorrect user</h1></Page>
-  }
   return (
     <>
       <Page>
@@ -213,3 +224,5 @@ export default function makePost( {post} ) {
     </>
   );
 }
+
+export default editPost;

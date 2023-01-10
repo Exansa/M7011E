@@ -2,7 +2,7 @@ const Routes = {
   posts: {
     index: "/posts",
     make: "/posts/makePost",
-    edit: (post) => "/posts/editPost",
+    edit: (postID) => `/posts/edit/${postID}`,
     post: (postID) => `/posts/${postID}`,
   },
 

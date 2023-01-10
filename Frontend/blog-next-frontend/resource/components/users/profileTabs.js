@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { Tabs, Tab, Box, Grid, Typography } from "@mui/material";
 import Posts from "../../../data/mock_db/posts";
 import GenericCard from "../global/card";
+import { useSession } from "next-auth/react";
 
 
 export async function getStaticProps() {
@@ -74,14 +75,14 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ user }) {
+export default function BasicTabs(context) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const { data: session } = useSession();
-  if (!session){ return  <Page><AccessDenied/></Page> }
+  //const { data: session } = useSession();
+  //if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -97,8 +98,8 @@ export default function BasicTabs({ user }) {
       </Box>
       <TabPanel value={value} index={0}>
         <Grid container spacing={3} sx={{ mb: 2 }}>
-          {posts.length > 0 ? (
-            posts.map((result) => (
+          {context.posts.length > 0 ? (
+            context.posts.map((result) => (
               <Grid item flexwrap="wrap">
                 <GenericCard post={result} />
               </Grid>
