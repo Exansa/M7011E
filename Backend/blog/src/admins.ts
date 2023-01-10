@@ -102,7 +102,7 @@ export default () => {
 				'admins',
 				async (collection) => {
 					const query = {
-						_id: new ObjectId(data.id)
+						user_id: data.id
 					};
 					const result = await collection.findOne(query);
 					return result;
@@ -158,7 +158,7 @@ export default () => {
 			await checkUserExists(admin, client);
 
 			//check admin exists
-			await checkAdminExists(admin, client);
+			await checkAdminExists(admin.user_id, client);
 			client.close();
 
 			const result = await DB.performQuery(
@@ -225,8 +225,7 @@ export default () => {
 				'admins',
 				async (collection) => {
 					const query = {
-						_id: new ObjectId(data.id),
-						user_id: admin.user_id
+						user_id: data.id
 					};
 					const result = await collection.updateOne(query, {
 						$set: admin
@@ -279,7 +278,7 @@ export default () => {
 				'admins',
 				async (collection) => {
 					const query = {
-						_id: new ObjectId(data.id)
+						user_id: data.id
 					};
 					const result = await collection.deleteOne(query);
 					return result;
@@ -325,9 +324,9 @@ async function checkUserExists(admin: any, client: MongoClient) {
 	const result = await collection.findOne(query);
 	if (!result) throw new Error('User does not exist');
 }
-async function checkAdminExists(admin: any, client: MongoClient) {
+async function checkAdminExists(id: any, client: MongoClient) {
 	const collection = await client.db('blog').collection('admins');
-	const query = { user_id: admin.user_id };
+	const query = { user_id: id };
 	const alreadyExists = await collection.findOne(query);
 	if (alreadyExists) throw new Error('Admin already exists');
 }
@@ -357,7 +356,7 @@ async function lastSuperAdmin(id: any, client: MongoClient) {
 	const collection = await client.db('blog').collection('admins');
 	const query = { access: 'superAdmin' };
 	const result = await collection.find(query).toArray();
-	if (result.length == 1 && result[0]._id == id)
+	if (result.length == 1 && result[0].user_id == id)
 		throw new Error('Cant remove last super admin');
 }
 function validateSet(inSet: any) {

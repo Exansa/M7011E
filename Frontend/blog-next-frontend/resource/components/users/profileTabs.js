@@ -2,13 +2,50 @@
 
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Tabs, Tab, Box, Grid, Typography } from "@mui/material";
+import { Tabs, Tab, Box, Grid, Typography, Button } from "@mui/material";
 import Posts from "../../../data/mock_db/posts";
 import dynamic from "next/dynamic";
+import { useSession } from "next-auth/react";
 
-function TabPanel(props) {
+export async function getStaticProps() {
+  const postRef =
+    "http://localhost:5001/user/" + session.user._id + "/" + "posts?set=1";
+  const postRes = await fetch(postRef, {
+    method: "GET",
+    header: {
+      accept: "application/json",
+    },
+  });
+  const result = await postRes.json();
+  const postData = result;
+  console.log("postdata", postData);
+  const set = 2;
+  /*while(result){
+    postData = postData + result;
+    const postRef = "http://localhost:5001/user/" + session.user._id + "/" + "?set=" + set;
+    const postRes = await fetch(postRef, {
+      method: "GET",
+      header: {
+        accept: "application/json",
+      }
+    });
+    const result = await postRes.json();
+    set = set + 1;
+  }*/
+
+  return {
+    props: {
+      posts: postData,
+      users: userData,
+      tags: tagData,
+      categories: categoryData,
+    },
+  };
+}
+
+function TabPanel({ context }) {
   const { children, value, index, ...other } = props;
-
+  console.log(context.posts);
   return (
     <div
       role="tabpanel"
@@ -39,7 +76,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ user }) {
+export default function BasicTabs(context) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -77,12 +114,13 @@ export default function BasicTabs({ user }) {
             }
           })}
         </Grid>
+        {/*TODO: Load more slices when this is pressed<Button onClick={handleSliceChange}>Load More</Button>*/}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        Not implemented yet
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        Not implemented yet
       </TabPanel>
     </Box>
   );

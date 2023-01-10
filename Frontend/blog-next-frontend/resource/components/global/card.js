@@ -14,6 +14,7 @@ import {
   CardHeader,
   Avatar,
   IconButton,
+  Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import posts from "../../../data/mock_db/posts";
@@ -51,10 +52,25 @@ export default function GenericCard({ post, key }) {
               }
               title={post.user.username}
               action={
-                // <IconButton onClick=GÖRNÅGOT sx={{display:session.user._id===post.user._id ? "box" : "none"}}>
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
+                // <IconButton onClick=GÖRNÅGOT >
+                <Box
+                  sx={{
+                    display:
+                      session && session.user._id === post.user._id
+                        ? "block"
+                        : "none",
+                  }}
+                >
+                  <NextLink
+                    passHref
+                    href={Routes.posts.edit(post._id)}
+                    key={post._id}
+                  >
+                    <IconButton>
+                      <EditIcon />
+                    </IconButton>
+                  </NextLink>
+                </Box>
               }
             />
             <CardMedia

@@ -366,7 +366,7 @@ function generatePost(inPost: any, userId: string) {
 		created_at: new Date(),
 		content: inPost.content,
 		user_id: userId,
-		categories_id: inPost.categories_id,
+		category_id: inPost.category_id,
 		tags_id: inPost.tags_id,
 		media: inPost.media
 	};
@@ -400,17 +400,13 @@ async function getDataFromPost(post: any, client: MongoClient) {
 	post.user = result;
 
 	collection = await client.db('blog').collection('categories');
-	const categoryLength = post.categories_id?.length ?? 0;
-	post.categories = [];
-	for (let j = 0; j < categoryLength; j++) {
-		const query = {
-			_id: new ObjectId(post.categories_id[j])
-		};
-		const result = await collection.findOne(query, {
-			projection: { name: 1 }
-		});
-		post.categories[j] = result;
-	}
+	const query2 = {
+		_id: new ObjectId(post.category_id)
+	};
+	const result2 = await collection.findOne(query2, {
+		projection: { name: 1 }
+	});
+	post.category = result2;
 
 	collection = await client.db('blog').collection('tags');
 	const tagsLength = post.tags_id?.length ?? 0;
@@ -442,8 +438,8 @@ function generateSearch(search: any) {
 	if (search.user_id && search.user_id !== '') out.user_id = search.user_id;
 	if (search.tags_id && search.tags_id.length !== 0)
 		out.tags_id = { $in: search.tags_id };
-	if (search.categories_id && search.categories_id.length !== 0)
-		out.categories_id = { $in: search.categories_id };
+	if (search.category_id && search.category_id !== '')
+		out.category_id = search.category_id;
 	if (search.media && search.media !== '') {
 		out.media = { $regex: search.media, $options: 'i' };
 	}

@@ -313,13 +313,9 @@ export default () => {
 							pattern: '[0-9a-z]{24}',
 							required: true
 						},
-						categories_id: {
-							type: 'array',
-							items: {
-								type: 'string',
-								pattern: '[0-9a-z]{24}'
-							},
-							required: false
+						category_id: {
+							type: 'string',
+							pattern: '[0-9a-z]{24}'
 						},
 						tags_id: {
 							type: 'array',
@@ -347,7 +343,7 @@ export default () => {
 								}
 							}
 						},
-						categories: {
+						category: {
 							type: 'array',
 							items: {
 								type: 'object',
@@ -406,13 +402,9 @@ export default () => {
 								pattern: '[0-9a-z]{24}',
 								required: true
 							},
-							categories_id: {
-								type: 'array',
-								items: {
-									type: 'string',
-									pattern: '[0-9a-z]{24}'
-								},
-								required: false
+							category_id: {
+								type: 'string',
+								pattern: '[0-9a-z]{24}'
 							},
 							tags_id: {
 								type: 'array',
@@ -440,18 +432,15 @@ export default () => {
 									}
 								}
 							},
-							categories: {
-								type: 'array',
-								items: {
-									type: 'object',
-									properties: {
-										_id: {
-											type: 'string',
-											pattern: '[0-9a-z]{24}'
-										},
-										name: {
-											type: 'string'
-										}
+							category: {
+								type: 'object',
+								properties: {
+									_id: {
+										type: 'string',
+										pattern: '[0-9a-z]{24}'
+									},
+									name: {
+										type: 'string'
 									}
 								}
 							},
@@ -493,13 +482,9 @@ export default () => {
 									type: 'string',
 									required: true
 								},
-								categories_id: {
-									type: 'array',
-									items: {
-										type: 'string',
-										pattern: '[0-9a-z]{24}'
-									},
-									required: false
+								category_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}'
 								},
 								tags_id: {
 									type: 'array',
@@ -537,13 +522,9 @@ export default () => {
 									type: 'string',
 									required: false
 								},
-								categories_id: {
-									type: 'array',
-									items: {
-										type: 'string',
-										pattern: '[0-9a-z]{24}'
-									},
-									required: false
+								category_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}'
 								},
 								tags_id: {
 									type: 'array',
@@ -771,13 +752,9 @@ export default () => {
 									pattern: '[0-9a-z]{24}',
 									required: false
 								},
-								categories_id: {
-									type: 'array',
-									items: {
-										type: 'string',
-										pattern: '[0-9a-z]{24}'
-									},
-									required: false
+								category_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}'
 								},
 								tags_id: {
 									type: 'array',
