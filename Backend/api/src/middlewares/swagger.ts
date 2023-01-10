@@ -88,7 +88,7 @@ export default () => {
 						email: {
 							type: 'string'
 						},
-						picture: {
+						profile_picture: {
 							type: 'string'
 						},
 						createdAt: {
@@ -113,7 +113,7 @@ export default () => {
 							email: {
 								type: 'string'
 							},
-							picture: {
+							profile_picture: {
 								type: 'string'
 							},
 							createdAt: {
@@ -134,7 +134,7 @@ export default () => {
 						email: {
 							type: 'string'
 						},
-						picture: {
+						profile_picture: {
 							type: 'string'
 						}
 					}
@@ -188,7 +188,7 @@ export default () => {
 								email: {
 									type: 'string'
 								},
-								picture: {
+								profile_picture: {
 									type: 'string'
 								},
 								createdAt: {
@@ -233,7 +233,7 @@ export default () => {
 									email: {
 										type: 'string'
 									},
-									picture: {
+									profile_picture: {
 										type: 'string'
 									},
 									createdAt: {
@@ -337,7 +337,7 @@ export default () => {
 								username: {
 									type: 'string'
 								},
-								picture: {
+								profile_picture: {
 									type: 'string'
 								}
 							}
@@ -430,7 +430,7 @@ export default () => {
 									username: {
 										type: 'string'
 									},
-									picture: {
+									profile_picture: {
 										type: 'string'
 									}
 								}
@@ -805,7 +805,7 @@ export default () => {
 									type: 'string',
 									required: false
 								},
-								picture: {
+								profile_picture: {
 									type: 'string',
 									required: false
 								}

@@ -27,7 +27,7 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 	const {
 		sub: auth0_id,
 		email,
-		profile_picture
+		picture: profile_picture
 	} = JSON.parse(userResponse.response);
 
 	return await DB.performQuery('blog', 'users', async (collection) => {
@@ -45,7 +45,7 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 			auth0_id,
 			username,
 			email,
-			picture,
+			profile_picture,
 			createdAt: new Date()
 		});
 		if (!createdUser) {
