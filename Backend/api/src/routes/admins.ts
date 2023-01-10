@@ -14,7 +14,7 @@ export default () => {
 	 *     tags:
 	 *       - Admins
 	 *     summary: Get a set of 10 admins
-	 *     description: Get a set of 10 admins, ordered by id. Set = 1 gets the fist 10 admins, set = 2 gets the next 10, etc.
+	 *     description: Get a set of 10 admins, ordered by user id. Set = 1 gets the fist 10 admins, set = 2 gets the next 10, etc.
 	 *     parameters:
 	 *       - in: path
 	 *         name: set
@@ -125,7 +125,7 @@ export default () => {
 	 *     tags:
 	 *       - Admins
 	 *     summary: Update one admin
-	 *     description: Update the admin of the given id with the given data
+	 *     description: Update the admin of the given user id with the given data
 	 *     parameters:
 	 *       - in: path
 	 *         name: id
@@ -162,7 +162,7 @@ export default () => {
 	 *     tags:
 	 *       - Admins
 	 *     summary: Delete one admin
-	 *     description: Update the admin of the given id with the given data, only superAdmin can delete admins and superAdmins. There must be at least one superAdmin.
+	 *     description: Update the admin of the given user id with the given data, only superAdmin can delete admins and superAdmins. There must be at least one superAdmin.
 	 *     parameters:
 	 *       - in: path
 	 *         name: id
