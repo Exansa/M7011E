@@ -67,7 +67,13 @@ function GenericCard({ post }) {
             </Typography>
             <Breadcrumbs maxItems={3} separator="" sx={{ my: 1 }}>
               {post.tags[0] &&
-                post.tags.map((tag) => <Chip label={tag.name} size="small" />)}
+                post.tags.map((tag) => (
+                  <Chip
+                    key={post.title + "card-chip-" + tag.name}
+                    label={tag.name}
+                    size="small"
+                  />
+                ))}
             </Breadcrumbs>
             <Typography variant="body2" component="div" color="text.secondary">
               {post.content.length > 90
