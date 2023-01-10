@@ -2,14 +2,14 @@
 
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Tabs, Tab, Box, Grid, Typography } from "@mui/material";
+import { Tabs, Tab, Box, Grid, Typography, Button } from "@mui/material";
 import Posts from "../../../data/mock_db/posts";
 import GenericCard from "../global/card";
 import { useSession } from "next-auth/react";
 
 
 export async function getStaticProps() {
-  const postRef = "http://localhost:5001/user/" + session.user._id + "/" + "?set=1";
+  const postRef = "http://localhost:5001/user/" + session.user._id + "/" + "posts?set=1";
   const postRes = await fetch(postRef, {
     method: "GET",
     header: {
@@ -18,6 +18,7 @@ export async function getStaticProps() {
   });
   const result = await postRes.json();
   const postData = result;
+  console.log('postdata', postData)
   const set = 2;
   /*while(result){
     postData = postData + result;
@@ -42,9 +43,9 @@ export async function getStaticProps() {
   };
 }
 
-function TabPanel(props) {
+function TabPanel({context}) {
   const { children, value, index, ...other } = props;
-
+  console.log(context.posts)
   return (
     <div
       role="tabpanel"
@@ -98,7 +99,7 @@ export default function BasicTabs(context) {
       </Box>
       <TabPanel value={value} index={0}>
         <Grid container spacing={3} sx={{ mb: 2 }}>
-          {context.posts.length > 0 ? (
+          {/*context.posts.length > 0 ? (
             context.posts.map((result) => (
               <Grid item flexwrap="wrap">
                 <GenericCard post={result} />
@@ -112,10 +113,9 @@ export default function BasicTabs(context) {
             >
               No results found
             </Typography>
-          )}
+          )*/}
         </Grid>
-        {/*TODO: Load more slices when this is pressed*/}
-        <Button onClick={handleSliceChange}>Load More</Button>
+        {/*TODO: Load more slices when this is pressed<Button onClick={handleSliceChange}>Load More</Button>*/}
       </TabPanel>
       <TabPanel value={value} index={1}>
         Not implemented yet

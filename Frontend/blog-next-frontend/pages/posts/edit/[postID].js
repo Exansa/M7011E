@@ -111,6 +111,7 @@ const editPost = ( context ) => {
 
     const JSONdata = JSON.stringify(data)
     console.log(JSONdata)
+    console.log(context.postID)
     const postRef = "http://localhost:5001/post/" + context.postID;
     const res = await fetch(postRef, {
         method: "PATCH",

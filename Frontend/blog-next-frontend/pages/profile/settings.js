@@ -1,5 +1,5 @@
 import ResponsiveAppBar from "../../resource/layout/headerBar";
-import { Button } from "@mui/material";
+import { Button, Container, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import Page from "../../resource/layout/page";
 import Users from "../../data/mock_db/users";
@@ -35,15 +35,43 @@ export function Settings() {
     }
   }
 
+  const handleSubmit = async (event)=> {
+    event.preventDefault()
+  }
   if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     session &&(
       <Page title={"Settings: " + session.name}>
-       <Box>
+       <Container maxWidth="md">
+       <form onSubmit={handleSubmit}>
+          <TextField  required fullWidth label="New username" 
+                      margin="normal" 
+                      id='username'
+                      name="username"
+                      />
+          <TextField  required fullWidth label="New email" 
+                      margin="normal" 
+                      id='email'
+                      name="email"
+                      />
+          <Button
+              sx={{ m: 1, minWidth: 120 }}
+              type="submit"
+              variant="contained"
+            >
+              Submit
+          </Button>
+        </form>
+        <Button sx={{ m: 1, minWidth: 120 }}
+                type="submit"
+                variant="contained"
+                onClick={handleOnButtonClick}>
+          Delete
+        </Button>
         <Button onClick={handleOnButtonClick}>
           edit
         </Button>
-       </Box>
+       </Container>
       </Page>
     )
   );
