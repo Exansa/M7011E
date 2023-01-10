@@ -82,10 +82,8 @@ export default function GenericCard({ post, key }) {
 
             <CardContent
               sx={{
-                maxHeight: "140px",
-                minHeight: "140px",
-                minWidth: "345px",
-                maxWidth: "345px",
+                maxHeight: "160px",
+                minHeight: "160px",
               }}
             >
               <Typography component="div">
@@ -99,7 +97,7 @@ export default function GenericCard({ post, key }) {
                 color="text.secondary"
                 gutterBottom
               >
-                {post.categories[0] && post.categories[0].name}
+                {post.category && post.category.name}
               </Typography>
               <Breadcrumbs maxItems={3} separator="" sx={{ my: 1 }}>
                 {post.tags[0] &&

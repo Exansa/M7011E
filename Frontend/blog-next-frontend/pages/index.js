@@ -24,7 +24,7 @@ export default function Home(context) {
   //console.log(session)
 
   const GenericCard = dynamic(
-    () => import("../../resource/components/global/card"),
+    () => import("../resource/components/global/card"),
     { ssr: false }
   );
 
