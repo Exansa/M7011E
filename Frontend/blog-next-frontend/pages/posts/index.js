@@ -13,6 +13,7 @@ import Page from "../../resource/layout/page";
 import GenericCard from "../../resource/components/global/card";
 import { useState, useMemo } from "react";
 import { debounce } from "@mui/material/utils";
+import AutoCompleteFetcher from "../../resource/components/search/autoCompleteFetcher";
 
 export async function getStaticProps() {
   const postRes = await fetch("http:localhost:5001/posts?set=1");
@@ -38,43 +39,12 @@ export default function Browse(context) {
   const sliceIncrement = 4;
   const [maxSlice, setMaxSlice] = useState(sliceIncrement);
   const [posts, setPosts] = useState(context.posts);
-  const [users, setUsers] = useState(context.users);
-  const [usersLoading, setUsersLoading] = useState(false);
-  const [tags, setTags] = useState(context.tags);
-  const [tagsLoading, setTagsLoading] = useState(false);
-  const [categories, setCategories] = useState(context.categories);
-  const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [targetUserID, setTargetUserID] = useState("");
   const [targetTags, setTargetTags] = useState([]);
   const [targetCategoryID, setTargetCategoryID] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [searching, setSearching] = useState(false);
-
-  // Passively fetch data from the server, used to update input suggestions
-  const passiveFetch = useMemo(
-    () =>
-      //Since this function is called on every keystroke, it needs to be debounced to prevent spamming the server
-      debounce(async ({ request, destination, updateState, loading }) => {
-        loading(true);
-        const hit = await fetch(destination, {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(request),
-        });
-
-        await hit.json().then((data) => {
-          if (data) {
-            updateState(data);
-          }
-          loading(false);
-        });
-      }, 300),
-    []
-  );
 
   // TODO: Pagnation / infinite scroll
   function handleSliceChange() {
@@ -146,58 +116,6 @@ export default function Browse(context) {
     setSearching(false);
   }
 
-  // Prepare the fetch request and perform passive query
-  function handleUserRequest(event, newInputValue) {
-    const request = {
-      search: {
-        username: newInputValue,
-        email: "",
-        picture: "",
-      },
-    };
-
-    passiveFetch({
-      request: request,
-      destination: "http://localhost:5001/search/users?set=1",
-      updateState: setUsers,
-      loading: setUsersLoading,
-    });
-  }
-
-  // Prepare the fetch request and perform passive query
-  function handleTagRequest(event, newInputValue) {
-    const request = {
-      search: {
-        name: newInputValue,
-      },
-    };
-
-    passiveFetch({
-      request: request,
-      destination: "http://localhost:5001/search/tags?set=1",
-      updateState: setTags,
-      loading: setTagsLoading,
-    });
-  }
-
-  // Prepare the fetch request and perform passive query
-  function handleCategoryRequest(event, newInputValue) {
-    const request = {
-      search: {
-        name: newInputValue,
-      },
-    };
-
-    setCategories([]);
-
-    passiveFetch({
-      request: request,
-      destination: "http://localhost:5001/search/categories?set=1",
-      updateState: setCategories,
-      loading: setCategoriesLoading,
-    });
-  }
-
   // Resets the results to the default
   function handleReset() {
     setPosts(context.posts);
@@ -238,58 +156,18 @@ export default function Browse(context) {
               </Grid>
               <Grid item xs={12} md={3}>
                 {/* ------------------ User Search ------------------ */}
-                <Autocomplete
-                  id="user-search"
-                  filterOptions={(x) => x}
-                  options={users}
-                  getOptionLabel={(option) =>
-                    option.username ? option.username : ""
-                  }
+                <AutoCompleteFetcher
+                  label="User"
                   noOptionsText="No users found"
-                  isOptionEqualToValue={(option, value) =>
-                    option.username === value.username
-                  }
-                  onChange={(event, newSelection) => {
-                    if (newSelection) {
-                      setTargetUserID(newSelection._id);
-                    } else {
-                      setTargetUserID("");
-                    }
-                  }}
-                  loading={usersLoading}
-                  loadingText="Searching..."
-                  onInputChange={(event, newInputValue) => {
-                    handleUserRequest(event, newInputValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="User"
-                      placeholder="User"
-                      fullWidth
-                    />
-                  )}
-                  renderOption={(props, option) => {
-                    return (
-                      <li {...props}>
-                        <Stack direction={"row"} spacing={2}>
-                          <Avatar
-                            alt={option.username}
-                            src={option.profile_picture}
-                          />
-                          <Stack direction={"column"}>
-                            <Typography variant="body1" color="text.primary">
-                              {option.username}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              ID: {option._id}
-                            </Typography>
-                          </Stack>
-                        </Stack>
-                      </li>
-                    );
-                  }}
+                  setSelectedItem={setTargetUserID}
+                  defaultItems={context.categories}
+                  apiURL="http://localhost:5001/search/users?set=1"
+                  requestKey="username"
+                  valueKey="_id"
+                  avatarKey={"profile_picture"}
+                  extraParams={{ email: "", picture: "" }}
+                  multiple={false}
+                  noneValue=""
                 />
               </Grid>
               {/* ------------------ Content ------------------ */}
@@ -314,97 +192,29 @@ export default function Browse(context) {
               </Grid>
               <Grid item xs={12} md={3}>
                 {/* ------------------ Tags ------------------ */}
-                <Autocomplete
-                  multiple
-                  id="tag search"
-                  filterOptions={(x) => x}
-                  options={tags}
-                  getOptionLabel={(option) => (option.name ? option.name : "")}
+                <AutoCompleteFetcher
+                  label="Tag"
                   noOptionsText="No tags found"
-                  isOptionEqualToValue={(option, value) =>
-                    option.name === value.name
-                  }
-                  onChange={(event, newSelection) => {
-                    if (newSelection) {
-                      setTargetTags(newSelection);
-                    } else {
-                      setTargetTags([]);
-                    }
-                  }}
-                  loading={tagsLoading}
-                  onInputChange={(event, newInputValue) => {
-                    handleTagRequest(event, newInputValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Tag"
-                      placeholder="Tag"
-                      fullWidth
-                    />
-                  )}
-                  renderOption={(props, option) => {
-                    return (
-                      <li {...props}>
-                        <Stack direction={"column"}>
-                          <Typography variant="body1" color="text.primary">
-                            {option.name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            ID: {option._id}
-                          </Typography>
-                        </Stack>
-                      </li>
-                    );
-                  }}
+                  setSelectedItem={setTargetTags}
+                  defaultItems={context.tags}
+                  apiURL="http://localhost:5001/search/tags?set=1"
+                  requestKey="name"
+                  multiple={true}
+                  noneValue={[]}
                 />
               </Grid>
               <Grid item xs={12} md={3}>
                 {/* ------------------ Category ------------------ */}
-                <Autocomplete
-                  id="category-search"
-                  filterOptions={(x) => x}
-                  options={categories}
-                  getOptionLabel={(option) => (option.name ? option.name : "")}
+                <AutoCompleteFetcher
+                  label="Category"
                   noOptionsText="No categories found"
-                  isOptionEqualToValue={(option, value) =>
-                    option.name === value.name
-                  }
-                  onChange={(event, newSelection) => {
-                    if (newSelection) {
-                      setTargetCategoryID(newSelection._id);
-                    } else {
-                      setTargetCategoryID("");
-                    }
-                  }}
-                  loading={categoriesLoading}
-                  onInputChange={(event, newInputValue) => {
-                    handleCategoryRequest(event, newInputValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Category"
-                      placeholder="Category"
-                      fullWidth
-                    />
-                  )}
-                  renderOption={(props, option) => {
-                    return (
-                      <li {...props}>
-                        <Stack direction={"column"}>
-                          <Typography variant="body1" color="text.primary">
-                            {option.name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            ID: {option._id}
-                          </Typography>
-                        </Stack>
-                      </li>
-                    );
-                  }}
+                  setSelectedItem={setTargetCategoryID}
+                  defaultItems={context.categories}
+                  apiURL="http://localhost:5001/search/categories?set=1"
+                  requestKey="name"
+                  valueKey="_id"
+                  multiple={false}
+                  noneValue=""
                 />
               </Grid>
               <Grid item xs={12}>
@@ -459,11 +269,11 @@ export default function Browse(context) {
                 spacing={3}
                 sx={{ mb: 2 }}
               >
-                {posts.map((result) => (
+                {/* {posts.map((result) => (
                   <Grid item>
                     <GenericCard post={result} />
                   </Grid>
-                ))}
+                ))} */}
               </Grid>
             ) : (
               <Typography variant="h6" component="body2" color="text.secondary">
