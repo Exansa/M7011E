@@ -82,6 +82,7 @@ function inactivateUser() {
 		username: 'Deactivated',
 		deactivated: 'true',
 		email: null,
-		password: null
+		auth0_id: null,
+		profile_picture: null
 	};
 }
