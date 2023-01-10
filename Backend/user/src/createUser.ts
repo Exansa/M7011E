@@ -24,7 +24,11 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 		JSON.stringify(bearer)
 	);
 	if (!userResponse.success) return userResponse;
-	const { sub: auth0_id, email, picture } = JSON.parse(userResponse.response);
+	const {
+		sub: auth0_id,
+		email,
+		profile_picture
+	} = JSON.parse(userResponse.response);
 
 	return await DB.performQuery('blog', 'users', async (collection) => {
 		const existingUser = await collection.findOne({

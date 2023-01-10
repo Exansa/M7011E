@@ -395,7 +395,7 @@ async function getDataFromPost(post: any, client: MongoClient) {
 		_id: new ObjectId(post.user_id)
 	};
 	const result = await collection.findOne(query, {
-		projection: { username: 1, picture: 1 }
+		projection: { username: 1, profile_picture: 1 }
 	});
 	post.user = result;
 
