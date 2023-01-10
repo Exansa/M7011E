@@ -21,7 +21,7 @@ export default async (message: ConsumeMessage) => {
 	try {
 		const userResponse = await Rabbitmq.sendRPC(
 			'authentication.verifyGetUser',
-			data.bearer
+			JSON.stringify(data.bearer)
 		);
 		if (!userResponse.success) {
 			return userResponse;
@@ -64,7 +64,7 @@ async function checkAccess(
 	client: MongoClient
 ) {
 	if (currentUser == id) return;
-	const collection = await client.db('blog').collection('admin');
+	const collection = await client.db('blog').collection('admins');
 	const query = { user_id: currentUser };
 	const admin = await collection.findOne(query);
 	if (admin != null && admin.access === 'superAdmin') return;

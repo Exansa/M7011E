@@ -125,17 +125,22 @@ export default () => {
 				UserUpdate: {
 					type: 'object',
 					properties: {
-						_id: {
-							type: 'string'
-						},
-						username: {
-							type: 'string'
-						},
-						email: {
-							type: 'string'
-						},
-						profile_picture: {
-							type: 'string'
+						user: {
+							type: 'object',
+							properties: {
+								username: {
+									type: 'string',
+									required: false
+								},
+								email: {
+									type: 'string',
+									required: false
+								},
+								profile_picture: {
+									type: 'string',
+									required: false
+								}
+							}
 						}
 					}
 				},

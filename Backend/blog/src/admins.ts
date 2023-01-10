@@ -97,8 +97,6 @@ export default () => {
 			//check access
 			await checkAccess(userId, client);
 
-			console.log(data.id);
-
 			let result = await DB.performQuery(
 				'blog',
 				'admins',
