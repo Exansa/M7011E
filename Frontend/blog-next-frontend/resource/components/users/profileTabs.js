@@ -2,13 +2,50 @@
 
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Tabs, Tab, Box, Grid, Typography } from "@mui/material";
+import { Tabs, Tab, Box, Grid, Typography, Button } from "@mui/material";
 import Posts from "../../../data/mock_db/posts";
 import GenericCard from "../global/card";
+import { useSession } from "next-auth/react";
 
-function TabPanel(props) {
+
+export async function getStaticProps() {
+  const postRef = "http://localhost:5001/user/" + session.user._id + "/" + "posts?set=1";
+  const postRes = await fetch(postRef, {
+    method: "GET",
+    header: {
+      accept: "application/json",
+    }
+  });
+  const result = await postRes.json();
+  const postData = result;
+  console.log('postdata', postData)
+  const set = 2;
+  /*while(result){
+    postData = postData + result;
+    const postRef = "http://localhost:5001/user/" + session.user._id + "/" + "?set=" + set;
+    const postRes = await fetch(postRef, {
+      method: "GET",
+      header: {
+        accept: "application/json",
+      }
+    });
+    const result = await postRes.json();
+    set = set + 1;
+  }*/
+  
+  return {
+    props: {
+      posts: postData,
+      users: userData,
+      tags: tagData,
+      categories: categoryData,
+    },
+  };
+}
+
+function TabPanel({context}) {
   const { children, value, index, ...other } = props;
-
+  console.log(context.posts)
   return (
     <div
       role="tabpanel"
@@ -39,13 +76,14 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ user }) {
+export default function BasicTabs(context) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  //const { data: session } = useSession();
+  //if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -60,24 +98,30 @@ export default function BasicTabs({ user }) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <Grid container spacing={2}>
-          {Posts.map((post) => {
-            //TODO: Implement new solution when DB is implemented
-            if (post.user.id == user._id) {
-              return (
-                <Grid item>
-                  <GenericCard postID={post.id} />
-                </Grid>
-              );
-            }
-          })}
+        <Grid container spacing={3} sx={{ mb: 2 }}>
+          {/*context.posts.length > 0 ? (
+            context.posts.map((result) => (
+              <Grid item flexwrap="wrap">
+                <GenericCard post={result} />
+              </Grid>
+            ))
+          ) : (
+            <Typography
+              variant="h6"
+              component="body2"
+              color="text.secondary"
+            >
+              No results found
+            </Typography>
+          )*/}
         </Grid>
+        {/*TODO: Load more slices when this is pressed<Button onClick={handleSliceChange}>Load More</Button>*/}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        Not implemented yet
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        Not implemented yet
       </TabPanel>
     </Box>
   );

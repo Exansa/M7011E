@@ -2,7 +2,7 @@ import { PropTypes } from "prop-types";
 import { Box, Stack, Avatar, Card, Button, Typography } from "@mui/material";
 import Routes from "../../routes";
 
-UserCard.PropTypes = {
+/*UserCard.PropTypes = {
   user: PropTypes.shape({
     username: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
@@ -11,7 +11,7 @@ UserCard.PropTypes = {
       href: PropTypes.string.isRequired,
     }),
   }),
-};
+};*/
 
 export default function UserCard({ user }) {
   return (
