@@ -12,18 +12,19 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export function Settings() {
   const { data: session } = useSession();
-
+  const path = 'http://localhost:5001/user/' + session.user._id;
   async function handleOnButtonClick(e){
-    const res = await fetch("http://localhost:5001/user/me", {
-          method: 'GET',
-          headers: new Headers({
-            authorization: 'Bearer ' + session.accessToken
-          })
-        });
-        const result = await res.json();
-        console.log(result);
+    const res = await fetch(path, {
+      method: 'GET',
+      headers: {
+        accept: "application/json",
+      }
+    });
+    const result = await res.json();
+    console.log(result);
   }
 
+  if (!session){ return  <Page><AccessDenied/></Page> }
   return (
     session &&(
       <Page title={"Settings: " + session.name}>

@@ -36,10 +36,10 @@ const options = {
     })*/
   ],
   callbacks: {
-    async jwt(token, session, user, account, profile, isNewUser) {
-      if (token.account) {
-        //token.accessToken = token.account.access_token;
-        //console.log('account', token.account.access_token);
+
+    async jwt(token,session, user, account, profile, isNewUser){
+      
+      if (token.account){
         const res = await fetch("http://localhost:5001/user/me", {
           method: "GET",
           headers: new Headers({
@@ -47,15 +47,25 @@ const options = {
           }),
         });
         const result = await res.json();
-        //console.log(res)
-        //console.log(result);
 
-        if (result) {
+        if (result != "User does not exist") {
           console.log("existing user");
           //session.accessToken = result;
         } else {
-          console.log("new user");
-          //redirect to creation page with result
+          console.log("new user! adding user!");
+          const access = ("Bearer " + token.account.access_token);
+          const data = {
+            username: token.token.name,
+          }
+          const res = await fetch('http://localhost:5001/user', {
+            method: "POST",
+            headers: new Headers({
+            accept: "application/json",
+            authorization: access,
+            "Content-Type": "application/json",
+            }),
+            body: JSON.stringify(data),
+          })
         }
         return token;
       }
@@ -64,18 +74,11 @@ const options = {
     },
 
     async session({ session, token }) {
-      // Send properties to the client, like an access_token and user id from a provider.
-      //console.log('session token', token)
-      //console.log('session' , session)
-      //console.log('token accoutn', token.token.account)
-      if (token.token.account) {
+      if (token.token.account){
         //console.log('token accoutn', token.token.account)
-        session.accessToken = token.token.account.access_token;
-        //console.log(session);
-        //console.log('session token',token)
-        console.log("accessToken", session.accessToken);
-        /*const res = await fetch("http://localhost:5001/user/me", {
-          method: "GET",
+        session.accessToken = token.token.account.access_token
+        const res = await fetch("http://localhost:5001/user/me", {
+          method: 'GET',
           headers: new Headers({
             authorization: "Bearer " + session.accessToken,
           }),
@@ -84,7 +87,7 @@ const options = {
 
         if (result) {
           session.user = result;
-        }*/
+        }
         console.log(session);
 
         return session;

@@ -1,48 +1,34 @@
-import { Box, Stack, Typography, Button, Grid } from "@mui/material";
-import posts from "../../data/mock_db/posts";
-import GenericCard from "../../resource/components/global/card";
-import { useState } from "react";
-import AdminPage from "../../resource/layout/adminPage";
 import Page from "../../resource/layout/page";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import AdminPanel from "../../resource/components/admin/adminMainPanel";
 
+export async function getStaticProps() {
+  const postRes = await fetch("http:localhost:5001/posts?set=1");
+  const postData = await postRes.json();
+  const userRes = await fetch("http:localhost:5001/user?set=1");
+  const userData = await userRes.json();
+  const tagRes = await fetch("http:localhost:5001/tags?set=1");
+  const tagData = await tagRes.json();
+  const categoryRes = await fetch("http:localhost:5001/categories?set=1");
+  const categoryData = await categoryRes.json();
 
+  return {
+    props: {
+      posts: postData,
+      users: userData,
+      tags: tagData,
+      categories: categoryData,
+    },
+  };
+}
 
-export default function AdminDashboard() {
-  const sliceIncrement = 4;
-  const [maxSlice, setMaxSlice] = useState(sliceIncrement);
-
-  const handleSliceChange = () => {
-    if (maxSlice + sliceIncrement <= posts.length) {
-      setMaxSlice(maxSlice + sliceIncrement);
-    }
-  }
-
-
+export default function AdminDashboard(context) {
+  console.log("context:");
+  console.log(context);
   return (
     <>
-      <AdminPage title="AdminDashboard">
-        <Box sx={{ mx: 5, my: 3 }}>
-          <Stack direction={"column"}>
-            <Typography variant="h1" component="h2">
-              Browse Posts
-            </Typography>
-
-            <Typography variant="h2" component="h3">
-              Featured
-            </Typography>
-
-            <Grid container spacing={3} sx={{ mb: 2 }}>
-              {posts.slice(0, maxSlice).map((post) => (
-                <Grid item flexwrap="wrap">
-                  <GenericCard postID={post.id} />
-                </Grid>
-              ))}
-            </Grid>
-            <Button onClick={handleSliceChange}>Load More</Button>
-          </Stack>
-        </Box>
-      </AdminPage>
+      <Page title="Admin">
+        <AdminPanel data={context} />
+      </Page>
     </>
   );
 }
