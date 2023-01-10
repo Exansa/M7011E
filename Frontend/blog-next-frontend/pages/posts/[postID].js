@@ -61,7 +61,7 @@ const Post = (context) => {
       <Page title={post.title}>
         <Box sx={{ width: "60%", mx: "auto", mt: 5 }}>
           <Stack direction="column" spacing={2} sx={{ mb: 2 }}>
-            <Image src={post.media} duration={1000} />
+            <Image alt={post.title} src={post.media} duration={1000} />
             <Stack direction={"row"} alignItems="center" spacing={0}>
               <Typography variant="title" component="h2">
                 {post.title}
@@ -72,7 +72,13 @@ const Post = (context) => {
             </Stack>
             <Breadcrumbs separator="" sx={{ my: 3 }}>
               {post.tags[0] &&
-                post.tags.map((tag) => <Chip label={tag.name} size="small" />)}
+                post.tags.map((tag) => (
+                  <Chip
+                    key={post.title + "card-chip-" + tag.name}
+                    label={tag.name}
+                    size="small"
+                  />
+                ))}
             </Breadcrumbs>
             <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
               {/*TODO: Add user profile picture*/}

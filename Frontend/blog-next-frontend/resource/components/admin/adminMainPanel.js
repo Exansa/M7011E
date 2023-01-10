@@ -83,7 +83,7 @@ export default function AdminPanel({ data }) {
         <Typography>Users</Typography>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <EnhancedTable data={data.posts} />
+        <EnhancedTable data={data} />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <Typography>Tags</Typography>

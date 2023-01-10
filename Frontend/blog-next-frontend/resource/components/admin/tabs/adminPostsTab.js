@@ -13,16 +13,27 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 import { visuallyHidden } from "@mui/utils";
+
+import AutoCompleteFetcher from "../../search/autoCompleteFetcher";
+import SearchPostsForm from "../../search/searchPostsForm";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -176,7 +187,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, openDeleteDialog, openFilterDialog } = props;
 
   return (
     <Toolbar
@@ -214,13 +225,13 @@ function EnhancedTableToolbar(props) {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={openDeleteDialog}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton>
+          <IconButton onClick={openFilterDialog}>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
@@ -231,16 +242,64 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  openDeleteDialog: PropTypes.func.isRequired,
+  openFilterDialog: PropTypes.func.isRequired,
+};
+
+function DeleteDialog(props) {
+  const { numItems, dialogState, closeDialog, action } = props;
+
+  const deleteAllowed = numItems < 5;
+
+  return (
+    <>
+      <Dialog
+        open={dialogState}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Delete post?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {deleteAllowed
+              ? "Do you really want to delete " +
+                numItems +
+                " items? This action cannot be undone."
+              : "You cannot delete more than 5 items at a time."}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={action}
+            sx={{ display: deleteAllowed ? "block" : "none" }}
+          >
+            Yes
+          </Button>
+          <Button onClick={closeDialog}>{deleteAllowed ? "No" : "Ok"}</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}
+
+DeleteDialog.propTypes = {
+  numItems: PropTypes.number.isRequired,
+  dialogState: PropTypes.bool.isRequired,
+  closeDialog: PropTypes.func.isRequired,
+  action: PropTypes.func.isRequired,
 };
 
 export default function EnhancedTable({ data }) {
-  const [rows, setRows] = React.useState(data);
+  const [rows, setRows] = React.useState(data.posts);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("title");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [filter, setFilter] = React.useState({});
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -272,6 +331,37 @@ export default function EnhancedTable({ data }) {
     setSelected(newSelected);
   };
 
+  const handleEdit = (event, target_id) => {
+    //TODO: Route to edit page
+  };
+
+  const handleDelete = async () => {
+    if (selected.length === 0 || selected > 5) return;
+
+    selected.forEach(async (target_id) => {
+      //TODO: Replace with admin ID?
+      const body = { user_id: target.user._id };
+      // Remove item from db
+      const res = await fetch(`http://localhost:3000/posts/${target._id}`, {
+        method: "DELETE",
+        headers: {
+          //TODO: Authorization
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (res.status === 200) {
+        const newRows = rows.filter((row) => row._id !== target._id);
+        setRows(newRows);
+      } else {
+        console.log("Error");
+        console.log(data);
+      }
+    });
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -285,6 +375,22 @@ export default function EnhancedTable({ data }) {
     setDense(event.target.checked);
   };
 
+  const openDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const openFilterDialog = () => {
+    setFilterDialogOpen(true);
+  };
+
+  const closeFilterDialog = () => {
+    setFilterDialogOpen(false);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -293,8 +399,23 @@ export default function EnhancedTable({ data }) {
 
   return (
     <Box sx={{ width: "100%" }}>
+      <SearchPostsForm
+        defaultContent={data}
+        setResults={setRows}
+        dialog={{ state: filterDialogOpen, close: closeFilterDialog }}
+      />
+      <DeleteDialog
+        numItems={selected.length}
+        dialogState={deleteDialogOpen}
+        closeDialog={closeDeleteDialog}
+        action={handleDelete}
+      />
       <Paper sx={{ width: "100%", maxWidth: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          openDeleteDialog={openDeleteDialog}
+          openFilterDialog={openFilterDialog}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -352,15 +473,16 @@ export default function EnhancedTable({ data }) {
                       <TableCell align="right">{row.user.username}</TableCell>
                       <TableCell align="right">{row.user._id}</TableCell>
                       <TableCell align="right">
-                        {row.categories[0].name}
+                        {row.categories[0] ? row.categories[0].name : "None"}
                       </TableCell>
                       <TableCell align="right">{row.tags.length}</TableCell>
                       <TableCell align="right">
-                        <IconButton>
+                        <IconButton
+                          onClick={(event) => {
+                            handleEdit(event, row);
+                          }}
+                        >
                           <EditIcon />
-                        </IconButton>
-                        <IconButton>
-                          <DeleteIcon />
                         </IconButton>
                       </TableCell>
                     </TableRow>
