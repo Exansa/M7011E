@@ -262,8 +262,8 @@ export default () => {
 	Rabbitmq.listen('posts.patch', async (message) => {
 		const data = JSON.parse(message.content.toString());
 
-		if (!data.tag) {
-			return { success: false, response: 'Missing param tag' };
+		if (!data.post) {
+			return { success: false, response: 'Missing param post' };
 		}
 		if (!data.id) {
 			return { success: false, response: 'Missing param id' };
@@ -279,7 +279,6 @@ export default () => {
 
 		try {
 			const post = data.post;
-			validatePost(post);
 
 			await checkAccess(data.id, data.user_id, client);
 
@@ -396,7 +395,7 @@ async function getDataFromPost(post: any, client: MongoClient) {
 		_id: new ObjectId(post.user_id)
 	};
 	const result = await collection.findOne(query, {
-		projection: { username: 1, picture: 1 }
+		projection: { username: 1, profile_picture: 1 }
 	});
 	post.user = result;
 

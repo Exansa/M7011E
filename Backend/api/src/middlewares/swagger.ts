@@ -88,7 +88,7 @@ export default () => {
 						email: {
 							type: 'string'
 						},
-						picture: {
+						profile_picture: {
 							type: 'string'
 						},
 						createdAt: {
@@ -113,7 +113,7 @@ export default () => {
 							email: {
 								type: 'string'
 							},
-							picture: {
+							profile_picture: {
 								type: 'string'
 							},
 							createdAt: {
@@ -125,17 +125,22 @@ export default () => {
 				UserUpdate: {
 					type: 'object',
 					properties: {
-						_id: {
-							type: 'string'
-						},
-						username: {
-							type: 'string'
-						},
-						email: {
-							type: 'string'
-						},
-						picture: {
-							type: 'string'
+						user: {
+							type: 'object',
+							properties: {
+								username: {
+									type: 'string',
+									required: false
+								},
+								email: {
+									type: 'string',
+									required: false
+								},
+								profile_picture: {
+									type: 'string',
+									required: false
+								}
+							}
 						}
 					}
 				},
@@ -188,7 +193,7 @@ export default () => {
 								email: {
 									type: 'string'
 								},
-								picture: {
+								profile_picture: {
 									type: 'string'
 								},
 								createdAt: {
@@ -233,7 +238,7 @@ export default () => {
 									email: {
 										type: 'string'
 									},
-									picture: {
+									profile_picture: {
 										type: 'string'
 									},
 									createdAt: {
@@ -337,7 +342,7 @@ export default () => {
 								username: {
 									type: 'string'
 								},
-								picture: {
+								profile_picture: {
 									type: 'string'
 								}
 							}
@@ -430,7 +435,7 @@ export default () => {
 									username: {
 										type: 'string'
 									},
-									picture: {
+									profile_picture: {
 										type: 'string'
 									}
 								}
@@ -805,7 +810,7 @@ export default () => {
 									type: 'string',
 									required: false
 								},
-								picture: {
+								profile_picture: {
 									type: 'string',
 									required: false
 								}

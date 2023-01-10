@@ -97,8 +97,6 @@ export default () => {
 			//check access
 			await checkAccess(userId, client);
 
-			console.log(data.id);
-
 			let result = await DB.performQuery(
 				'blog',
 				'admins',
@@ -215,6 +213,10 @@ export default () => {
 
 			//check user exists
 			await checkUserExists(admin, client);
+
+			if (admin.access == 'admin') {
+				await lastSuperAdmin(data.id, client);
+			}
 
 			client.close();
 
@@ -356,7 +358,7 @@ async function lastSuperAdmin(id: any, client: MongoClient) {
 	const query = { access: 'superAdmin' };
 	const result = await collection.find(query).toArray();
 	if (result.length == 1 && result[0]._id == id)
-		throw new Error('Cant delete last super admin');
+		throw new Error('Cant remove last super admin');
 }
 function validateSet(inSet: any) {
 	const set = parseInt(inSet);

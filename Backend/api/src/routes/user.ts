@@ -244,14 +244,6 @@ export default () => {
 	 *         schema:
 	 *           type: string
 	 *           required: true
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UserId'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UserId'
 	 *     security:
 	 *          - bearerAuth: []
 	 *     responses:
