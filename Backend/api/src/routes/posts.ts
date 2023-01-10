@@ -105,7 +105,7 @@ export default () => {
 
 	/**
 	 * @swagger
-	 * /post/{id}:
+	 * /posts/{id}:
 	 *   patch:
 	 *     tags:
 	 *       - Posts
