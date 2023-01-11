@@ -234,7 +234,7 @@ export default () => {
 		try {
 			let post = data.post;
 			post = generatePost(post, data.user_id);
-			validatePost(post);
+			await validatePostCreate(post, client);
 
 			const result = await DB.performQuery(
 				'blog',
@@ -281,6 +281,7 @@ export default () => {
 			const post = data.post;
 
 			await checkAccess(data.id, data.user_id, client);
+			await validatePostUpdate(post, client);
 
 			client.close();
 
@@ -374,9 +375,49 @@ function generatePost(inPost: any, userId: string) {
 	return post;
 }
 
-function validatePost(post: any) {
+async function validatePostCreate(post: any, client: MongoClient) {
 	if (!post.title) throw new Error('Title is required');
 	if (!post.content) throw new Error('Content is required');
+	if (!post.category_id) throw new Error('Category is required');
+	if (!post.user_id) throw new Error('User_id is required');
+	validateId(post.user_id, 'users', client);
+	validateId(post.category_id, 'categories', client);
+	if (post.tags_id) validateIdArray(post.tags_id, 'tags', client);
+}
+
+async function validatePostUpdate(post: any, client: MongoClient) {
+	if (post.user_id) validateId(post.user_id, 'users', client);
+	if (post.category_id) validateId(post.category_id, 'categories', client);
+	if (post.tags_id) validateIdArray(post.tags_id, 'tags', client);
+}
+
+async function validateIdArray(
+	id: string[],
+	collectionName: string,
+	client: MongoClient
+) {
+	let collection = await client.db('blog').collection(collectionName);
+	const length = id.length ? id.length : 0;
+	for (let i = 0; i < length; i++) {
+		const query = {
+			_id: new ObjectId(id[i])
+		};
+		const result = await collection.findOne(query);
+		if (!result) throw new Error('Invalid id');
+	}
+}
+
+async function validateId(
+	id: string,
+	collectionName: string,
+	client: MongoClient
+) {
+	let collection = await client.db('blog').collection(collectionName);
+	const query = {
+		_id: new ObjectId(id)
+	};
+	const result = await collection.findOne(query);
+	if (!result) throw new Error('Invalid id');
 }
 
 async function getDataFromPostsArray(

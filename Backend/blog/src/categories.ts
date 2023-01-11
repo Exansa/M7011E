@@ -137,7 +137,15 @@ export default () => {
 		});
 
 		try {
-			const userId = data.user_id;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
+
 			let category = data.category;
 			category = generateCategory(category);
 			validateCategory(category);
@@ -188,11 +196,20 @@ export default () => {
 		});
 
 		try {
-			const { id, user_id } = data;
-			const category = generateCategory(data.category);
-			validateCategory(category);
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
 
-			await checkAccess(user_id, client);
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
+
+			const id = data.id;
+			const category = data.category;
+			validateCategoryPatch(category);
+
+			await checkAccess(userId, client);
 			await checkUniuqeCategory(category, id, client);
 			client.close();
 
@@ -233,6 +250,13 @@ function validateCategory(category: any) {
 	if (!category.name)
 		throw new Error('Name is not defined, invalid category');
 	if (!category.description)
+		throw new Error('Description is not defined, invalid category');
+}
+
+function validateCategoryPatch(category: any) {
+	if (category.name && category.name === '')
+		throw new Error('Name is not defined, invalid category');
+	if (category.description || category.description === '')
 		throw new Error('Description is not defined, invalid category');
 }
 
