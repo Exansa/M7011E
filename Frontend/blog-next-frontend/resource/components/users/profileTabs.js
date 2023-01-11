@@ -43,8 +43,8 @@ export async function getStaticProps() {
   };
 }
 
-function TabPanel({ context }) {
-  const { children, value, index, ...other } = props;
+function TabPanel(context) {
+  const { children, value, index, ...other } = context;
   console.log(context.posts);
   return (
     <div
@@ -83,10 +83,7 @@ export default function BasicTabs(context) {
     setValue(newValue);
   };
 
-  const GenericCard = dynamic(
-    () => import("../../resource/components/global/card"),
-    { ssr: false }
-  );
+  const GenericCard = dynamic(() => import("../global/card"), { ssr: false });
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -103,16 +100,14 @@ export default function BasicTabs(context) {
       </Box>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
-          {Posts.map((post) => {
-            //TODO: Implement new solution when DB is implemented
-            if (post.user.id == user._id) {
+          {context.posts &&
+            context.posts.map((post) => {
               return (
                 <Grid key={post._id + "-grid-item"} item>
-                  <GenericCard key={post._id + "-post-item"} postID={post.id} />
+                  <GenericCard key={post._id + "-post-item"} post={post} />
                 </Grid>
               );
-            }
-          })}
+            })}
         </Grid>
         {/*TODO: Load more slices when this is pressed<Button onClick={handleSliceChange}>Load More</Button>*/}
       </TabPanel>
