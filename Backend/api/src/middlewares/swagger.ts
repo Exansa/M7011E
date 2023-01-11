@@ -269,6 +269,26 @@ export default () => {
 						admin: {
 							type: 'object',
 							properties: {
+								user_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: true
+								},
+								access: {
+									type: 'string',
+									enum: ['admin', 'superAdmin'],
+									required: true
+								}
+							}
+						}
+					}
+				},
+				AdminUpdate: {
+					type: 'object',
+					properties: {
+						admin: {
+							type: 'object',
+							properties: {
 								access: {
 									type: 'string',
 									enum: ['admin', 'superAdmin'],

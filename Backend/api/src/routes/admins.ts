@@ -103,13 +103,15 @@ export default () => {
 	 *            application/json:
 	 *              schema:
 	 *                 $ref: '#/components/schemas/AdminCreate'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/', async (req: Request, res: Response) => {
+	router.post('/', authenticate, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'admins.post',
@@ -136,10 +138,10 @@ export default () => {
 	 *         content:
 	 *            application/x-www-form-urlencoded:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/AdminCreate'
+	 *                 $ref: '#/components/schemas/AdminUpdate'
 	 *            application/json:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/AdminCreate'
+	 *                 $ref: '#/components/schemas/AdminUpdate'
 	 *     security:
 	 *       - bearerAuth: []
 	 *     responses:

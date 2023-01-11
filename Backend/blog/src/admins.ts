@@ -146,7 +146,14 @@ export default () => {
 		});
 
 		try {
-			const userId = data.user_id;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
 			let admin = data.admin;
 			admin = generateAdmin(admin);
 			validateAdmin(admin);
