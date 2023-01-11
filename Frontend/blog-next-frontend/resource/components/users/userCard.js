@@ -25,7 +25,7 @@ export default function UserCard({ user }) {
         >
           <Avatar
             alt="Error loading avatar"
-            src={user.picture}
+            src={user.profile_picture}
             sx={{ width: 250, height: 250 }}
           />
           <Stack direction="column" spacing={2} sx={{ mt: 2 }}>

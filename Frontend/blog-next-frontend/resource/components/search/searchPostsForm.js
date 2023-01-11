@@ -15,8 +15,8 @@ import { useState } from "react";
 SearchPostsForm.propTypes = {
   defaultContent: PropTypes.object.isRequired,
   setResults: PropTypes.func.isRequired,
-  dialog: PropTypes.Object,
-  loader: PropTypes.Object,
+  dialog: PropTypes.bool,
+  loader: PropTypes.object,
 };
 
 export default function SearchPostsForm(props) {
