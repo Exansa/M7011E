@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import debounce from "lodash/debounce";
+//import debounce from "lodash/debounce";
 import {
   Autocomplete,
   TextField,
@@ -8,8 +8,26 @@ import {
   Avatar,
 } from "@mui/material";
 import PropTypes from "prop-types";
-// Loosely based on MUI example
-// https://mui.com/material-ui/react-autocomplete/#google-maps-place
+
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+// src: https://gist.github.com/nmsdvid/8807205
+// Lodash/debounce was not working for one of our members due to unknown reasons
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function () {
+    var context = this,
+      args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    }, wait);
+    if (immediate && !timeout) func.apply(context, args);
+  };
+}
 
 AutoCompleteFetcher.propTypes = {
   label: PropTypes.string.isRequired,
@@ -25,6 +43,8 @@ AutoCompleteFetcher.propTypes = {
   noneValue: PropTypes.string.isRequired,
 };
 
+// Loosely based on MUI example
+// https://mui.com/material-ui/react-autocomplete/#google-maps-place
 export default function AutoCompleteFetcher(props) {
   const {
     label,
@@ -76,7 +96,7 @@ export default function AutoCompleteFetcher(props) {
       }
       setLoading(false);
     });
-  }, 500);
+  }, 300);
 
   return (
     <Autocomplete
