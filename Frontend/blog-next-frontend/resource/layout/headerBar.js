@@ -23,75 +23,86 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 //const pages = ["home", "about", "browse"];
-const pages = [
-  { link: "/", name: "Home" },
-  { link: Routes.posts.index, name: "Browse" },
-  { link: "/about", name: "About" },
-  { link: Routes.posts.make, name: "Make Post" },
-];
-const settings = [
-  { link: Routes.users.index, name: "Profile" },
-  { link: Routes.users.settings, name: "Settings" },
-  { link: Routes.posts.make, name: "Post" },
-  { link: Routes.admin.index, name: "Admin" },
-];
 
-function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+function SettingsBox(args) {
+  const { anchorElUser, handleOpenUserMenu, handleCloseUserMenu, session } =
+    args;
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
+  const settings = [
+    { link: Routes.users.index, name: "Profile" },
+    { link: Routes.users.settings, name: "Settings" },
+    { link: Routes.posts.make, name: "Post" },
+    { link: Routes.admin.index, name: "Admin" },
+  ];
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  return (
+    <Box sx={{ flexGrow: 0 }}>
+      <Tooltip title="Open settings">
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          <Avatar
+            alt={session.user.username}
+            src={session.user.profile_picture}
+          />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        sx={{ mt: "45px" }}
+        id="menu-appbar"
+        anchorEl={anchorElUser}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={Boolean(anchorElUser)}
+        onClose={handleCloseUserMenu}
+      >
+        {settings.map((setting) => (
+          <Link key={`link-${setting}`} href={setting.link}>
+            <MenuItem
+              key={setting.link}
+              onClick={(event) => {
+                //console.log("Click!");
+                //handleSetting(setting);
+                handleCloseUserMenu();
+              }}
+            >
+              <Typography textAlign="center">{setting.name}</Typography>
+            </MenuItem>
+          </Link>
+        ))}
+        <MenuItem
+          onClick={(event) => {
+            handleCloseUserMenu();
+            signOut();
+          }}
+        >
+          Logout
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
+}
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-
-  //const { user, error, isLoading } = useUser();
-  const { data: session } = useSession();
-
+function NavBarSmall(args) {
+  const {
+    title,
+    session,
+    pages,
+    anchorElNav,
+    handleOpenNavMenu,
+    handleCloseNavMenu,
+    SettingsBox,
+  } = args;
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -121,7 +132,7 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <Link href={page.link}>
+                <Link key={`link-${page}`} href={page.link}>
                   <MenuItem key={page.link} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{page.name}</Typography>
                   </MenuItem>
@@ -146,11 +157,45 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            {title}
           </Typography>
+
+          {session ? { ...SettingsBox } : null}
+        </Toolbar>
+      </Container>
+    </AppBar>
+  );
+}
+
+function NavBarExpanded(args) {
+  const { title, session, pages, handleCloseNavMenu, SettingsBox } = args;
+
+  return (
+    <AppBar position="static">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            {title}
+          </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Link href={page.link}>
+              <Link key={`link-${page}`} href={page.link}>
                 <Button
                   key={page.link}
                   onClick={handleCloseNavMenu}
@@ -161,74 +206,87 @@ function ResponsiveAppBar() {
               </Link>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+
+          <Box>
+            {session ? (
+              { ...SettingsBox }
+            ) : (
+              <Button
+                key={"login"}
+                onClick={signIn}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
-              {session
-              ?(
-              <>
-              {settings.map((setting) => (
-                <Link href={setting.link}>
-                  <MenuItem
-                    key={setting.link}
-                    onClick={(event) => {
-                      //console.log("Click!");
-                      //handleSetting(setting);
-                      handleCloseUserMenu();
-                    }}
-                  >
-                    <Typography textAlign="center">{setting.name}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
-                <MenuItem
-                  onClick={(event) => {
-                    handleCloseUserMenu();
-                    signOut();
-                  }}
-                >
-                    Logout
-                  </MenuItem>
-              </>)
-              :(
-                <MenuItem onClick={(event) => {
-                  handleCloseUserMenu();
-                  signIn();
-                }}>
-                  Sign in
-                </MenuItem>
-                /*{isAdmin() && 
-                  <MenuItem onClick={(event) => {
-                  handleCloseUserMenu();
-                  signIn();
-                  }}>
-                  Sign in
-                </MenuItem>}*/
-              )}
-              </Menu>             
-          </Box>          
+                Login
+              </Button>
+            )}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+
+export default function ResponsiveAppBar() {
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const { data: session } = useSession();
+
+  const pages = [
+    { link: "/", name: "Home" },
+    { link: Routes.posts.index, name: "Browse" },
+    { link: "/about", name: "About" },
+  ];
+
+  if (session) {
+    pages.push({ link: Routes.posts.make, name: "Make Post" });
+  }
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const args = {
+    title: "M7011E",
+    session,
+    pages,
+    anchorElNav,
+    anchorElUser,
+    handleOpenNavMenu,
+    handleOpenUserMenu,
+    handleCloseNavMenu,
+    handleCloseUserMenu,
+    SettingsBox: (
+      <SettingsBox
+        anchorElUser={anchorElUser}
+        handleOpenUserMenu={handleOpenUserMenu}
+        handleCloseUserMenu={handleCloseUserMenu}
+        session={session}
+      />
+    ),
+  };
+
+  //const { user, error, isLoading } = useUser();
+
+  return (
+    <>
+      <Box sx={{ display: { xs: "block", md: "none", width: "100vw" } }}>
+        <NavBarSmall {...args} />
+      </Box>
+      <Box sx={{ display: { xs: "none", md: "block", width: "100vw" } }}>
+        <NavBarExpanded {...args} />
+      </Box>
+    </>
+  );
+}
