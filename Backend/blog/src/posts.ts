@@ -232,8 +232,17 @@ export default () => {
 		});
 
 		try {
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
+
 			let post = data.post;
-			post = generatePost(post, data.user_id);
+			post = generatePost(post, userId);
 			await validatePostCreate(post, client);
 
 			const result = await DB.performQuery(
@@ -278,9 +287,18 @@ export default () => {
 		});
 
 		try {
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
+
 			const post = data.post;
 
-			await checkAccess(data.id, data.user_id, client);
+			await checkAccess(data.id, userId, client);
 			await validatePostUpdate(post, client);
 
 			client.close();
@@ -327,7 +345,14 @@ export default () => {
 		});
 
 		try {
-			const userId = data.user_id;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
 
 			//check access
 			await checkAccess(data.id, userId, client);
@@ -465,10 +490,15 @@ async function getDataFromPost(post: any, client: MongoClient) {
 }
 
 async function checkAccess(id: any, userId: any, client: MongoClient) {
-	const collection = await client.db('blog').collection('posts');
-	const query = { _id: new ObjectId(id), user_id: userId };
-	const result = await collection.findOne(query);
-	if (!result) throw new Error('Access denied');
+	const collectionPosts = await client.db('blog').collection('posts');
+	const queryPosts = { _id: new ObjectId(id), user_id: userId };
+	const resultPosts = await collectionPosts.findOne(queryPosts);
+
+	const collectionAdmins = await client.db('blog').collection('admins');
+	const queryAdmins = { user_id: userId };
+	const resultAdmins = await collectionAdmins.findOne(queryAdmins);
+
+	if (!resultPosts && !resultAdmins) throw new Error('Access denied');
 }
 function generateSearch(search: any) {
 	const out: any = {};
