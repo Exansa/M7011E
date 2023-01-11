@@ -140,14 +140,17 @@ export default () => {
 	 *            application/json:
 	 *              schema:
 	 *                 $ref: '#/components/schemas/AdminCreate'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.patch('/:id', async (req: Request, res: Response) => {
+	router.patch('/:id', authenticate, async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
+		console.log('1');
 		const result = await Rabbitmq.sendRPC(
 			'admins.patch',
 			JSON.stringify(data)
