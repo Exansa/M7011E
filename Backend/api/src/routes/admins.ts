@@ -172,21 +172,15 @@ export default () => {
 	 *         schema:
 	 *           type: string
 	 *           required: true
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UserId'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UserId'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.delete('/:id', async (req: Request, res: Response) => {
+	router.delete('/:id', authenticate, async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
 			'admins.delete',
