@@ -1,11 +1,13 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import { TextField } from "@mui/material";
+import {
+  TextField,
+  TableCell,
+  TableRow,
+  Checkbox,
+  Stack,
+  IconButton,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";

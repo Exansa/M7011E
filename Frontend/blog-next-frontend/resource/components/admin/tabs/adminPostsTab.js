@@ -1,9 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
+import { TableCell, TableRow, Checkbox, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AdminTab from "../utils/adminTab";
 import SearchPostsForm from "../../search/searchPostsForm";
