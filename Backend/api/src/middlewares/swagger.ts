@@ -612,11 +612,6 @@ export default () => {
 				CategoryCreate: {
 					type: 'object',
 					properties: {
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
 						category: {
 							type: 'object',
 							required: true,
@@ -636,11 +631,6 @@ export default () => {
 				CategoryUpdate: {
 					type: 'object',
 					properties: {
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
 						category: {
 							type: 'object',
 							required: true,
