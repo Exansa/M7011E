@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
 import { unpackParams } from '../middlewares/unpack';
+import authenticate from '../middlewares/authenticate';
 
 const router = Router();
 
@@ -78,8 +79,8 @@ export default () => {
 	 *   post:
 	 *     tags:
 	 *       - Tags
-	 *     summary: Create a new tag. Only admins can do this.
-	 *     description: Create a new tag with the given data
+	 *     summary: Create a new tag
+	 *     description: Create a new tag with the given data. Only admins can do this.
 	 *     requestBody:
 	 *         content:
 	 *            application/x-www-form-urlencoded:
@@ -88,13 +89,15 @@ export default () => {
 	 *            application/json:
 	 *              schema:
 	 *                 $ref: '#/components/schemas/TagCreate'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/', async (req: Request, res: Response) => {
+	router.post('/', authenticate, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'tags.post',
@@ -121,17 +124,19 @@ export default () => {
 	 *         content:
 	 *            application/x-www-form-urlencoded:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/tagUpdate'
+	 *                 $ref: '#/components/schemas/TagUpdate'
 	 *            application/json:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/tagUpdate'
+	 *                 $ref: '#/components/schemas/TagUpdate'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.patch('/:id', async (req: Request, res: Response) => {
+	router.patch('/:id', authenticate, async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
 			'tags.patch',

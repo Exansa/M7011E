@@ -137,7 +137,15 @@ export default () => {
 		});
 
 		try {
-			const userId = data.user_id;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
+
 			let tag = data.tag;
 			tag = generateTag(tag);
 			validateTag(tag);
@@ -188,11 +196,20 @@ export default () => {
 		});
 
 		try {
-			const { id, user_id } = data;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
+
+			const id = data.id;
 			const tag = generateTag(data.tag);
 			validateTag(tag);
 
-			await checkAccess(user_id, client);
+			await checkAccess(userId, client);
 			await checkUniuqeTag(tag, id, client);
 			client.close();
 
