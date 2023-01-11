@@ -84,7 +84,7 @@ export default function BasicTabs(context) {
   };
 
   const GenericCard = dynamic(
-    () => import("../../resource/components/global/card"),
+    () => import("../global/card"),
     { ssr: false }
   );
 
