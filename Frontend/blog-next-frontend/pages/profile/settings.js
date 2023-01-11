@@ -11,6 +11,7 @@ import AccessDenied from "../../resource/components/accessDenied";
 
 
 export function Settings() {
+  const [value, setValue] = useState("");
   const { data: session } = useSession();
   async function handleOnButtonClick(e){
     const path = 'http://localhost:5001/admins?set=1';
@@ -35,8 +36,47 @@ export function Settings() {
     }
   }
 
+
+
   const handleSubmit = async (event)=> {
     event.preventDefault()
+    if(event.target.username.value=="" && event.target.email.value==""){
+      const data = {
+        username: session.user.username,
+        email: session.user.email,
+        profile_picture: session.user.profile_picture
+      }
+    }
+    else if(event.target.username.value==""){
+      const data = {
+        username: session.user.username,
+        email: event.target.email.value,
+        profile_picture: session.user.profile_picture
+      }
+    }
+    else if(event.target.email.value==""){
+      const data = {
+        username: event.target.username.value,
+        email: session.user.email,
+        profile_picture: session.user.profile_picture
+      }
+    }
+    console.log(data)
+    /*
+    const path = 'http://localhost:5001/user/' + session.user._id;
+    const access = "Bearer " + session.accessToken;
+    const res = await fetch(path, {
+      method: "PATCH",
+      headers: {
+        accept: "**", 
+        Authorization: access,
+        "Content-Type": "application/json"
+      },
+      body: data,
+    });*/
+
+    setValue("");
+
   }
   if (!session){ return  <Page><AccessDenied/></Page> }
   return (
@@ -48,11 +88,23 @@ export function Settings() {
                       margin="normal" 
                       id='username'
                       name="username"
+                      onChange={(newValue) => {
+                        setValue(newValue.target.value);
+                      }}
+                      variant="outlined"
+                      defaultValue={value}
+                      value={value}
                       />
           <TextField  required fullWidth label="New email" 
                       margin="normal" 
                       id='email'
                       name="email"
+                      onChange={(newValue) => {
+                        setValue(newValue.target.value);
+                      }}
+                      variant="outlined"
+                      defaultValue={value}
+                      value={value}
                       />
           <Button
               sx={{ m: 1, minWidth: 120 }}
@@ -62,12 +114,6 @@ export function Settings() {
               Submit
           </Button>
         </form>
-        <Button sx={{ m: 1, minWidth: 120 }}
-                type="submit"
-                variant="contained"
-                onClick={handleOnButtonClick}>
-          Delete
-        </Button>
         <Button onClick={handleOnButtonClick}>
           edit
         </Button>
