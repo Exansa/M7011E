@@ -146,7 +146,14 @@ export default () => {
 		});
 
 		try {
-			const userId = data.user_id;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
 			let admin = data.admin;
 			admin = generateAdmin(admin);
 			validateAdmin(admin);
@@ -155,7 +162,7 @@ export default () => {
 			await checkAccess(userId, client);
 
 			//check user exists
-			await checkUserExists(admin, client);
+			await checkUserExists(admin.user_id, client);
 
 			//check admin exists
 			await checkAdminExists(admin.user_id, client);
@@ -203,16 +210,23 @@ export default () => {
 		});
 
 		try {
-			const userId = data.user_id;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
+
 			let admin = data.admin;
-			admin = generateAdmin(admin);
 			validateAdmin(admin);
 
 			//check access
 			await checkAccess(userId, client);
 
 			//check user exists
-			await checkUserExists(admin, client);
+			await checkUserExists(data.id, client);
 
 			if (admin.access == 'admin') {
 				await lastSuperAdmin(data.id, client);
@@ -264,7 +278,14 @@ export default () => {
 		});
 
 		try {
-			const userId = data.user_id;
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
 
 			//check access
 			await checkAccess(userId, client);
@@ -301,8 +322,11 @@ export default () => {
 };
 
 function validateAdmin(admin: any) {
-	if (!admin.user_id) throw new Error('Name is not defined, invalid admin');
+	if (admin.user_id && admin.user_id == '')
+		throw new Error('Name is not defined, invalid admin');
 	if (!admin.access) throw new Error('Access is not defined, invalid admin');
+	if (!(admin.access == 'admin' || admin.access == 'superAdmin'))
+		throw new Error('Invalid value for access');
 }
 function generateAdmin(admin: any): any {
 	return {
@@ -318,9 +342,9 @@ async function checkAccess(userId: any, client: MongoClient) {
 	if (!result || result.access != 'superAdmin')
 		throw new Error('Access denied');
 }
-async function checkUserExists(admin: any, client: MongoClient) {
+async function checkUserExists(user_id: any, client: MongoClient) {
 	const collection = await client.db('blog').collection('users');
-	const query = { _id: new ObjectId(admin.user_id) };
+	const query = { _id: new ObjectId(user_id) };
 	const result = await collection.findOne(query);
 	if (!result) throw new Error('User does not exist');
 }

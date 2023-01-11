@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
 import { unpackParams } from '../middlewares/unpack';
+import authenticate from '../middlewares/authenticate';
 
 const router = Router();
 
@@ -79,7 +80,7 @@ export default () => {
 	 *     tags:
 	 *       - Categories
 	 *     summary: Create a new category. Only admins can do this.
-	 *     description: Create a new category with the given data
+	 *     description: Create a new category with the given data. Only admins can do this.
 	 *     requestBody:
 	 *         content:
 	 *            application/x-www-form-urlencoded:
@@ -88,13 +89,15 @@ export default () => {
 	 *            application/json:
 	 *              schema:
 	 *                 $ref: '#/components/schemas/CategoryCreate'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/', async (req: Request, res: Response) => {
+	router.post('/', authenticate, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'categories.post',
@@ -121,17 +124,19 @@ export default () => {
 	 *         content:
 	 *            application/x-www-form-urlencoded:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/categoryUpdate'
+	 *                 $ref: '#/components/schemas/CategoryUpdate'
 	 *            application/json:
 	 *              schema:
-	 *                 $ref: '#/components/schemas/categoryUpdate'
+	 *                 $ref: '#/components/schemas/CategoryUpdate'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.patch('/:id', async (req: Request, res: Response) => {
+	router.patch('/:id', authenticate, async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
 			'categories.patch',
