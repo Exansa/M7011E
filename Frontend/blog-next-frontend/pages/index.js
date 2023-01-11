@@ -3,6 +3,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import ResponsiveAppBar from "../resource/layout/headerBar";
+import dynamic from "next/dynamic";
 import GenericCard from "../resource/components/global/card";
 import React from "react";
 import Page from "../resource/layout/page";
@@ -19,10 +20,14 @@ export async function getStaticProps() {
 
 export default function Home(context) {
   //const { user, error, isLoading } = useUser();
-  const {data: session } = useSession();
+  const { data: session } = useSession();
   //console.log(session)
 
-  
+  const GenericCard = dynamic(
+    () => import("../resource/components/global/card"),
+    { ssr: false }
+  );
+
   return (
     <>
       <Page title="Index">
@@ -38,7 +43,7 @@ export default function Home(context) {
             alignContent={"center"}
           >
             {context.data.slice(0, 3).map((post) => (
-              <GenericCard post={post} />
+              <GenericCard key={post._id + "-card"} post={post} />
             ))}
           </Stack>
         </Box>

@@ -81,7 +81,7 @@ export default function AutoCompleteFetcher(props) {
   return (
     <Autocomplete
       multiple={multiple}
-      id="tag search"
+      id={label + "-autocomplete"}
       filterOptions={(x) => x}
       options={options}
       getOptionLabel={(option) =>

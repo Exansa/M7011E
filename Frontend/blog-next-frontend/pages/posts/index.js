@@ -9,6 +9,7 @@ import {
   Avatar,
   CircularProgress,
 } from "@mui/material";
+import dynamic from "next/dynamic";
 import Page from "../../resource/layout/page";
 import GenericCard from "../../resource/components/global/card";
 import { useState, useMemo } from "react";
@@ -41,6 +42,12 @@ export default function Browse(context) {
   const [maxSlice, setMaxSlice] = useState(sliceIncrement);
   const [posts, setPosts] = useState(context.posts);
   const [searching, setSearching] = useState(false);
+
+  // Dynamic import to avoid SSR-related issues
+  const GenericCard = dynamic(
+    () => import("../../resource/components/global/card"),
+    { ssr: false }
+  );
 
   // TODO: Pagnation / infinite scroll
   function handleSliceChange() {
@@ -113,11 +120,14 @@ export default function Browse(context) {
                 spacing={3}
                 sx={{ mb: 2 }}
               >
-                {/* {posts.map((result) => (
-                  <Grid item>
-                    <GenericCard post={result} />
+                {posts.map((result) => (
+                  <Grid key={result.title + "-grid-item"} item>
+                    <GenericCard
+                      key={result.title + "-card-item"}
+                      post={result}
+                    />
                   </Grid>
-                ))} */}
+                ))}
               </Grid>
             ) : (
               <Typography variant="h6" component="body2" color="text.secondary">

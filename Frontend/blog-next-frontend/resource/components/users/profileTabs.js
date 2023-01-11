@@ -4,21 +4,21 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { Tabs, Tab, Box, Grid, Typography, Button } from "@mui/material";
 import Posts from "../../../data/mock_db/posts";
-import GenericCard from "../global/card";
+import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 
-
 export async function getStaticProps() {
-  const postRef = "http://localhost:5001/user/" + session.user._id + "/" + "posts?set=1";
+  const postRef =
+    "http://localhost:5001/user/" + session.user._id + "/" + "posts?set=1";
   const postRes = await fetch(postRef, {
     method: "GET",
     header: {
       accept: "application/json",
-    }
+    },
   });
   const result = await postRes.json();
   const postData = result;
-  console.log('postdata', postData)
+  console.log("postdata", postData);
   const set = 2;
   /*while(result){
     postData = postData + result;
@@ -32,7 +32,7 @@ export async function getStaticProps() {
     const result = await postRes.json();
     set = set + 1;
   }*/
-  
+
   return {
     props: {
       posts: postData,
@@ -43,9 +43,9 @@ export async function getStaticProps() {
   };
 }
 
-function TabPanel({context}) {
+function TabPanel({ context }) {
   const { children, value, index, ...other } = props;
-  console.log(context.posts)
+  console.log(context.posts);
   return (
     <div
       role="tabpanel"
@@ -82,8 +82,12 @@ export default function BasicTabs(context) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  //const { data: session } = useSession();
-  //if (!session){ return  <Page><AccessDenied/></Page> }
+
+  const GenericCard = dynamic(
+    () => import("../../resource/components/global/card"),
+    { ssr: false }
+  );
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -98,22 +102,17 @@ export default function BasicTabs(context) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <Grid container spacing={3} sx={{ mb: 2 }}>
-          {/*context.posts.length > 0 ? (
-            context.posts.map((result) => (
-              <Grid item flexwrap="wrap">
-                <GenericCard post={result} />
-              </Grid>
-            ))
-          ) : (
-            <Typography
-              variant="h6"
-              component="body2"
-              color="text.secondary"
-            >
-              No results found
-            </Typography>
-          )*/}
+        <Grid container spacing={2}>
+          {Posts.map((post) => {
+            //TODO: Implement new solution when DB is implemented
+            if (post.user.id == user._id) {
+              return (
+                <Grid key={post._id + "-grid-item"} item>
+                  <GenericCard key={post._id + "-post-item"} postID={post.id} />
+                </Grid>
+              );
+            }
+          })}
         </Grid>
         {/*TODO: Load more slices when this is pressed<Button onClick={handleSliceChange}>Load More</Button>*/}
       </TabPanel>

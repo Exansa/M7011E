@@ -2,9 +2,11 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import EnhancedTable from "./tabs/adminPostsTab";
+import AdminPostsTab from "./tabs/adminPostsTab";
+import AdminFiltersTab from "./tabs/adminFiltersTab";
 
 //Based on MUI Tab example
 //https://mui.com/components/tabs/
@@ -73,8 +75,7 @@ export default function AdminPanel({ data }) {
         <Tab label="Overview" {...a11yProps(0)} />
         <Tab label="Users" {...a11yProps(1)} />
         <Tab label="Posts" {...a11yProps(2)} />
-        <Tab label="Tags" {...a11yProps(3)} />
-        <Tab label="Categories" {...a11yProps(4)} />
+        <Tab label="Filters" {...a11yProps(3)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <Typography>Overview</Typography>
@@ -83,13 +84,25 @@ export default function AdminPanel({ data }) {
         <Typography>Users</Typography>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <EnhancedTable data={data} />
+        <AdminPostsTab data={data} />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <Typography>Tags</Typography>
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        <Typography>Categories</Typography>
+        <Grid container direction="row" spacing={{ xs: 3 }}>
+          <Grid item>
+            <AdminFiltersTab
+              data={data.categories}
+              label={"Categories"}
+              apiDestination={"categories"}
+            />
+          </Grid>
+          <Grid item>
+            <AdminFiltersTab
+              data={data.tags}
+              label={"Tags"}
+              apiDestination={"tags"}
+            />
+          </Grid>
+        </Grid>
       </TabPanel>
     </Box>
   );

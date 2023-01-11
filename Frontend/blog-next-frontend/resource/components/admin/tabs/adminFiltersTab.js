@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Checkbox from "@mui/material/Checkbox";
+import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -22,6 +23,8 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Chip from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
@@ -69,58 +72,16 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "title",
+    id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Title",
+    label: "Name",
   },
   {
     id: "id",
     numeric: false,
     disablePadding: true,
     label: "ID",
-  },
-  {
-    id: "created-at",
-    numeric: false,
-    disablePadding: false,
-    label: "Created",
-  },
-  {
-    id: "content",
-    numeric: false,
-    disablePadding: false,
-    label: "Content",
-  },
-  {
-    id: "username",
-    numeric: false,
-    disablePadding: false,
-    label: "User",
-  },
-  {
-    id: "user-id",
-    numeric: false,
-    disablePadding: false,
-    label: "User ID",
-  },
-  {
-    id: "category",
-    numeric: false,
-    disablePadding: false,
-    label: "Category",
-  },
-  {
-    id: "tags",
-    numeric: false,
-    disablePadding: false,
-    label: "Tags",
-  },
-  {
-    id: "actions",
-    numeric: false,
-    disablePadding: false,
-    label: "Actions",
   },
 ];
 
@@ -187,7 +148,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, openDeleteDialog, openFilterDialog } = props;
+  const { numSelected, label, openDeleteDialog, openFilterDialog } = props;
 
   return (
     <Toolbar
@@ -219,7 +180,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Posts
+          {label}
         </Typography>
       )}
 
@@ -257,7 +218,7 @@ function DeleteDialog(props) {
         open={dialogState}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Delete post?"}</DialogTitle>
+        <DialogTitle>{"Delete?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {deleteAllowed
@@ -288,8 +249,97 @@ DeleteDialog.propTypes = {
   action: PropTypes.func.isRequired,
 };
 
-export default function AdminPostsTab({ data }) {
-  const [rows, setRows] = React.useState(data.posts);
+function RowItem(props) {
+  const { row, handleClick, isItemSelected, labelId, resetSelected } = props;
+
+  const [editing, setEditing] = React.useState(false);
+
+  const enterEditMode = () => {
+    resetSelected();
+    setEditing(true);
+  };
+
+  const leaveEditMode = () => {
+    setEditing(false);
+  };
+
+  const saveChanges = () => {};
+
+  return (
+    <TableRow
+      hover
+      role="checkbox"
+      aria-checked={isItemSelected}
+      tabIndex={-1}
+      key={row._id}
+      selected={isItemSelected}
+      onClick={!editing ? (event) => handleClick(event, row._id) : null}
+    >
+      <TableCell padding="checkbox">
+        <Checkbox
+          color="primary"
+          checked={isItemSelected}
+          inputProps={{
+            "aria-labelledby": props.labelId,
+          }}
+        />
+      </TableCell>
+      <TableCell
+        component="th"
+        id={labelId}
+        scope="row"
+        padding="none"
+        sx={{ wordBreak: "break-all" }}
+      >
+        <TextField defaultValue={row.name} disabled={!editing} />
+      </TableCell>
+      <TableCell align="right">{row._id}</TableCell>
+      <TableCell align="right">
+        {editing ? (
+          <Stack>
+            <IconButton
+              onClick={() => {
+                saveChanges();
+              }}
+            >
+              <CheckIcon />
+            </IconButton>
+
+            <IconButton
+              onClick={() => {
+                leaveEditMode();
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+        ) : (
+          <IconButton
+            onClick={() => {
+              enterEditMode();
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+        )}
+      </TableCell>
+    </TableRow>
+  );
+}
+
+RowItem.propTypes = {
+  row: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }),
+  handleClick: PropTypes.func.isRequired,
+  isItemSelected: PropTypes.bool.isRequired,
+  labelID: PropTypes.string.isRequired,
+  resetSelected: PropTypes.func.isRequired,
+};
+
+export default function AdminFiltersTab({ data, label, apiDestination }) {
+  const [rows, setRows] = React.useState(data);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("title");
   const [selected, setSelected] = React.useState([]);
@@ -307,7 +357,7 @@ export default function AdminPostsTab({ data }) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
+  const handleResetClick = (event) => {
     setSelected([]);
   };
 
@@ -342,15 +392,18 @@ export default function AdminPostsTab({ data }) {
       //TODO: Replace with admin ID?
       const body = { user_id: target.user._id };
       // Remove item from db
-      const res = await fetch(`http://localhost:3000/posts/${target._id}`, {
-        method: "DELETE",
-        headers: {
-          //TODO: Authorization
-          authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+      const res = await fetch(
+        `http://localhost:5001/${apiDestination}/${target._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            //TODO: Authorization
+            authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
       const data = await res.json();
       if (res.status === 200) {
         const newRows = rows.filter((row) => row._id !== target._id);
@@ -383,14 +436,6 @@ export default function AdminPostsTab({ data }) {
     setDeleteDialogOpen(false);
   };
 
-  const openFilterDialog = () => {
-    setFilterDialogOpen(true);
-  };
-
-  const closeFilterDialog = () => {
-    setFilterDialogOpen(false);
-  };
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -399,11 +444,6 @@ export default function AdminPostsTab({ data }) {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <SearchPostsForm
-        defaultContent={data}
-        setResults={setRows}
-        dialog={{ state: filterDialogOpen, close: closeFilterDialog }}
-      />
       <DeleteDialog
         numItems={selected.length}
         dialogState={deleteDialogOpen}
@@ -412,9 +452,9 @@ export default function AdminPostsTab({ data }) {
       />
       <Paper sx={{ width: "100%", maxWidth: "100%", mb: 2 }}>
         <EnhancedTableToolbar
+          label={label}
           numSelected={selected.length}
           openDeleteDialog={openDeleteDialog}
-          openFilterDialog={openFilterDialog}
         />
         <TableContainer>
           <Table
@@ -426,7 +466,7 @@ export default function AdminPostsTab({ data }) {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
+              onSelectAllClick={handleResetClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
@@ -438,54 +478,14 @@ export default function AdminPostsTab({ data }) {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row._id)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row._id}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        sx={{ wordBreak: "break-all" }}
-                      >
-                        {row.title}
-                      </TableCell>
-                      <TableCell align="right">{row._id}</TableCell>
-                      <TableCell align="right">{row.created_at}</TableCell>
-                      <TableCell align="right" sx={{ wordBreak: "break-all" }}>
-                        {row.content}
-                      </TableCell>
-                      <TableCell align="right">{row.user.username}</TableCell>
-                      <TableCell align="right">{row.user._id}</TableCell>
-                      <TableCell align="right">
-                        {row.category ? row.category.name : "None"}
-                      </TableCell>
-                      <TableCell align="right">{row.tags.length}</TableCell>
-                      <TableCell align="right">
-                        <IconButton
-                          onClick={(event) => {
-                            handleEdit(event, row);
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
+                    <RowItem
+                      key={row._id + "-row-item"}
+                      row={row}
+                      handleClick={handleClick}
+                      isItemSelected={isItemSelected}
+                      resetSelected={handleResetClick}
+                      labelId={labelId}
+                    />
                   );
                 })}
               {emptyRows > 0 && (
