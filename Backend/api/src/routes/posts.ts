@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import Rabbitmq from '../../../common/rabbitmq';
 import { respond } from '..';
 import { unpackParams } from '../middlewares/unpack';
+import authenticate from '../middlewares/authenticate';
 
 const router = Router();
 
@@ -88,13 +89,15 @@ export default () => {
 	 *            application/json:
 	 *              schema:
 	 *                 $ref: '#/components/schemas/PostCreate'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.post('/', async (req: Request, res: Response) => {
+	router.post('/', authenticate, async (req: Request, res: Response) => {
 		const data = req.body;
 		const result = await Rabbitmq.sendRPC(
 			'posts.post',
@@ -125,13 +128,15 @@ export default () => {
 	 *            application/json:
 	 *              schema:
 	 *                 $ref: '#/components/schemas/PostUpdate'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.patch('/:id', async (req: Request, res: Response) => {
+	router.patch('/:id', authenticate, async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
 			'posts.patch',
@@ -154,21 +159,15 @@ export default () => {
 	 *         schema:
 	 *           type: string
 	 *           required: true
-	 *     requestBody:
-	 *         content:
-	 *            application/x-www-form-urlencoded:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UserId'
-	 *            application/json:
-	 *              schema:
-	 *                 $ref: '#/components/schemas/UserId'
+	 *     security:
+	 *       - bearerAuth: []
 	 *     responses:
 	 *       200:
 	 *         description: Success
 	 *       500:
 	 *         description: Internal Server Error
 	 */
-	router.delete('/:id', async (req: Request, res: Response) => {
+	router.delete('/:id', authenticate, async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
 		const result = await Rabbitmq.sendRPC(
 			'posts.delete',

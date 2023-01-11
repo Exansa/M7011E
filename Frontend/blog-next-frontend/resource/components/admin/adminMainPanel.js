@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import AdminPostsTab from "./tabs/adminPostsTab";
 import AdminFiltersTab from "./tabs/adminFiltersTab";
+import AdminUsersTab from "./tabs/adminUsersTab";
 
 //Based on MUI Tab example
 //https://mui.com/components/tabs/
@@ -81,7 +82,7 @@ export default function AdminPanel({ data }) {
         <Typography>Overview</Typography>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Typography>Users</Typography>
+        <AdminUsersTab data={data.users} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <AdminPostsTab data={data} />

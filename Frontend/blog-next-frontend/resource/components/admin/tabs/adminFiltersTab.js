@@ -32,16 +32,7 @@ function RowItem(props) {
 
   return (
     <TableRow hover tabIndex={-1} key={row._id} selected={isItemSelected}>
-      <TableCell padding="checkbox">
-        <Checkbox
-          color="primary"
-          checked={isItemSelected}
-          onClick={!editing ? (event) => handleClick(event, row._id) : null}
-          inputProps={{
-            "aria-labelledby": props.labelId,
-          }}
-        />
-      </TableCell>
+      <TableCell padding="checkbox"></TableCell>
       <TableCell
         component="th"
         id={labelId}
@@ -120,6 +111,7 @@ export default function AdminFilterstab({ data, label, apiDestination }) {
     label: label,
     defaultRows: data,
     headCells: headCells,
+    removable: false,
   };
 
   return <AdminTab components={components} args={args} />;

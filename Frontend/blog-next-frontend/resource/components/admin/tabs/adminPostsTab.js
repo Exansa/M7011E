@@ -1,5 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import NextLink from "next/link";
+import Routes from "../../../routes";
 import { TableCell, TableRow, Checkbox, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AdminTab from "../utils/adminTab";
@@ -7,8 +9,6 @@ import SearchPostsForm from "../../search/searchPostsForm";
 
 function RowItem(props) {
   const { row, handleClick, isItemSelected, labelId } = props;
-
-  const handleEdit = () => {};
 
   return (
     <TableRow
@@ -50,13 +50,11 @@ function RowItem(props) {
       </TableCell>
       <TableCell align="right">{row.tags.length}</TableCell>
       <TableCell align="right">
-        <IconButton
-          onClick={(event) => {
-            handleEdit(event, row);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
+        <NextLink passHref href={Routes.posts.edit(row._id)} key={row._id}>
+          <IconButton>
+            <EditIcon />
+          </IconButton>
+        </NextLink>
       </TableCell>
     </TableRow>
   );
@@ -140,6 +138,7 @@ export default function AdminPostsTab({ data }) {
     label: "Posts",
     defaultRows: data.posts,
     headCells: headCells,
+    removable: true,
     optionalFilterArgs: {
       defaultContent: data,
     },

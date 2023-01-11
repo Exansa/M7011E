@@ -475,11 +475,6 @@ export default () => {
 				PostCreate: {
 					type: 'object',
 					properties: {
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
 						post: {
 							type: 'object',
 							required: true,
@@ -515,11 +510,6 @@ export default () => {
 				PostUpdate: {
 					type: 'object',
 					properties: {
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
 						post: {
 							type: 'object',
 							required: true,
@@ -695,12 +685,7 @@ export default () => {
 				TagCreate: {
 					type: 'object',
 					properties: {
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
-						category: {
+						tag: {
 							type: 'object',
 							required: true,
 							properties: {
@@ -715,12 +700,7 @@ export default () => {
 				TagUpdate: {
 					type: 'object',
 					properties: {
-						user_id: {
-							type: 'string',
-							pattern: '[0-9a-z]{24}',
-							required: true
-						},
-						category: {
+						tag: {
 							type: 'object',
 							required: true,
 							properties: {
