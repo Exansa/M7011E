@@ -280,12 +280,12 @@ export default function AdminTab(props) {
   const handleDelete = async () => {
     if (selected.length === 0 || selected > 5 || !removable) return;
 
-    selected.forEach(async (target_id) => {
+    selected.forEach(async (target) => {
       //TODO: Replace with admin ID?
-      const body = { user_id: target.user._id };
+
       // Remove item from db
       const res = await fetch(
-        `http://localhost:3000/${apiDestination}/${target._id}`,
+        `http://localhost:3000/${apiDestination}/${target}`,
         {
           method: "DELETE",
           headers: {
@@ -293,7 +293,6 @@ export default function AdminTab(props) {
             authorization: `Bearer ${session.data.accessToken}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(body),
         }
       );
       const data = await res.json();
