@@ -6,6 +6,6 @@ then compare the performance of the two different systems. They will have a shar
 backend and database so we can see the difference in them without other factors.
 
 |      Test     |    Nextjs     |    Flutter    |     Note      |
-| Second Header | Second Header | ------------- | ------------- | 
-| ------------- | Content Cell  | Content Cell  | Content Cell  |
+| ------------- | ------------- | ------------- | ------------- | 
+| Content Cell  | Content Cell  | Content Cell  | Content Cell  |
 | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
