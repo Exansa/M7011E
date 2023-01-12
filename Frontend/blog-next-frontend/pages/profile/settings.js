@@ -9,30 +9,28 @@ import { useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 import AccessDenied from "../../resource/components/accessDenied";
 
-
-
 export function Settings() {
   const [value, setValue] = useState("");
   const { data: session } = useSession();
-  async function handleOnButtonClick(e){
-    const path = 'http://localhost:5001/admins?set=1';
+  async function handleOnButtonClick(e) {
+    const path = "http://localhost:5001/admins?set=1";
     const access = "Bearer " + session.accessToken;
     const res = await fetch(path, {
       method: "GET",
       headers: {
-        accept: "*/*", 
-        Authorization: access
-      }
+        accept: "*/*",
+        Authorization: access,
+      },
     });
-    console.log('res', res)
+    console.log("res", res);
     const result = await res.json();
-    console.log('result: ',result);
-    for(let i=0; i<result.length; i++){
-      if (result.user_id == session.user._id){
-        console.log("true")
+    console.log("result: ", result);
+    for (let i = 0; i < result.length; i++) {
+      if (result.user_id == session.user._id) {
+        console.log("true");
         break;
       } else {
-        console.log("false")
+        console.log("false");
       }
     }
   }
@@ -144,11 +142,16 @@ export function Settings() {
     });*/
 
     setValue("");
-
+  };
+  if (!session) {
+    return (
+      <Page>
+        <AccessDenied />
+      </Page>
+    );
   }
-  if (!session){ return  <Page><AccessDenied/></Page> }
   return (
-    session &&(
+    session && (
       <Page title={"Settings: " + session.name}>
        <Container maxWidth="md">
        <form onSubmit={handleSubmit}>
@@ -184,12 +187,10 @@ export function Settings() {
               variant="contained"
             >
               Submit
-          </Button>
-        </form>
-        <Button onClick={handleOnButtonClick}>
-          edit
-        </Button>
-       </Container>
+            </Button>
+          </form>
+          <Button onClick={handleOnButtonClick}>edit</Button>
+        </Container>
       </Page>
     )
   );
