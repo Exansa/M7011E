@@ -30,8 +30,9 @@ import { useForm } from "react-hook-form";
 export async function getStaticPaths() {
   const res = await fetch("http://localhost:5001/posts?set=1");
   const posts = await res.json();
-
-  //console.log('POSTS',posts)
+  
+  console.log('POSTS',posts)
+  console.log('Tags', posts.tags)
   const paths = posts.map((post) => {
     return {
       params: { postID: post._id },
@@ -40,7 +41,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: false,
+    fallback: "blocking",
   };
 }
 
@@ -50,6 +51,8 @@ export async function getStaticProps({params}) {
   const tags = await resTags.json();
   const resCat = await fetch("http://localhost:5001/categories?set=1");
   const categories  = await resCat.json();
+  const resPost =  await fetch("http://localhost:5001/posts/" + params.postID);
+  const post = await resPost.json();
   //console.log('2')
   //console.log('params',params.postID);
   //console.log(tags);
@@ -59,6 +62,7 @@ export async function getStaticProps({params}) {
     props: {
       tags,
       categories,
+      post,
       postID: params.postID
     },
   };
@@ -100,23 +104,24 @@ const editPost = ( context ) => {
     const predata = {
       title: event.target.title.value,
       content: event.target.content.value,
-      categories_id: [event.target.categories.value],
+      category_id: event.target.categories.value,
       tags_id: [event.target.tags.value],
       media: event.target.image.value,
     }
     const data = {
-      user_id: session.user._id,
       post: predata,
     }
 
     const JSONdata = JSON.stringify(data)
     console.log(JSONdata)
     console.log(context.postID)
+    const access = "Bearer " + session.accessToken;
     const postRef = "http://localhost:5001/post/" + context.postID;
     const res = await fetch(postRef, {
         method: "PATCH",
         headers: {
           accept: "*/*",
+          Authorization: access,
           "Content-Type": "application/json",
         },
         body: JSONdata,
@@ -137,6 +142,7 @@ const editPost = ( context ) => {
             <TextField  required fullWidth label="Title" 
                         margin="normal" 
                         id='title'
+                        defaultValue={context.post.title}
                         name="title"
                         />
 
@@ -147,6 +153,7 @@ const editPost = ( context ) => {
               label="Blog post text"
               margin="normal"
               id='content'
+              defaultValue={context.post.content}
               name="content"
             />
             <InputLabel id="demo-simple-select-helper-label">
@@ -211,6 +218,7 @@ const editPost = ( context ) => {
                         margin="normal" 
                         id='image'
                         name="image"
+                        defaultValue={context.post.media}
                         />
           <Button
             sx={{ m: 1, minWidth: 120 }}
