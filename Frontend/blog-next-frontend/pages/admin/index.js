@@ -1,8 +1,8 @@
 import Page from "../../resource/layout/page";
 import AdminPanel from "../../resource/components/admin/adminMainPanel";
-import { useSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 import AccessDenied from "../../resource/components/accessDenied";
-import { checkIfAdmin } from "../../resource/utils/checkAdmin";
+import { checkAdmin } from "../../resource/utils/checkAdmin";
 
 export async function getStaticProps() {
   const postRes = await fetch("http:localhost:5001/posts?set=1");
@@ -29,13 +29,18 @@ export default function AdminDashboard(context) {
   console.log(context);
 
   const { data: session, status } = useSession();
-  const isAdmin = session ? checkIfAdmin(session) : false;
+  console.log("Entering admin page..");
 
   return (
     <>
       <Page title="Admin">
-        {isAdmin ? <AdminPanel data={context} /> : <AccessDenied />}
+        <AdminPanel data={context} adminType={context.adminType} />
       </Page>
     </>
   );
 }
+
+AdminDashboard.auth = {
+  admin: true,
+  roles: ["admin", "superAdmin"],
+};

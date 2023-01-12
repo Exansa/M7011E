@@ -22,7 +22,7 @@ import Routes from "../routes";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-import { checkIfAdmin } from "../utils/checkAdmin";
+import { checkAdmin } from "../utils/checkAdmin";
 
 //const pages = ["home", "about", "browse"];
 
@@ -36,11 +36,12 @@ function SettingsBox(args) {
     { link: Routes.posts.make, name: "Post" },
   ];
 
-  const isAdmin = session ? checkIfAdmin(session) : false;
+  // const isAdmin = session ? checkAdmin(session) : null;
 
-  if (isAdmin) {
-    settings.push({ link: Routes.admin.index, name: "Admin" });
-  }
+  // TODO:
+  // if (isAdmin) {
+  //   settings.push({ link: Routes.admin.index, name: "Admin" });
+  // }
 
   return (
     <Box sx={{ flexGrow: 0 }}>
