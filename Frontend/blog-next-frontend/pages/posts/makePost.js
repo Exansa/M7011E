@@ -86,21 +86,22 @@ export default function makePost(context) {
     const predata = {
       title: event.target.title.value,
       content: event.target.content.value,
-      categories_id: [event.target.categories.value],
+      category_id: event.target.categories.value,
       tags_id: [event.target.tags.value],
       media: event.target.image.value,
     }
     const data = {
-      user_id: session.user._id,
       post: predata,
     }
 
     const JSONdata = JSON.stringify(data)
     console.log(JSONdata)
+    const access = "Bearer " + session.accessToken;
     const res = await fetch('http://localhost:5001/posts', {
         method: "POST",
         headers: {
           accept: "*/*",
+          Authorization: access,
           "Content-Type": "application/json",
         },
         body: JSONdata,
