@@ -40,19 +40,18 @@ export async function getStaticProps() {
   const resTags = await fetch("http://localhost:5001/tags?set=1");
   const tags = await resTags.json();
   const resCat = await fetch("http://localhost:5001/categories?set=1");
-  const categories  = await resCat.json();
+  const categories = await resCat.json();
   //console.log(tags);
   //console.log(categories);
   return {
     props: {
       tags,
-      categories
+      categories,
     },
   };
 }
 
-export default function makePost(context) {  
-
+export default function makePost(context) {
   // If no session exists, display access denied message
   //if (!session) { return  <Page><AccessDenied/></Page> }
 
@@ -70,18 +69,17 @@ export default function makePost(context) {
     );
   };
 
-
   const handlePicture = (e) => {
     const i = e.target.files[0];
-    setImage(i)
+    setImage(i);
     /*let formData = new FormData();
     formData.append("data", JSON.stringify(i));
     formData.append("profile_picture", e.target.files[0]);
     axios.put("/api/update", formData).then(console.log).catch(console.log);*/
   };
 
-  const handleSubmit = async (event)=> {
-    event.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     const predata = {
       title: event.target.title.value,
@@ -89,40 +87,47 @@ export default function makePost(context) {
       categories_id: [event.target.categories.value],
       tags_id: [event.target.tags.value],
       media: event.target.image.value,
-    }
+    };
     const data = {
       user_id: session.user._id,
       post: predata,
-    }
+    };
 
-    const JSONdata = JSON.stringify(data)
-    console.log(JSONdata)
-    const res = await fetch('http://localhost:5001/posts', {
-        method: "POST",
-        headers: {
-          accept: "*/*",
-          "Content-Type": "application/json",
-        },
-        body: JSONdata,
-    }); 
+    const JSONdata = JSON.stringify(data);
+    console.log(JSONdata);
+    const res = await fetch("http://localhost:5001/posts", {
+      method: "POST",
+      headers: {
+        accept: "*/*",
+        "Content-Type": "application/json",
+      },
+      body: JSONdata,
+    });
 
-    console.log(JSONdata)
-
-  }
-
+    console.log(JSONdata);
+  };
 
   const { data: session } = useSession();
-  if (!session){ return  <Page><AccessDenied/></Page> }
+  if (!session) {
+    return (
+      <Page>
+        <AccessDenied />
+      </Page>
+    );
+  }
   return (
     <>
       <Page>
         <Container maxWidth="md">
           <form onSubmit={handleSubmit}>
-            <TextField  required fullWidth label="Title" 
-                        margin="normal" 
-                        id='title'
-                        name="title"
-                        />
+            <TextField
+              required
+              fullWidth
+              label="Title"
+              margin="normal"
+              id="title"
+              name="title"
+            />
 
             <TextField
               required
@@ -130,43 +135,43 @@ export default function makePost(context) {
               multiline
               label="Blog post text"
               margin="normal"
-              id='content'
+              id="content"
               name="content"
             />
             <InputLabel id="demo-simple-select-helper-label">
               Category
             </InputLabel>
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <Select
-              labelId="demo-simple-select-helper-label"
-              value={context.categories._id}
-              label="Category"
-              id='categories'
-              name='categories'
-              
-              //onChange={handleChange}
-            >
-              {context.categories.map((categories) => (
-                <MenuItem value={categories._id}>{categories.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <Select
-              labelId="demo-simple-select-helper-label"
-              value={context.tags._id}
-              label="Tags"
-              id='tags'
-              name='tags'
-              
-              //onChange={handleChange}
-            >
-              {context.tags.map((tags) => (
-                <MenuItem value={tags._id}>{tags.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {/*<FormControl sx={{ m: 1, minWidth: 120 }}>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                value={context.categories._id}
+                label="Category"
+                id="categories"
+                name="categories"
+
+                //onChange={handleChange}
+              >
+                {context.categories.map((categories) => (
+                  <MenuItem value={categories._id}>{categories.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                value={context.tags._id}
+                label="Tags"
+                id="tags"
+                name="tags"
+
+                //onChange={handleChange}
+              >
+                {context.tags.map((tags) => (
+                  <MenuItem value={tags._id}>{tags.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {/*<FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
             <Select
               labelId="demo-multiple-checkbox-label"
@@ -189,23 +194,31 @@ export default function makePost(context) {
             </Select>
           </FormControl>*/}
 
-          {/*<input accept="*" 
+            {/*<input accept="*" 
             type="file" onChange={handlePicture} name="image" id='image' />*/}
-          <TextField  required fullWidth label="image" 
-                        margin="normal" 
-                        id='image'
-                        name="image"
-                        />
-          <Button
-            sx={{ m: 1, minWidth: 120 }}
-            type="submit"
-            variant="contained"
-          >
-            Submit
-          </Button>
-        </form>
+            <TextField
+              required
+              fullWidth
+              label="image"
+              margin="normal"
+              id="image"
+              name="image"
+            />
+            <Button
+              sx={{ m: 1, minWidth: 120 }}
+              type="submit"
+              variant="contained"
+            >
+              Submit
+            </Button>
+          </form>
         </Container>
       </Page>
     </>
   );
 }
+
+makePost.auth = {
+  admin: false,
+  roles: ["user", "admin", "superAdmin"],
+};

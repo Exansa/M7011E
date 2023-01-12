@@ -49,7 +49,7 @@ function a11yProps(index) {
   };
 }
 
-export default function AdminPanel({ data }) {
+export default function AdminPanel({ data, adminType }) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -77,6 +77,7 @@ export default function AdminPanel({ data }) {
         <Tab label="Users" {...a11yProps(1)} />
         <Tab label="Posts" {...a11yProps(2)} />
         <Tab label="Filters" {...a11yProps(3)} />
+        {adminType === "superAdmin" && <Tab label="Admins" {...a11yProps(4)} />}
       </Tabs>
       <TabPanel value={value} index={0}>
         <Typography>Overview</Typography>
@@ -105,6 +106,11 @@ export default function AdminPanel({ data }) {
           </Grid>
         </Grid>
       </TabPanel>
+      {adminType === "superAdmin" && (
+        <TabPanel value={value} index={4}>
+          <Typography>Admins</Typography>
+        </TabPanel>
+      )}
     </Box>
   );
 }
