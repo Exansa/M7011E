@@ -36,12 +36,11 @@ function SettingsBox(args) {
     { link: Routes.posts.make, name: "Post" },
   ];
 
-  // const isAdmin = session ? checkAdmin(session) : null;
-
-  // TODO:
-  // if (isAdmin) {
-  //   settings.push({ link: Routes.admin.index, name: "Admin" });
-  // }
+  // The session variable is only a indicator whether to generate the link or not
+  // The page then performs the proper authorization via _app.js
+  if (session.admin && session.admin != null) {
+    settings.push({ link: Routes.admin.index, name: "Admin" });
+  }
 
   return (
     <Box sx={{ flexGrow: 0 }}>

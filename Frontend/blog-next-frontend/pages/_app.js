@@ -29,15 +29,25 @@ function Auth(props) {
     return <Loading />;
   }
 
-  if (auth.admin && !checkAdmin(data)) {
-    return (
-      <Page title="Access Denied">
-        <AccessDenied />
-      </Page>
-    );
+  if (auth.admin) {
+    console.log("data");
+    console.log(data);
+    checkAdmin(data).then((res) => {
+      console.log("Res");
+      console.log(res);
+      if (!res) {
+        return (
+          <Page title="Access Denied">
+            <AccessDenied />
+          </Page>
+        );
+      } else {
+        return children;
+      }
+    });
+  } else {
+    return children;
   }
-
-  return children;
 }
 
 export default MyApp;
