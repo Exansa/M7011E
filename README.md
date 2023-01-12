@@ -5,7 +5,21 @@ Our porject is a blog style website where we will make it using the frameworks N
 then compare the performance of the two different systems. They will have a shared
 backend and database so we can see the difference in them without other factors.
 
-|      Test     |    Nextjs     |    Flutter    |     Note      |
-| ------------- | ------------- | ------------- | ------------- | 
-| Content Cell  | Content Cell  | Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  | Content Cell  | Content Cell  |
+|          Test            |    Nextjs     |    Flutter    |     Note      |
+| ------------------------ | ------------- | ------------- | ------------- | 
+| Refreshing page          |               |               |               |
+| First Contentful Paint   | 0.3s          | 0.4s          |               |
+| Speed Index              | 1.5s          | 32.0s         |               |
+| Largest Contentful Paint | 1.5s          | 32.0s         |               |
+| Time to Interactive      | 3.5s          | 0.4s          |               |
+| Total Blocking Time      | 3.6s          | 32.0s         |               |
+| Cumulative Layout Shift  | 0             | 0.4s          |               |
+| Total size               | 1.5s          | 32.0s         |               |
+| Switching pages          |               |               |               |
+| Total blocking time      | 0ms           | 0ms           |               |
+| interaction to next paint| 40ms          | --            |               |
+| Cumulative Layout Shift  | 0.012         | 0             |               |
+| Login                    |               |               |               |
+| Total blocking time      | 560ms         | 890ms         |               |
+| interaction to next paint| 130ms         | 80ms          |               |
+| Cumulative Layout Shift  | 0.001         | 0.014         |               |
