@@ -7,6 +7,9 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import AdminPostsTab from "./tabs/adminPostsTab";
 import AdminFiltersTab from "./tabs/adminFiltersTab";
+import AdminUsersTab from "./tabs/adminUsersTab";
+
+import { useSession } from "next-auth/react";
 
 //Based on MUI Tab example
 //https://mui.com/components/tabs/
@@ -48,8 +51,10 @@ function a11yProps(index) {
   };
 }
 
-export default function AdminPanel({ data }) {
+export default function AdminPanel({ data, adminType }) {
   const [value, setValue] = React.useState(0);
+
+  const { data: session } = useSession();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -76,12 +81,17 @@ export default function AdminPanel({ data }) {
         <Tab label="Users" {...a11yProps(1)} />
         <Tab label="Posts" {...a11yProps(2)} />
         <Tab label="Filters" {...a11yProps(3)} />
+        {session.admin === "superAdmin" && (
+          // It is posible to access this tab by manipulating the session
+          // However, since the API is protected you will not be able to change any data.
+          <Tab label="Admins" {...a11yProps(4)} />
+        )}
       </Tabs>
       <TabPanel value={value} index={0}>
         <Typography>Overview</Typography>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Typography>Users</Typography>
+        <AdminUsersTab data={data.users} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <AdminPostsTab data={data} />
@@ -104,6 +114,13 @@ export default function AdminPanel({ data }) {
           </Grid>
         </Grid>
       </TabPanel>
+      {session.admin == "superAdmin" && (
+        // It is posible to access this tab by manipulating the session
+        // However, since the API is protected you will not be able to change any data.
+        <TabPanel value={value} index={4}>
+          <Typography>Admins</Typography>
+        </TabPanel>
+      )}
     </Box>
   );
 }

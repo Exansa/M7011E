@@ -9,9 +9,15 @@ import AccessDenied from "../../resource/components/accessDenied";
 
 export function Profile() {
   const { data: session } = useSession();
-  if (!session){ return  <Page><AccessDenied/></Page> }
+  if (!session) {
+    return (
+      <Page title={"Access denied"}>
+        <AccessDenied />
+      </Page>
+    );
+  }
   return (
-    session &&(
+    session && (
       <>
         <Page title={"Profile: " + session.user.username}>
           <Box sx={{ minHeight: "80vh", top: 0, my: 4, mx: 4 }}>
@@ -28,3 +34,7 @@ export function Profile() {
   );
 }
 export default Profile;
+
+Profile.auth = {
+  admin: false,
+};

@@ -232,7 +232,7 @@ DeleteDialog.propTypes = {
 export default function AdminTab(props) {
   const { components, args } = props;
   const { RowComponent, OptionalFilterDialogComponent } = components;
-  const { defaultRows, label, headCells, optionalFilterArgs } = args;
+  const { defaultRows, label, headCells, optionalFilterArgs, removable } = args;
 
   const [rows, setRows] = React.useState(defaultRows);
   const [order, setOrder] = React.useState("asc");
@@ -276,7 +276,7 @@ export default function AdminTab(props) {
   };
 
   const handleDelete = async () => {
-    if (selected.length === 0 || selected > 5) return;
+    if (selected.length === 0 || selected > 5 || !removable) return;
 
     selected.forEach(async (target_id) => {
       //TODO: Replace with admin ID?

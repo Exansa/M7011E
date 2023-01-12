@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import Auth0Provider from "next-auth/providers/auth0";
 import { get_KV } from "../../../data/mock_request/db_handler";
+import { checkAdmin } from "../../../resource/utils/checkAdmin";
 
 const options = {
   providers: [
@@ -36,10 +37,8 @@ const options = {
     })*/
   ],
   callbacks: {
-
-    async jwt(token,session, user, account, profile, isNewUser){
-      
-      if (token.account){
+    async jwt(token, session, user, account, profile, isNewUser) {
+      if (token.account) {
         const res = await fetch("http://localhost:5001/user/me", {
           method: "GET",
           headers: new Headers({
@@ -50,22 +49,23 @@ const options = {
 
         if (result != "User does not exist") {
           console.log("existing user");
+          console.log(result);
           //session.accessToken = result;
         } else {
           console.log("new user! adding user!");
-          const access = ("Bearer " + token.account.access_token);
+          const access = "Bearer " + token.account.access_token;
           const data = {
             username: token.token.name,
-          }
-          const res = await fetch('http://localhost:5001/user', {
+          };
+          const res = await fetch("http://localhost:5001/user", {
             method: "POST",
             headers: new Headers({
-            accept: "application/json",
-            authorization: access,
-            "Content-Type": "application/json",
+              accept: "application/json",
+              authorization: access,
+              "Content-Type": "application/json",
             }),
             body: JSON.stringify(data),
-          })
+          });
         }
         return token;
       }
@@ -74,11 +74,11 @@ const options = {
     },
 
     async session({ session, token }) {
-      if (token.token.account){
+      if (token.token.account) {
         //console.log('token accoutn', token.token.account)
-        session.accessToken = token.token.account.access_token
+        session.accessToken = token.token.account.access_token;
         const res = await fetch("http://localhost:5001/user/me", {
-          method: 'GET',
+          method: "GET",
           headers: new Headers({
             authorization: "Bearer " + session.accessToken,
           }),
@@ -87,6 +87,9 @@ const options = {
 
         if (result) {
           session.user = result;
+          await checkAdmin(session).then((res) => {
+            session.admin = res;
+          });
         }
         console.log(session);
 
