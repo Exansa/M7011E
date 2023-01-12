@@ -30,8 +30,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 
-import AutoCompleteFetcher from "../../search/autoCompleteFetcher";
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -281,15 +279,12 @@ export default function AdminTab(props) {
     if (selected.length === 0 || selected > 5 || !removable) return;
 
     selected.forEach(async (target) => {
-      //TODO: Replace with admin ID?
-
       // Remove item from db
       const res = await fetch(
         `http://localhost:3000/${apiDestination}/${target}`,
         {
           method: "DELETE",
           headers: {
-            //TODO: Authorization
             authorization: `Bearer ${session.data.accessToken}`,
             "Content-Type": "application/json",
           },

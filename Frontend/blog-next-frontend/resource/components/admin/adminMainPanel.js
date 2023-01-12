@@ -114,7 +114,9 @@ export default function AdminPanel({ data }) {
       </TabPanel>
       {session.user.access === "superAdmin" && (
         <TabPanel value={value} index={4}>
-          <Typography>Admins</Typography>
+          <Typography>
+            Edit Admins coming soon... Cant wait? Try Swagger!
+          </Typography>
         </TabPanel>
       )}
     </Box>
