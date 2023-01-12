@@ -1,9 +1,5 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
 import Auth0Provider from "next-auth/providers/auth0";
-import { get_KV } from "../../../data/mock_request/db_handler";
-import { checkAdmin } from "../../../resource/utils/checkAdmin";
 
 const options = {
   providers: [
@@ -87,9 +83,6 @@ const options = {
 
         if (result) {
           session.user = result;
-          await checkAdmin(session).then((res) => {
-            session.admin = res;
-          });
         }
         console.log(session);
 

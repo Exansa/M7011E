@@ -8,11 +8,11 @@ import {
   Button,
   Box,
   Container,
-  Stack,
   Menu,
   MenuItem,
   Avatar,
   Tooltip,
+  CircularProgress,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -20,9 +20,6 @@ import AdbIcon from "@mui/icons-material/Adb";
 
 import Routes from "../routes";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useUser } from "@auth0/nextjs-auth0/client";
-
-import { checkAdmin } from "../utils/checkAdmin";
 
 //const pages = ["home", "about", "browse"];
 
@@ -36,9 +33,11 @@ function SettingsBox(args) {
     { link: Routes.posts.make, name: "Post" },
   ];
 
-  // The session variable is only a indicator whether to generate the link or not
-  // The page then performs the proper authorization via _app.js
-  if (session.admin && session.admin != null) {
+  if (
+    session.data &&
+    (session.data.user.access === "admin" ||
+      session.data.user.access === "superAdmin")
+  ) {
     settings.push({ link: Routes.admin.index, name: "Admin" });
   }
 
@@ -47,8 +46,8 @@ function SettingsBox(args) {
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
           <Avatar
-            alt={session.user.username}
-            src={session.user.profile_picture}
+            alt={session.data.user.username}
+            src={session.data.user.profile_picture}
           />
         </IconButton>
       </Tooltip>
@@ -105,6 +104,7 @@ function NavBarSmall(args) {
     handleCloseNavMenu,
     SettingsBox,
   } = args;
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -167,7 +167,19 @@ function NavBarSmall(args) {
             {title}
           </Typography>
 
-          {session ? { ...SettingsBox } : null}
+          <Box>
+            {session.data ? (
+              { ...SettingsBox }
+            ) : (
+              <Button
+                key={"login"}
+                onClick={signIn}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Login
+              </Button>
+            )}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
@@ -175,7 +187,7 @@ function NavBarSmall(args) {
 }
 
 function NavBarExpanded(args) {
-  const { title, session, pages, handleCloseNavMenu, SettingsBox } = args;
+  const { title, pages, handleCloseNavMenu, SettingsBox, session } = args;
 
   return (
     <AppBar position="static">
@@ -215,7 +227,7 @@ function NavBarExpanded(args) {
           </Box>
 
           <Box>
-            {session ? (
+            {session.data ? (
               { ...SettingsBox }
             ) : (
               <Button
@@ -237,15 +249,15 @@ export default function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const { data: session } = useSession();
-
   const pages = [
     { link: "/", name: "Home" },
     { link: Routes.posts.index, name: "Browse" },
     { link: "/about", name: "About" },
   ];
 
-  if (session) {
+  const session = useSession();
+
+  if (session.data) {
     pages.push({ link: Routes.posts.make, name: "Make Post" });
   }
 
@@ -266,8 +278,8 @@ export default function ResponsiveAppBar() {
 
   const args = {
     title: "M7011E",
-    session,
     pages,
+    session,
     anchorElNav,
     anchorElUser,
     handleOpenNavMenu,
@@ -277,9 +289,9 @@ export default function ResponsiveAppBar() {
     SettingsBox: (
       <SettingsBox
         anchorElUser={anchorElUser}
+        session={session}
         handleOpenUserMenu={handleOpenUserMenu}
         handleCloseUserMenu={handleCloseUserMenu}
-        session={session}
       />
     ),
   };

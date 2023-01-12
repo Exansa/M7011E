@@ -242,6 +242,8 @@ export default function AdminTab(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const session = useSession();
+
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
 
@@ -288,7 +290,7 @@ export default function AdminTab(props) {
           method: "DELETE",
           headers: {
             //TODO: Authorization
-            authorization: `Bearer ${localStorage.getItem("token")}`,
+            authorization: `Bearer ${session.data.accessToken}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
@@ -298,6 +300,7 @@ export default function AdminTab(props) {
       if (res.status === 200) {
         const newRows = rows.filter((row) => row._id !== target._id);
         setRows(newRows);
+        handleResetClick();
       } else {
         console.log("Error");
         console.log(data);

@@ -8,19 +8,10 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Typography,
-  Box,
   FormControl,
-  FormHelperText,
-  OutlinedInput,
-  Checkbox,
-  ListItemText,
 } from "@mui/material";
 import * as React from "react";
-import Tags from "../../../data/mock_db/tags";
-import Categories from "../../../data/mock_db/categories";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 //import { Category } from "@mui/icons-material";
 
 //import { getCategories } from "../../data/mock_request/db_handler";
@@ -62,12 +53,9 @@ export async function getStaticProps({ params }) {
   };
 }
 
-const editPost = (context) => {
-  // If no session exists, display access denied message
-  //if (!session) { return  <Page><AccessDenied/></Page> }
-
-  const [setCategory] = React.useState("");
-  const [tagName, setTagName] = React.useState([]);
+export default function EditPost(context) {
+  const [setCategory] = useState("");
+  const [tagName, setTagName] = useState([]);
   const [image, setImage] = useState(null);
 
   const handleChange = (event) => {
@@ -83,10 +71,6 @@ const editPost = (context) => {
   const handlePicture = (e) => {
     const i = e.target.files[0];
     setImage(i);
-    /*let formData = new FormData();
-    formData.append("data", JSON.stringify(i));
-    formData.append("profile_picture", e.target.files[0]);
-    axios.put("/api/update", formData).then(console.log).catch(console.log);*/
   };
 
   const handleSubmit = async (event) => {
@@ -121,7 +105,13 @@ const editPost = (context) => {
   };
 
   const { data: session } = useSession();
-  if (!session) {
+  if (
+    !session ||
+    (session &&
+      session.user._id != context.post.user_id &&
+      session.user.access !== "admin" &&
+      session.user.access !== "superAdmin")
+  ) {
     return (
       <Page>
         <AccessDenied />
@@ -165,7 +155,12 @@ const editPost = (context) => {
                 //onChange={handleChange}
               >
                 {context.categories.map((categories) => (
-                  <MenuItem value={categories._id}>{categories.name}</MenuItem>
+                  <MenuItem
+                    key={`menu-item-${categories._id}`}
+                    value={categories._id}
+                  >
+                    {categories.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -180,35 +175,15 @@ const editPost = (context) => {
                 //onChange={handleChange}
               >
                 {context.tags.map((tags) => (
-                  <MenuItem value={tags._id}>{tags.name}</MenuItem>
+                  <MenuItem
+                    key={`menu-item-${categories._id}`}
+                    value={tags._id}
+                  >
+                    {tags.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
-            {/*<FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
-            <Select
-              labelId="demo-multiple-checkbox-label"
-              id='tags'
-              multiple
-              value={context.tags}
-              onChange={handleChange}
-              input={<OutlinedInput label="Tags" />}
-              renderValue={(selected) => selected.join(", ")}
-              name="tags"
-              
-              //MenuProps={MenuProps}
-            >
-              {context.tags.map((tags) => (
-                <MenuItem key={tags._id} value={tags.name}>
-                  <Checkbox checked={tags.name.indexOf(tags.name) > -1} />
-                  <ListItemText primary={tags.name} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>*/}
-
-            {/*<input accept="*" 
-            type="file" onChange={handlePicture} name="image" id='image' />*/}
             <TextField
               required
               fullWidth
@@ -229,6 +204,8 @@ const editPost = (context) => {
       </Page>
     </>
   );
-};
+}
 
-export default editPost;
+EditPost.auth = {
+  admin: false,
+};
