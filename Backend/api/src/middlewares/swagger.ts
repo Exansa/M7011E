@@ -298,6 +298,26 @@ export default () => {
 						}
 					}
 				},
+				AdminAccess: {
+					type: 'object',
+					properties: {
+						access: {
+							type: 'object',
+							properties: {
+								_id: {
+									type: 'string',
+									pattern: '[0-9a-z]{24}',
+									required: true
+								},
+								access: {
+									type: 'string',
+									enum: ['admin', 'superAdmin'],
+									required: true
+								}
+							}
+						}
+					}
+				},
 				PostWithData: {
 					type: 'object',
 					properties: {
