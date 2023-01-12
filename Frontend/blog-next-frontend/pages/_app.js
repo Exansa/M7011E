@@ -23,7 +23,7 @@ function Auth(props) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { status, data } = useSession({ required: true });
 
-  if (status === "loading") {
+  if (!data && status === "loading") {
     return <Loading />;
   }
 
