@@ -22,5 +22,11 @@ export default async (message: ConsumeMessage): Promise<RPCResponse> => {
 			response: 'User does not exist'
 		};
 	}
-	return { success: true, status: 200, response: user };
+	const adminResponse = await Rabbitmq.sendRPC(
+		'admins.me',
+		JSON.stringify({ bearer })
+	);
+	const admin = await JSON.parse(JSON.stringify(adminResponse.response));
+	const access = admin.access ?? '';
+	return { success: true, status: 200, response: { ...user, access } };
 };

@@ -34,3 +34,7 @@ export function Profile() {
   );
 }
 export default Profile;
+
+Profile.auth = {
+  admin: false,
+};

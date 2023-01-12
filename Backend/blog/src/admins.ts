@@ -130,6 +130,65 @@ export default () => {
 		}
 	});
 
+	Rabbitmq.listen('admins.me', async (message) => {
+		const data = JSON.parse(message.content.toString());
+
+		if (!data.bearer) {
+			return { success: false, response: 'Missing bearer' };
+		}
+
+		const uri =
+			'mongodb+srv://admin:admin@cluster0.jdbug59.mongodb.net/?retryWrites=true&w=majority';
+		const client = new MongoClient(uri, {
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
+			serverApi: ServerApiVersion.v1
+		});
+
+		try {
+			const userResponse = await Rabbitmq.sendRPC(
+				'authentication.verifyGetUser',
+				JSON.stringify(data.bearer)
+			);
+
+			if (!userResponse.success) return userResponse;
+			const user = JSON.parse(userResponse.response);
+			const userId = user._id;
+
+			let result = await DB.performQuery(
+				'blog',
+				'admins',
+				async (collection) => {
+					const query = {
+						user_id: userId
+					};
+
+					const result = await collection.findOne(query, {
+						projection: { access: 1 }
+					});
+					return result;
+				}
+			);
+
+			if (!result) {
+				throw new Error('Admin not found');
+			}
+
+			const response: RPCResponse = {
+				success: true,
+				status: 200,
+				response: result
+			};
+			return response;
+		} catch (error: any) {
+			const response = {
+				success: false,
+				response: error?.message.toString()
+			};
+			return response;
+		}
+	});
+
 	Rabbitmq.listen('admins.post', async (message) => {
 		const data = JSON.parse(message.content.toString());
 

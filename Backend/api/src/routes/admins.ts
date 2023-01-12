@@ -49,6 +49,35 @@ export default () => {
 
 	/**
 	 * @swagger
+	 * /admins/me:
+	 *   get:
+	 *     tags:
+	 *       - Admins
+	 *     summary: Get the admin of the current user
+	 *     description: Get the admin of the current user
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       200:
+	 *         description: Success
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/AdminAccess'
+	 *       500:
+	 *         description: Internal Server Error
+	 */
+	router.get('/me', authenticate, async (req: Request, res: Response) => {
+		const data = { ...req.body, ...req?.params };
+		const result = await Rabbitmq.sendRPC(
+			'admins.me',
+			JSON.stringify(data)
+		);
+		respond(res, result);
+	});
+
+	/**
+	 * @swagger
 	 * /admins/{id}:
 	 *   get:
 	 *     tags:
@@ -152,7 +181,6 @@ export default () => {
 	 */
 	router.patch('/:id', authenticate, async (req: Request, res: Response) => {
 		const data = { ...req.body, ...req?.params };
-		console.log('1');
 		const result = await Rabbitmq.sendRPC(
 			'admins.patch',
 			JSON.stringify(data)

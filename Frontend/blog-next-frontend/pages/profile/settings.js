@@ -156,3 +156,7 @@ export function Settings() {
   );
 }
 export default Settings;
+
+Settings.auth = {
+  admin: false,
+};

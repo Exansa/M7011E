@@ -3,6 +3,7 @@ import Rabbitmq from '../../../common/rabbitmq';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
 	const authorizationHeader = req.header('Authorization');
+
 	if (!authorizationHeader)
 		return res.status(401).send({ error: 'Authorization Header missing' });
 	const type = authorizationHeader.split(' ')[0];

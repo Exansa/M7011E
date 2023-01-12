@@ -9,6 +9,8 @@ import AdminPostsTab from "./tabs/adminPostsTab";
 import AdminFiltersTab from "./tabs/adminFiltersTab";
 import AdminUsersTab from "./tabs/adminUsersTab";
 
+import { useSession } from "next-auth/react";
+
 //Based on MUI Tab example
 //https://mui.com/components/tabs/
 
@@ -52,6 +54,8 @@ function a11yProps(index) {
 export default function AdminPanel({ data, adminType }) {
   const [value, setValue] = React.useState(0);
 
+  const { data: session } = useSession();
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -77,7 +81,11 @@ export default function AdminPanel({ data, adminType }) {
         <Tab label="Users" {...a11yProps(1)} />
         <Tab label="Posts" {...a11yProps(2)} />
         <Tab label="Filters" {...a11yProps(3)} />
-        {adminType === "superAdmin" && <Tab label="Admins" {...a11yProps(4)} />}
+        {session.admin === "superAdmin" && (
+          // It is posible to access this tab by manipulating the session
+          // However, since the API is protected you will not be able to change any data.
+          <Tab label="Admins" {...a11yProps(4)} />
+        )}
       </Tabs>
       <TabPanel value={value} index={0}>
         <Typography>Overview</Typography>
@@ -106,7 +114,9 @@ export default function AdminPanel({ data, adminType }) {
           </Grid>
         </Grid>
       </TabPanel>
-      {adminType === "superAdmin" && (
+      {session.admin == "superAdmin" && (
+        // It is posible to access this tab by manipulating the session
+        // However, since the API is protected you will not be able to change any data.
         <TabPanel value={value} index={4}>
           <Typography>Admins</Typography>
         </TabPanel>

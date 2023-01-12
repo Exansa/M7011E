@@ -17,10 +17,14 @@ export const checkAdmin = async (session) => {
   );
 
   if (adminRes.status === 200) {
-    await adminRes.json().then((data) => {
-      return data.access;
-    });
+    console.log("Admin found");
+    console.log(adminRes.body);
+    const adminData = await adminRes.json();
+    console.log(adminData);
+    return adminData.access;
   } else {
+    console.log("Admin not found");
+    console.log(adminRes);
     return;
   }
 };
