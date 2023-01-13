@@ -106,6 +106,7 @@ export default function EditPost(context) {
 
     console.log(JSONdata);
   };
+  console.log(context.post)
 
   const { data: session } = useSession();
   if (
@@ -133,6 +134,7 @@ export default function EditPost(context) {
               margin="normal"
               id="title"
               name="title"
+              defaultValue={context.post.title}
             />
 
             <TextField
@@ -143,6 +145,7 @@ export default function EditPost(context) {
               margin="normal"
               id="content"
               name="content"
+              defaultValue={context.post.content}
             />
             <InputLabel id="demo-simple-select-helper-label">
               Category
@@ -159,7 +162,7 @@ export default function EditPost(context) {
               >
                 {context.categories.map((categories) => (
                   <MenuItem
-                    key={`menu-item-${context.categories._id}`}
+                    key={`menu-item-${categories._id}`}
                     value={categories._id}
                   >
                     {categories.name}
@@ -194,6 +197,7 @@ export default function EditPost(context) {
               margin="normal"
               id="image"
               name="image"
+              defaultValue={context.post.media}
             />
             <Button
               sx={{ m: 1, minWidth: 120 }}
