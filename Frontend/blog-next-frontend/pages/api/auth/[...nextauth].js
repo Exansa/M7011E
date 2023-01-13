@@ -33,27 +33,29 @@ const options = {
     })*/
   ],
   callbacks: {
-    async jwt(token, session, user, account, profile, isNewUser) {
-      if (token.account) {
+    async jwt({ token, account, user, profile }) {
+      if (account) {
         const res = await fetch("http://localhost:5001/user/me", {
           method: "GET",
           headers: new Headers({
-            authorization: "Bearer " + token.account.access_token,
+            authorization: "Bearer " + account.access_token,
           }),
         });
         const result = await res.json();
+        token.user = result;
+        token.accessToken = account.access_token;
 
         if (result != "User does not exist") {
           console.log("existing user");
-          console.log(result);
-          //session.accessToken = result;
         } else {
           console.log("new user! adding user!");
-          const access = "Bearer " + token.account.access_token;
+
+          const access = "Bearer " + account.access_token;
           const data = {
-            username: token.token.name,
+            username: token.name,
           };
-          const res = await fetch("http://localhost:5001/user", {
+
+          await fetch("http://localhost:5001/user", {
             method: "POST",
             headers: new Headers({
               accept: "application/json",
@@ -63,40 +65,22 @@ const options = {
             body: JSON.stringify(data),
           });
         }
-        return token;
       }
 
       return token;
     },
 
     async session({ session, token }) {
-      if (token.token.account) {
-        //console.log('token accoutn', token.token.account)
-        session.accessToken = token.token.account.access_token;
-        const res = await fetch("http://localhost:5001/user/me", {
-          method: "GET",
-          headers: new Headers({
-            authorization: "Bearer " + session.accessToken,
-          }),
-        });
-        const result = await res.json();
+      session.accessToken = token.accessToken;
+      session.user = token.user;
+      console.log(session);
 
-        if (result) {
-          session.user = result;
-        }
-        console.log(session);
-
-        return session;
-      }
-      //return session
+      return session;
     },
-
-    /*async session(session, token){
-      console.log(token);
-    }*/
   },
 
   debug: false,
 };
 
-export default (req, res) => NextAuth(req, res, options);
+const Auth = (req, res) => NextAuth(req, res, options);
+export default Auth;
