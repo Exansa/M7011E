@@ -19,10 +19,6 @@ export async function getStaticProps() {
 }
 
 export default function Home(context) {
-  //const { user, error, isLoading } = useUser();
-  const { data: session } = useSession();
-  //console.log(session)
-
   const GenericCard = dynamic(
     () => import("../resource/components/global/card"),
     { ssr: false }
@@ -30,12 +26,9 @@ export default function Home(context) {
 
   return (
     <>
-      <Page title="Index">
+      <Page title="Home">
         <Box mx={"10%"} my="10%">
-          <Typography variant="h1">
-            {" "}
-            {session ? `${session.user.username}, ` : ""}Welcome to the blog!{" "}
-          </Typography>
+          <Typography variant="h1">Welcome to the blog!</Typography>
           <Stack
             direction="row"
             flexWrap="wrap"

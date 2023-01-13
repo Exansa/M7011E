@@ -51,7 +51,7 @@ function a11yProps(index) {
   };
 }
 
-export default function AdminPanel({ data, adminType }) {
+export default function AdminPanel({ data }) {
   const [value, setValue] = React.useState(0);
 
   const { data: session } = useSession();
@@ -81,9 +81,7 @@ export default function AdminPanel({ data, adminType }) {
         <Tab label="Users" {...a11yProps(1)} />
         <Tab label="Posts" {...a11yProps(2)} />
         <Tab label="Filters" {...a11yProps(3)} />
-        {session.admin === "superAdmin" && (
-          // It is posible to access this tab by manipulating the session
-          // However, since the API is protected you will not be able to change any data.
+        {session.user.access === "superAdmin" && (
           <Tab label="Admins" {...a11yProps(4)} />
         )}
       </Tabs>
@@ -114,11 +112,11 @@ export default function AdminPanel({ data, adminType }) {
           </Grid>
         </Grid>
       </TabPanel>
-      {session.admin == "superAdmin" && (
-        // It is posible to access this tab by manipulating the session
-        // However, since the API is protected you will not be able to change any data.
+      {session.user.access === "superAdmin" && (
         <TabPanel value={value} index={4}>
-          <Typography>Admins</Typography>
+          <Typography>
+            Edit Admins coming soon... Cant wait? Try Swagger!
+          </Typography>
         </TabPanel>
       )}
     </Box>

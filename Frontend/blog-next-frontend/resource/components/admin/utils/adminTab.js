@@ -1,5 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import { useSession } from "next-auth/react";
 import { alpha } from "@mui/material/styles";
 import {
   Box,
@@ -29,8 +30,6 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-
-import AutoCompleteFetcher from "../../search/autoCompleteFetcher";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -210,7 +209,10 @@ function DeleteDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={action}
+            onClick={() => {
+              action();
+              closeDialog();
+            }}
             sx={{ display: deleteAllowed ? "block" : "none" }}
           >
             Yes
@@ -232,7 +234,14 @@ DeleteDialog.propTypes = {
 export default function AdminTab(props) {
   const { components, args } = props;
   const { RowComponent, OptionalFilterDialogComponent } = components;
-  const { defaultRows, label, headCells, optionalFilterArgs, removable } = args;
+  const {
+    defaultRows,
+    label,
+    headCells,
+    optionalFilterArgs,
+    removable,
+    apiDestination,
+  } = args;
 
   const [rows, setRows] = React.useState(defaultRows);
   const [order, setOrder] = React.useState("asc");
@@ -241,6 +250,8 @@ export default function AdminTab(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const session = useSession();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
@@ -276,28 +287,27 @@ export default function AdminTab(props) {
   };
 
   const handleDelete = async () => {
-    if (selected.length === 0 || selected > 5 || !removable) return;
+    if (selected.length === 0 || selected > 5 || !removable) {
+      return;
+    }
 
-    selected.forEach(async (target_id) => {
-      //TODO: Replace with admin ID?
-      const body = { user_id: target.user._id };
+    selected.forEach(async (target) => {
       // Remove item from db
       const res = await fetch(
-        `http://localhost:3000/${apiDestination}/${target._id}`,
+        `http://localhost:5001/${apiDestination}/${target}`,
         {
           method: "DELETE",
           headers: {
-            //TODO: Authorization
-            authorization: `Bearer ${localStorage.getItem("token")}`,
+            authorization: `Bearer ${session.data.accessToken}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(body),
         }
       );
       const data = await res.json();
       if (res.status === 200) {
-        const newRows = rows.filter((row) => row._id !== target._id);
+        const newRows = rows.filter((row) => row._id !== target);
         setRows(newRows);
+        handleResetClick();
       } else {
         console.log("Error");
         console.log(data);

@@ -10,31 +10,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import AccessDenied from "../../resource/components/accessDenied";
 
 export function Settings() {
-  const [value, setValue] = useState("");
   const { data: session } = useSession();
-  async function handleOnButtonClick(e) {
-    const path = "http://localhost:5001/admins?set=1";
-    const access = "Bearer " + session.accessToken;
-    const res = await fetch(path, {
-      method: "GET",
-      headers: {
-        accept: "*/*",
-        Authorization: access,
-      },
-    });
-    console.log("res", res);
-    const result = await res.json();
-    console.log("result: ", result);
-    for (let i = 0; i < result.length; i++) {
-      if (result.user_id == session.user._id) {
-        console.log("true");
-        break;
-      } else {
-        console.log("false");
-      }
-    }
-  }
-
 
 
   const handleSubmit = async (event)=> {
@@ -120,28 +96,13 @@ export function Settings() {
       method: "PATCH",
       headers: {
         accept: "*/*", 
-        Authorization: access,
+        //Authorization: access,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(data),
       });
     }
 
-    
-    /*
-    const path = 'http://localhost:5001/user/' + session.user._id;
-    const access = "Bearer " + session.accessToken;
-    const res = await fetch(path, {
-      method: "PATCH",
-      headers: {
-        accept: "**", 
-        Authorization: access,
-        "Content-Type": "application/json"
-      },
-      body: data,
-    });*/
-
-    setValue("");
   };
   if (!session) {
     return (
@@ -189,7 +150,6 @@ export function Settings() {
               Submit
             </Button>
           </form>
-          <Button onClick={handleOnButtonClick}>edit</Button>
         </Container>
       </Page>
     )
