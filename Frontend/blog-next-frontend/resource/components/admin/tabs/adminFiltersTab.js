@@ -107,7 +107,7 @@ export default function AdminFilterstab({ data, label, apiDestination }) {
     RowComponent: RowItem,
   };
   const args = {
-    apiDestionation: apiDestination,
+    apiDestination: apiDestination,
     label: label,
     defaultRows: data,
     headCells: headCells,

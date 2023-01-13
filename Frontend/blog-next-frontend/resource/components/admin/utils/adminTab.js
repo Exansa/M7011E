@@ -1,5 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import { useSession } from "next-auth/react";
 import { alpha } from "@mui/material/styles";
 import {
   Box,
@@ -208,7 +209,10 @@ function DeleteDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={action}
+            onClick={() => {
+              action();
+              closeDialog();
+            }}
             sx={{ display: deleteAllowed ? "block" : "none" }}
           >
             Yes
@@ -230,7 +234,14 @@ DeleteDialog.propTypes = {
 export default function AdminTab(props) {
   const { components, args } = props;
   const { RowComponent, OptionalFilterDialogComponent } = components;
-  const { defaultRows, label, headCells, optionalFilterArgs, removable } = args;
+  const {
+    defaultRows,
+    label,
+    headCells,
+    optionalFilterArgs,
+    removable,
+    apiDestination,
+  } = args;
 
   const [rows, setRows] = React.useState(defaultRows);
   const [order, setOrder] = React.useState("asc");
@@ -276,12 +287,14 @@ export default function AdminTab(props) {
   };
 
   const handleDelete = async () => {
-    if (selected.length === 0 || selected > 5 || !removable) return;
+    if (selected.length === 0 || selected > 5 || !removable) {
+      return;
+    }
 
     selected.forEach(async (target) => {
       // Remove item from db
       const res = await fetch(
-        `http://localhost:3000/${apiDestination}/${target}`,
+        `http://localhost:5001/${apiDestination}/${target}`,
         {
           method: "DELETE",
           headers: {
@@ -292,7 +305,7 @@ export default function AdminTab(props) {
       );
       const data = await res.json();
       if (res.status === 200) {
-        const newRows = rows.filter((row) => row._id !== target._id);
+        const newRows = rows.filter((row) => row._id !== target);
         setRows(newRows);
         handleResetClick();
       } else {
