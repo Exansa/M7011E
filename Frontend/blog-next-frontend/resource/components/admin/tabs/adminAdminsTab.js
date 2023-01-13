@@ -123,7 +123,7 @@ export default function AdminUsersTab({ data }) {
     RowComponent: RowItem,
   };
   const args = {
-    apiDestionation: "users",
+    apiDestination: "users",
     label: "Users",
     defaultRows: data,
     headCells: headCells,

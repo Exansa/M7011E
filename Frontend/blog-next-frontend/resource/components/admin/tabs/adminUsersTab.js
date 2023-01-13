@@ -54,7 +54,9 @@ function RowItem(props) {
       <TableCell align="right">
         {row.auth0_id ? row.auth0_id.split("|")[0] : "None"}
       </TableCell>
-      <TableCell align="right" sx={{ wordBreak: "break-all" }}>{row.profile_picture}</TableCell>
+      <TableCell align="right" sx={{ wordBreak: "break-all" }}>
+        {row.profile_picture}
+      </TableCell>
       <TableCell align="right">
         {/* <NextLink passHref href={Routes.users.edit(row._id)} key={row._id}> */}
         <IconButton>
@@ -121,7 +123,7 @@ export default function AdminUsersTab({ data }) {
     RowComponent: RowItem,
   };
   const args = {
-    apiDestionation: "users",
+    apiDestination: "users",
     label: "Users",
     defaultRows: data,
     headCells: headCells,

@@ -43,8 +43,8 @@ function RowItem(props) {
       <TableCell align="right" sx={{ wordBreak: "break-all" }}>
         {row.content}
       </TableCell>
-      <TableCell align="right">{row.user.username}</TableCell>
-      <TableCell align="right">{row.user._id}</TableCell>
+      <TableCell align="right">{row.user?.username}</TableCell>
+      <TableCell align="right">{row.user?._id}</TableCell>
       <TableCell align="right">
         {row.category ? row.category.name : "None"}
       </TableCell>
@@ -134,7 +134,7 @@ export default function AdminPostsTab({ data }) {
     OptionalFilterDialogComponent: SearchPostsForm,
   };
   const args = {
-    apiDestionation: "posts",
+    apiDestination: "posts",
     label: "Posts",
     defaultRows: data.posts,
     headCells: headCells,
