@@ -20,22 +20,14 @@ export default async (message: ConsumeMessage) => {
 	}
 	// Verify bearer and return if error
 	const userResponse = await Rabbitmq.sendRPC(
-		'authentication.verify',
+		'authentication.verifyGetUser',
 		JSON.stringify(bearer)
 	);
-	if (!userResponse.success) {
-		return userResponse;
-	}
-
-	// Parse user object and assert _id parameter. Return if error
-	const user = JSON.parse(userResponse.response);
-	if (!user._id) {
-		return { success: false, response: 'user object missing _id' };
-	}
-
+	if (!userResponse.success) return userResponse;
+	const { _id: user_id } = await JSON.parse(userResponse.response);
 	// Update databse with secret and remove pending secret. Return if any error
 	return await DB.performQuery('users', 'totp', async (collection) => {
-		const dbUser = await collection.findOne({ user_id: user._id });
+		const dbUser = await collection.findOne({ user_id });
 		if (!dbUser) {
 			return { success: false, status: 404, response: 'User not found' };
 		}
@@ -57,7 +49,7 @@ export default async (message: ConsumeMessage) => {
 			return { success: false, status: 400, response: 'Invalid TOTP' };
 		}
 		const updated = await collection.updateOne(
-			{ user_id: user._id },
+			{ user_id },
 			{
 				$set: {
 					secret: dbUser.pending_secret,

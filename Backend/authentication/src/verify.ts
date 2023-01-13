@@ -2,12 +2,11 @@ import { ConsumeMessage } from 'amqplib';
 import { RPCResponse } from '../../common/rabbitmq';
 
 export default async (message: ConsumeMessage): Promise<RPCResponse> => {
-	console.info('authentication.verify');
-	const data = JSON.parse(message.content.toString());
-	if (!data) {
-		return { success: false, response: 'Missing data' };
-	}
 	try {
+		const data = JSON.parse(message.content.toString());
+		if (!data) {
+			return { success: false, response: 'Missing data' };
+		}
 		const user = await fetch('https://peterpanduro.eu.auth0.com/userinfo', {
 			method: 'GET',
 			headers: {

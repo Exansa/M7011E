@@ -3,11 +3,11 @@ import Rabbitmq, { RPCResponse } from '../../common/rabbitmq';
 import DB from '../../common/db';
 
 export default async (message: ConsumeMessage): Promise<RPCResponse> => {
-	const data = message.content.toString();
-	if (!data) {
-		return { success: false, response: 'Missing data' };
-	}
 	try {
+		const data = message.content.toString();
+		if (!data) {
+			return { success: false, response: 'Missing data' };
+		}
 		const bearerUserResponse = await Rabbitmq.sendRPC(
 			'authentication.verify',
 			data
