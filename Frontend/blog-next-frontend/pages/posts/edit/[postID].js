@@ -39,7 +39,7 @@ export async function getStaticProps({ params }) {
   const tags = await resTags.json();
   const resCat = await fetch("http://localhost:5001/categories?set=1");
   const categories = await resCat.json();
-  const resPost = await fetch("http://localhost:5001/posts/1");
+  const resPost = await fetch("http://localhost:5001/posts/" + params.postID);
   const post = await resPost.json();
   //console.log('2')
   //console.log('params',params.postID);
@@ -178,7 +178,7 @@ export default function EditPost(context) {
                 id="tags"
                 name="tags"
 
-                //onChange={handleChange}
+                onChange={handleChange}
               >
                 {context.tags.map((tags) => (
                   <MenuItem
@@ -188,7 +188,7 @@ export default function EditPost(context) {
                     {tags.name}
                   </MenuItem>
                 ))}
-              </Select>
+                </Select>
             </FormControl>
             <TextField
               required

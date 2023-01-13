@@ -51,7 +51,7 @@ export async function getStaticProps() {
   };
 }
 
-export default function makePost(context) {
+export default function MakePost(context) {
   // If no session exists, display access denied message
   //if (!session) { return  <Page><AccessDenied/></Page> }
 
