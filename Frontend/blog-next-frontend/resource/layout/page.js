@@ -10,6 +10,7 @@ import Footer from "./footer";
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line react/display-name
 const Page = forwardRef(({ children, meta, title, ...other }, ref) => (
   <>
     <Head>

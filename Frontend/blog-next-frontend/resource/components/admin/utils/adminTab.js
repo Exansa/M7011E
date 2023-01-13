@@ -30,8 +30,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 
-import AutoCompleteFetcher from "../../search/autoCompleteFetcher";
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -242,6 +240,8 @@ export default function AdminTab(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const session = useSession();
+
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
 
@@ -278,26 +278,23 @@ export default function AdminTab(props) {
   const handleDelete = async () => {
     if (selected.length === 0 || selected > 5 || !removable) return;
 
-    selected.forEach(async (target_id) => {
-      //TODO: Replace with admin ID?
-      const body = { user_id: target.user._id };
+    selected.forEach(async (target) => {
       // Remove item from db
       const res = await fetch(
-        `http://localhost:3000/${apiDestination}/${target._id}`,
+        `http://localhost:3000/${apiDestination}/${target}`,
         {
           method: "DELETE",
           headers: {
-            //TODO: Authorization
-            authorization: `Bearer ${localStorage.getItem("token")}`,
+            authorization: `Bearer ${session.data.accessToken}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(body),
         }
       );
       const data = await res.json();
       if (res.status === 200) {
         const newRows = rows.filter((row) => row._id !== target._id);
         setRows(newRows);
+        handleResetClick();
       } else {
         console.log("Error");
         console.log(data);

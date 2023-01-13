@@ -51,7 +51,7 @@ export async function getStaticProps() {
   };
 }
 
-export default function makePost(context) {
+export default function MakePost(context) {
   // If no session exists, display access denied message
   //if (!session) { return  <Page><AccessDenied/></Page> }
 
@@ -92,18 +92,18 @@ export default function makePost(context) {
       post: predata,
     };
 
-    const JSONdata = JSON.stringify(data)
-    console.log(JSONdata)
+    const JSONdata = JSON.stringify(data);
+    console.log(JSONdata);
     const access = "Bearer " + session.accessToken;
-    const res = await fetch('http://localhost:5001/posts', {
-        method: "POST",
-        headers: {
-          accept: "*/*",
-          Authorization: access,
-          "Content-Type": "application/json",
-        },
-        body: JSONdata,
-    }); 
+    const res = await fetch("http://localhost:5001/posts", {
+      method: "POST",
+      headers: {
+        accept: "*/*",
+        Authorization: access,
+        "Content-Type": "application/json",
+      },
+      body: JSONdata,
+    });
 
     console.log(JSONdata);
   };
@@ -153,7 +153,12 @@ export default function makePost(context) {
                 //onChange={handleChange}
               >
                 {context.categories.map((categories) => (
-                  <MenuItem value={categories._id}>{categories.name}</MenuItem>
+                  <MenuItem
+                    key={`menu-item-category-${categories._id}`}
+                    value={categories._id}
+                  >
+                    {categories.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -168,7 +173,9 @@ export default function makePost(context) {
                 //onChange={handleChange}
               >
                 {context.tags.map((tags) => (
-                  <MenuItem value={tags._id}>{tags.name}</MenuItem>
+                  <MenuItem key={`menu-item-tag-${tags._id}`} value={tags._id}>
+                    {tags.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
