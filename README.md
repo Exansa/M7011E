@@ -5,6 +5,11 @@ Our porject is a blog style website where we will make it using the frameworks N
 then compare the performance of the two different systems. They will have a shared
 backend and database so we can see the difference in them without other factors.
 
+We decided in the latter part of the project to focus on the development of nextjs and not flutter.
+Therefore flutter is not using the backend solution but what we compared was a page without that factor.
+Nextjs is the solution that fullfills the requirements of the project. 
+Flutter is a controlled comparison for evaluation
+
 
 
 # Testing frameworks
@@ -13,6 +18,12 @@ This is because it loads the entire application immedietly compared to next that
 This can be seen when switching to the about page from the home page. Flutter has an immediate transition.
 The drawback in this is that the total size of the load is very big especially when the user only want one page.
 Signing in has for the both practically very little differences
+
+Part of our performance report is also a more subjective opinion on how they are to work with.
+We are of the opinion that for this course and generally making a web native project nextjs is the best choice.
+Flutter is probably a better choice if we were creating an app that we want a web solution to aswell.
+Flutter has less resources and little documentation for web development compared with nextjs. But way more for apps.
+
 
 |     Refreshing page      |    Nextjs     |    Flutter    |
 | ------------------------ | ------------- | ------------- |
