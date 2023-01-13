@@ -8,6 +8,7 @@ import {
   Button,
   Stack,
   Box,
+  Typography,
 } from "@mui/material";
 import AutoCompleteFetcher from "../../resource/components/search/autoCompleteFetcher";
 import { useState } from "react";
@@ -32,7 +33,7 @@ export async function getStaticProps() {
   };
 }
 
-export default function MakePost(props) {
+function PostForm(props) {
   const { categories, tags } = props;
 
   const [title, setTitle] = useState("");
@@ -106,7 +107,7 @@ export default function MakePost(props) {
   };
 
   return (
-    <Page title="Make Post">
+    <>
       <Dialog open={errorDialogOpen} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Error!</DialogTitle>
         <DialogContent>Could not create post.</DialogContent>
@@ -116,15 +117,24 @@ export default function MakePost(props) {
           </DialogActions>
         </DialogActions>
       </Dialog>
-      <Stack direction="column" spacing={2}>
+      <Stack
+        direction="column"
+        spacing={2}
+        justifyContent={{ xs: "center" }}
+        alignItems="center"
+        sx={{ mx: "auto" }}
+      >
+        <Typography>Make Post</Typography>
         <Grid
           container
           direction="row"
-          justifyContent={{ xs: "center", md: "flex-start" }}
-          alignItems="flex-start"
           spacing={1}
+          md={6}
+          xs={12}
+          justifyContent={{ xs: "center", md: "flex-start" }}
+          sx={{ mx: "auto" }}
         >
-          <Grid item xs={12} md={width}>
+          <Grid item xs={12}>
             <TextField
               id="post-title"
               label="Post title"
@@ -138,47 +148,35 @@ export default function MakePost(props) {
             />
           </Grid>
           {/* ------------------ Content ------------------ */}
-          <Grid
-            container
-            item
-            xs={12}
-            justifyContent={{ xs: "center", md: "flex-start" }}
-          >
-            <Grid item xs={12} md={width}>
-              <TextField
-                id="content"
-                label="Content"
-                variant="outlined"
-                value={content}
-                fullWidth
-                required
-                onChange={(event) => {
-                  setContent(event.target.value);
-                }}
-              />
-            </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              id="content"
+              label="Content"
+              variant="outlined"
+              value={content}
+              fullWidth
+              required
+              onChange={(event) => {
+                setContent(event.target.value);
+              }}
+            />
           </Grid>
-          <Grid
-            container
-            item
-            xs={12}
-            justifyContent={{ xs: "center", md: "flex-start" }}
-          >
-            <Grid item xs={12} md={width}>
-              <TextField
-                id="media"
-                label="Media"
-                variant="outlined"
-                value={media}
-                fullWidth
-                required
-                onChange={(event) => {
-                  setMedia(event.target.value);
-                }}
-              />
-            </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              id="media"
+              label="Media"
+              variant="outlined"
+              value={media}
+              fullWidth
+              required
+              onChange={(event) => {
+                setMedia(event.target.value);
+              }}
+            />
           </Grid>
-          <Grid item xs={12} md={width / 2}>
+          <Grid item xs={6}>
             {/* ------------------ Tags ------------------ */}
             <AutoCompleteFetcher
               label="Tag"
@@ -191,7 +189,7 @@ export default function MakePost(props) {
               noneValue={[]}
             />
           </Grid>
-          <Grid item xs={12} md={width / 2}>
+          <Grid item xs={6}>
             {/* ------------------ Category ------------------ */}
             <AutoCompleteFetcher
               label="Category"
@@ -212,6 +210,16 @@ export default function MakePost(props) {
           </Button>
         </Box>
       </Stack>
+    </>
+  );
+}
+
+// In order to avoid full page refresh on update we have to wrap the content in a seperate component
+// Very hacky, but it works
+export default function MakePost(props) {
+  return (
+    <Page title="Make Post">
+      <PostForm {...props} />
     </Page>
   );
 }

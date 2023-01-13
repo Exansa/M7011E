@@ -36,7 +36,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: false,
+    fallback: "blocking",
   };
 }
 
@@ -67,7 +67,7 @@ const Post = (context) => {
                 {post.title}
               </Typography>
               <Typography variant="subtitle" color="text.secondary">
-                - {post.categories[0] && post.categories[0].name}
+                - {post.category && post.category.name}
               </Typography>
             </Stack>
             <Breadcrumbs separator="" sx={{ my: 3 }}>
