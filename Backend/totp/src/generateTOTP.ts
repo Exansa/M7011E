@@ -11,25 +11,19 @@ export default async (message: ConsumeMessage) => {
 	}
 	// Get user object by verify bearer. Return if error
 	const userResponse = await Rabbitmq.sendRPC(
-		'authentication.verify',
+		'authentication.verifyGetUser',
 		JSON.stringify(bearer)
 	);
-	if (!userResponse.success) {
-		return userResponse;
-	}
-	// Parse user object and assert _id parameter. Return if error
-	const user = JSON.parse(userResponse.response);
-	if (!user._id) {
-		return { success: false, response: 'user object missing _id' };
-	}
+	if (!userResponse.success) return userResponse;
+	const { _id: user_id } = await JSON.parse(userResponse.response);
 	// Generate secret and save as pending to database. Return if error
-	const secret = generate(user._id);
+	const secret = generate(user_id);
 	const dbResponse = await DB.performQuery('users', 'totp', (collection) =>
 		collection.updateOne(
-			{ user_id: user._id },
+			{ user_id },
 			{
 				$set: {
-					user_id: user._id,
+					user_id,
 					pending_secret: secret.secret,
 					pending_date: Date.now()
 				}

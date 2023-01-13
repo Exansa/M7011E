@@ -39,7 +39,7 @@ export async function getStaticProps({ params }) {
   const tags = await resTags.json();
   const resCat = await fetch("http://localhost:5001/categories?set=1");
   const categories = await resCat.json();
-  const resPost = await fetch("http://localhost:5001/posts/1");
+  const resPost = await fetch("http://localhost:5001/posts/" + params.postID);
   const post = await resPost.json();
   //console.log('2')
   //console.log('params',params.postID);
@@ -82,30 +82,32 @@ export default function EditPost(context) {
     const predata = {
       title: event.target.title.value,
       content: event.target.content.value,
-      categories_id: [event.target.categories.value],
+      category_id: event.target.categories.value,
       tags_id: [event.target.tags.value],
       media: event.target.image.value,
     };
     const data = {
-      user_id: session.user._id,
       post: predata,
     };
 
     const JSONdata = JSON.stringify(data);
     console.log(JSONdata);
     console.log(context.postID);
-    const postRef = "http://localhost:5001/post/" + context.postID;
+    const access = "Bearer " + session.accessToken;
+    const postRef = "http://localhost:5001/posts/" + context.postID;
     const res = await fetch(postRef, {
       method: "PATCH",
       headers: {
         accept: "*/*",
+        Authorization: access,
         "Content-Type": "application/json",
       },
       body: JSONdata,
     });
-
+    console.log(res)
     console.log(JSONdata);
   };
+  console.log(context.post)
 
   const { data: session } = useSession();
   if (
@@ -133,6 +135,7 @@ export default function EditPost(context) {
               margin="normal"
               id="title"
               name="title"
+              defaultValue={context.post.title}
             />
 
             <TextField
@@ -143,6 +146,7 @@ export default function EditPost(context) {
               margin="normal"
               id="content"
               name="content"
+              defaultValue={context.post.content}
             />
             <InputLabel id="demo-simple-select-helper-label">
               Category
@@ -159,7 +163,7 @@ export default function EditPost(context) {
               >
                 {context.categories.map((categories) => (
                   <MenuItem
-                    key={`menu-item-${context.categories._id}`}
+                    key={`menu-item-${categories._id}`}
                     value={categories._id}
                   >
                     {categories.name}
@@ -175,7 +179,7 @@ export default function EditPost(context) {
                 id="tags"
                 name="tags"
 
-                //onChange={handleChange}
+                onChange={handleChange}
               >
                 {context.tags.map((tags) => (
                   <MenuItem
@@ -185,7 +189,7 @@ export default function EditPost(context) {
                     {tags.name}
                   </MenuItem>
                 ))}
-              </Select>
+                </Select>
             </FormControl>
             <TextField
               required
@@ -194,6 +198,7 @@ export default function EditPost(context) {
               margin="normal"
               id="image"
               name="image"
+              defaultValue={context.post.media}
             />
             <Button
               sx={{ m: 1, minWidth: 120 }}
