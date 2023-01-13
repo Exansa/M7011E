@@ -33,7 +33,7 @@ const options = {
     })*/
   ],
   callbacks: {
-    async jwt({ token, account, user, profile }) {
+    async jwt({ token, account }) {
       if (account) {
         const res = await fetch("http://localhost:5001/user/me", {
           method: "GET",

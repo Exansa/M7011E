@@ -21,6 +21,9 @@ import Tags from "../../data/mock_db/tags";
 import Categories from "../../data/mock_db/categories";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+import Routes from "../../resource/routes";
+import Link from "next/link";
 //import { Category } from "@mui/icons-material";
 
 //import { getCategories } from "../../data/mock_request/db_handler";
@@ -58,6 +61,8 @@ export default function MakePost(context) {
   const [setCategory] = React.useState("");
   const [tagName, setTagName] = React.useState([]);
   const [image, setImage] = useState(null);
+
+  const router = useRouter();
 
   const handleChange = (event) => {
     const {
@@ -106,6 +111,7 @@ export default function MakePost(context) {
     });
 
     console.log(JSONdata);
+    router.push(Routes.posts.index);
   };
 
   const { data: session } = useSession();
@@ -179,31 +185,6 @@ export default function MakePost(context) {
                 ))}
               </Select>
             </FormControl>
-            {/*<FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
-            <Select
-              labelId="demo-multiple-checkbox-label"
-              id='tags'
-              multiple
-              value={context.tags}
-              onChange={handleChange}
-              input={<OutlinedInput label="Tags" />}
-              renderValue={(selected) => selected.join(", ")}
-              name="tags"
-              
-              //MenuProps={MenuProps}
-            >
-              {context.tags.map((tags) => (
-                <MenuItem key={tags._id} value={tags.name}>
-                  <Checkbox checked={tags.name.indexOf(tags.name) > -1} />
-                  <ListItemText primary={tags.name} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>*/}
-
-            {/*<input accept="*" 
-            type="file" onChange={handlePicture} name="image" id='image' />*/}
             <TextField
               required
               fullWidth
@@ -226,7 +207,7 @@ export default function MakePost(context) {
   );
 }
 
-makePost.auth = {
+MakePost.auth = {
   admin: false,
   roles: ["user", "admin", "superAdmin"],
 };
