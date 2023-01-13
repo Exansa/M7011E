@@ -1,213 +1,221 @@
-import Page from "../../resource/layout/page";
-import { useSession } from "next-auth/react";
-import AccessDenied from "../../resource/components/accessDenied";
 import {
-  Container,
+  Grid,
   TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Button,
-  Select,
-  MenuItem,
-  InputLabel,
-  Typography,
+  Stack,
   Box,
-  FormControl,
-  FormHelperText,
-  OutlinedInput,
-  Checkbox,
-  ListItemText,
 } from "@mui/material";
-import * as React from "react";
-import Tags from "../../data/mock_db/tags";
-import Categories from "../../data/mock_db/categories";
+import AutoCompleteFetcher from "../../resource/components/search/autoCompleteFetcher";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Routes from "../../resource/routes";
-import Link from "next/link";
-//import { Category } from "@mui/icons-material";
-
-//import { getCategories } from "../../data/mock_request/db_handler";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+import Page from "../../resource/layout/page";
 
 export async function getStaticProps() {
-  const resTags = await fetch("http://localhost:5001/tags?set=1");
-  const tags = await resTags.json();
-  const resCat = await fetch("http://localhost:5001/categories?set=1");
-  const categories = await resCat.json();
-  //console.log(tags);
-  //console.log(categories);
+  const catData = await (
+    await fetch("http://localhost:5001/categories?set=1")
+  ).json();
+  const tagData = await (
+    await fetch("http://localhost:5001/tags?set=1")
+  ).json();
+
   return {
     props: {
-      tags,
-      categories,
+      categories: catData,
+      tags: tagData,
     },
   };
 }
 
-export default function MakePost(context) {
-  // If no session exists, display access denied message
-  //if (!session) { return  <Page><AccessDenied/></Page> }
+export default function MakePost(props) {
+  const { categories, tags } = props;
 
-  const [setCategory] = React.useState("");
-  const [tagName, setTagName] = React.useState([]);
-  const [image, setImage] = useState(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [targetTags, setTargetTags] = useState([]);
+  const [targetCategoryID, setTargetCategoryID] = useState("");
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [media, setMedia] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const session = useSession();
   const router = useRouter();
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setTagName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
+  const width = 6;
 
-  const handlePicture = (e) => {
-    const i = e.target.files[0];
-    setImage(i);
-    /*let formData = new FormData();
-    formData.append("data", JSON.stringify(i));
-    formData.append("profile_picture", e.target.files[0]);
-    axios.put("/api/update", formData).then(console.log).catch(console.log);*/
-  };
+  const handleRequest = async () => {
+    if (
+      title.length < 1 ||
+      content.length < 1 ||
+      media.length < 1 ||
+      targetTags.length < 1 ||
+      targetCategoryID.length < 1
+    ) {
+      openErrorDialog();
+      return;
+    }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+    setLoading(true);
 
-    const predata = {
-      title: event.target.title.value,
-      content: event.target.content.value,
-      category_id: event.target.categories.value,
-      tags_id: [event.target.tags.value],
-      media: event.target.image.value,
-    };
-    const data = {
-      post: predata,
-    };
-
-    const JSONdata = JSON.stringify(data);
-    console.log(JSONdata);
-    const access = "Bearer " + session.accessToken;
-    const res = await fetch("http://localhost:5001/posts", {
-      method: "POST",
-      headers: {
-        accept: "*/*",
-        Authorization: access,
-        "Content-Type": "application/json",
+    const request = {
+      post: {
+        title: title,
+        content: content,
+        category_id: targetCategoryID,
+        tags_id: [],
+        media: media,
       },
-      body: JSONdata,
+    };
+
+    // Since tags are an array of objects, we need to convert them to an array of IDs
+    targetTags.forEach((tag) => {
+      request.post.tags_id.push(tag._id);
     });
 
-    console.log(JSONdata);
-    router.push(Routes.posts.index);
+    const data = await fetch("http://localhost:5001/posts", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        authorization: "Bearer " + session.data.accessToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+
+    setLoading(false);
+
+    if (data.status != 200) {
+      openErrorDialog();
+      return;
+    } else {
+      router.push(Routes.posts.index);
+    }
   };
 
-  const { data: session } = useSession();
-  if (!session) {
-    return (
-      <Page>
-        <AccessDenied />
-      </Page>
-    );
-  }
+  const closeErrorDialog = () => {
+    setErrorDialogOpen(false);
+  };
+
+  const openErrorDialog = () => {
+    setErrorDialogOpen(true);
+  };
+
   return (
-    <>
-      <Page>
-        <Container maxWidth="md">
-          <form onSubmit={handleSubmit}>
+    <Page title="Make Post">
+      <Dialog open={errorDialogOpen} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Error!</DialogTitle>
+        <DialogContent>Could not create post.</DialogContent>
+        <DialogActions>
+          <DialogActions>
+            <Button onClick={closeErrorDialog}>Close</Button>
+          </DialogActions>
+        </DialogActions>
+      </Dialog>
+      <Stack direction="column" spacing={2}>
+        <Grid
+          container
+          direction="row"
+          justifyContent={{ xs: "center", md: "flex-start" }}
+          alignItems="flex-start"
+          spacing={1}
+        >
+          <Grid item xs={12} md={width}>
             <TextField
-              required
+              id="post-title"
+              label="Post title"
+              variant="outlined"
+              value={title}
               fullWidth
-              label="Title"
-              margin="normal"
-              id="title"
-              name="title"
-            />
-
-            <TextField
               required
-              fullWidth
-              multiline
-              label="Blog post text"
-              margin="normal"
-              id="content"
-              name="content"
+              onChange={(event) => {
+                setTitle(event.target.value);
+              }}
             />
-            <InputLabel id="demo-simple-select-helper-label">
-              Category
-            </InputLabel>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                value={context.categories._id}
-                label="Category"
-                id="categories"
-                name="categories"
-
-                //onChange={handleChange}
-              >
-                {context.categories.map((categories) => (
-                  <MenuItem
-                    key={`menu-item-category-${categories._id}`}
-                    value={categories._id}
-                  >
-                    {categories.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                value={context.tags._id}
-                label="Tags"
-                id="tags"
-                name="tags"
-
-                //onChange={handleChange}
-              >
-                {context.tags.map((tags) => (
-                  <MenuItem key={`menu-item-tag-${tags._id}`} value={tags._id}>
-                    {tags.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <TextField
-              required
-              fullWidth
-              label="image"
-              margin="normal"
-              id="image"
-              name="image"
+          </Grid>
+          {/* ------------------ Content ------------------ */}
+          <Grid
+            container
+            item
+            xs={12}
+            justifyContent={{ xs: "center", md: "flex-start" }}
+          >
+            <Grid item xs={12} md={width}>
+              <TextField
+                id="content"
+                label="Content"
+                variant="outlined"
+                value={content}
+                fullWidth
+                required
+                onChange={(event) => {
+                  setContent(event.target.value);
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            item
+            xs={12}
+            justifyContent={{ xs: "center", md: "flex-start" }}
+          >
+            <Grid item xs={12} md={width}>
+              <TextField
+                id="media"
+                label="Media"
+                variant="outlined"
+                value={media}
+                fullWidth
+                required
+                onChange={(event) => {
+                  setMedia(event.target.value);
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={width / 2}>
+            {/* ------------------ Tags ------------------ */}
+            <AutoCompleteFetcher
+              label="Tag"
+              noOptionsText="No tags found"
+              setSelectedItem={setTargetTags}
+              defaultItems={tags}
+              apiURL="http://localhost:5001/search/tags?set=1"
+              requestKey="name"
+              multiple={true}
+              noneValue={[]}
             />
-            <Button
-              sx={{ m: 1, minWidth: 120 }}
-              type="submit"
-              variant="contained"
-            >
-              Submit
-            </Button>
-          </form>
-        </Container>
-      </Page>
-    </>
+          </Grid>
+          <Grid item xs={12} md={width / 2}>
+            {/* ------------------ Category ------------------ */}
+            <AutoCompleteFetcher
+              label="Category"
+              noOptionsText="No categories found"
+              setSelectedItem={setTargetCategoryID}
+              defaultItems={categories}
+              apiURL="http://localhost:5001/search/categories?set=1"
+              requestKey="name"
+              valueKey="_id"
+              multiple={false}
+              noneValue=""
+            />
+          </Grid>
+        </Grid>
+        <Box>
+          <Button version={"contained"} onClick={handleRequest}>
+            Submit
+          </Button>
+        </Box>
+      </Stack>
+    </Page>
   );
 }
 
 MakePost.auth = {
   admin: false,
-  roles: ["user", "admin", "superAdmin"],
 };
