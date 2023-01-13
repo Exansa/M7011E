@@ -82,28 +82,29 @@ export default function EditPost(context) {
     const predata = {
       title: event.target.title.value,
       content: event.target.content.value,
-      categories_id: [event.target.categories.value],
+      category_id: event.target.categories.value,
       tags_id: [event.target.tags.value],
       media: event.target.image.value,
     };
     const data = {
-      user_id: session.user._id,
       post: predata,
     };
 
     const JSONdata = JSON.stringify(data);
     console.log(JSONdata);
     console.log(context.postID);
-    const postRef = "http://localhost:5001/post/" + context.postID;
+    const access = "Bearer " + session.accessToken;
+    const postRef = "http://localhost:5001/posts/" + context.postID;
     const res = await fetch(postRef, {
       method: "PATCH",
       headers: {
         accept: "*/*",
+        Authorization: access,
         "Content-Type": "application/json",
       },
       body: JSONdata,
     });
-
+    console.log(res)
     console.log(JSONdata);
   };
   console.log(context.post)
