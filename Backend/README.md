@@ -2,9 +2,9 @@
 
 ## Quick Deploy Locally
 
-1. Make sure you have installed Docker and Docker Compose
+1. Make sure you have installed Docker and Docker Compose(both will be installed by installing "docker desktop")
 2. Navigate to Backend folder in a terminal
-3. `$ docker compose up -d`
+3. `$ docker compose up -d --build --no-deps`
 4. You can now make HTTP requests to the API Service using http://localhost:5001
 
 ## Prerequisities
