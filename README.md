@@ -10,7 +10,7 @@ Therefore flutter is not using the backend solution but what we compared was a p
 Nextjs is the solution that fullfills the requirements of the project. 
 Flutter is a controlled comparison for evaluation
 
-#Setting up the project
+# Setting up the project
 Step 1. Clone the repository
 Step 2. To setup the backend follow the README.md intructions found in the Backend folder 
 Step 3. To setup the nextJS frontend navigate to Frontend->blog_next_frontend and follow the README.md instructions
