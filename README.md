@@ -12,17 +12,17 @@ Flutter is a controlled comparison for evaluation
 
 # Setting up the project
 1. Clone the repository
-2. To setup the backend follow the README.md intructions found in the Backend folder 
-3. To setup the nextJS frontend navigate to Frontend->blog_next_frontend and follow the README.md instructions
-3.1. To setup the flutter frontend navigate to Frontend->blog_flutter_frontend and follow the README.md instructions
+2. To setup the backend follow the `README.md` intructions found in the Backend folder 
+3. To setup the nextJS frontend navigate to `Frontend/blog_next_frontend` and follow the `README.md` instructions
+3.1. To setup the flutter frontend navigate to `Frontend/blog_flutter_frontend` and follow the `README.md` instructions
 
 # Running the project
 1. Start docker desktop
-2. Navigate in a terminal to the backend folder and run docker using "docker compose up -d --build --no-deps"
+2. Navigate in a terminal to the backend folder and run docker using `docker compose up -d --build --no-deps
 3. For manual testing of the api calls to the server open swagger ui by going to localhost:5001/docs in your browser
 4. Navigate to the frontend folder of your choice(next or flutter)
-4.1. To run the next frontend type "yarn run" into the terminal and in the browser open localhost:3000
-4.2. To run the flutter frontend type "flutter run -d chrome" or run it from your editor
+4.1. To run the next frontend type `yarn run into the terminal and in the browser open localhost:3000
+4.2. To run the flutter frontend type `flutter run -d chrome` or run it from your editor
 
 # Testing frameworks
 As seen in the tables below the Flutter implementation is slower to reaload the page. 
