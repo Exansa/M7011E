@@ -23,8 +23,8 @@ Flutter is a controlled comparison for evaluation
 4. For manual testing of the api calls to the server open swagger ui by going to `localhost:5001/docs` in your browser
 5. Navigate to the frontend folder of your choice(next or flutter)
 6. Start the project
-    - To run the next frontend type `yarn run` into the terminal and in the browser open `localhost:3000`
-    - To run the flutter frontend type `flutter run -d chrome` or run it from your editor
+    - To run the next frontend type `yarn run dev` into the terminal and in the browser open `localhost:3000`
+    - To run the flutter frontend type `flutter run -d chrome --web-port=3000` or run it from your editor
 
 # Testing frameworks
 As seen in the tables below the Flutter implementation is slower to reaload the page. 
