@@ -14,7 +14,7 @@ Flutter is a controlled comparison for evaluation
 1. Clone the repository
 2. To setup the backend follow the `README.md` intructions found in the Backend folder 
 3. To setup the nextJS frontend navigate to `Frontend/blog_next_frontend` and follow the `README.md` instructions
-4. To setup the flutter frontend navigate to `Frontend/blog_flutter_frontend` and follow the `README.md` instructions
+4. To setup the flutter frontend navigate to `Frontend/blog_flutter_frontend/my_app` and follow the `README.md` instructions
 
 # Running the project
 1. Start docker desktop
