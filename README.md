@@ -19,9 +19,9 @@ Flutter is a controlled comparison for evaluation
 # Running the project
 1. Start docker desktop
 2. Navigate in a terminal to the backend folder and run docker using `docker compose up -d --build --no-deps`
-3. For manual testing of the api calls to the server open swagger ui by going to localhost:5001/docs in your browser
+3. For manual testing of the api calls to the server open swagger ui by going to `localhost:5001/docs` in your browser
 4. Navigate to the frontend folder of your choice(next or flutter)
-4.1. To run the next frontend type `yarn run into the terminal and in the browser open localhost:3000
+4.1. To run the next frontend type `yarn run` into the terminal and in the browser open `localhost:3000`
 4.2. To run the flutter frontend type `flutter run -d chrome` or run it from your editor
 
 # Testing frameworks
